@@ -1,0 +1,223 @@
+/* Codepen Specific */
+* {
+    margin: 0;
+    padding: 0;
+    font-family: Helvetica, Arial, sans-serif;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #111; /* 深灰色背景 */
+    padding: 10px;
+}
+
+.container {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 10px 5px 5px 5px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+
+.section {
+    margin-bottom: 20px;
+    padding: 10px;
+    border-radius: 5px;
+    /*background-color: #333; /* 灰色内容区域背景 */
+    width: 100%;
+    /*background: #1c1821;
+            background: linear-gradient(325deg,#1c1821,#9500db 50%,#1c1821);*/
+    /*height:2px;*/
+    background: url(/img/sf6_back2.jpg) no-repeat;
+    background-attachment: fixed;
+    z-index: 10;
+    white-space: nowrap; /* 防止内容换行 */
+}
+
+.tfaac{
+    width:100%;
+}
+
+.title {
+    position: relative;
+
+    right: 50%;
+
+
+    background: linear-gradient(90deg, #420862, #24007f 25%, #24007f 50%, #24007f 75%, #420862);
+    box-sizing: border-box;
+    text-align: center;
+    color: #fff;
+    font-family: Oswald, sans-serif;
+    font-size: min(5.1666666667vw, 60px);
+    font-weight: 800;
+    text-transform: uppercase;
+    text-shadow: 0 0 min(2.0833333333vw, 40px) #9b4b92, 0 0 min(1.0416666667vw, 20px) rgba(109, 39, 255, .5), 0 0 min(1.0416666667vw, 20px) rgba(109, 39, 255, .5);
+    letter-spacing: min(.5208333333vw, 10px);
+    line-height: 1.2;
+    transform: translateX(50%);
+
+
+    align-items: center;
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 10px;
+    line-height: 1;
+    border: 2px solid #9636b2;
+    z-index: 10;
+}
+
+
+.final-rule {
+    text-align: center;
+    list-style:none;
+    width: 100%;
+    padding: 10px;
+    font-size: 18px; /* 根据需要调整字体大小 */
+    color: #fff; /* 字体颜色，可以根据背景调整 */
+    text-shadow: 0 0 10px #99208d, 0 0 10px #99208d, 0 0 10px #99208d, 0 0 10px #99208d, 0 0 10px #99208d;
+    white-space: normal;
+}
+
+
+
+.final-table {
+    width: 90%;
+    border-collapse: collapse;
+    margin: 0 auto; /* 将表格水平居中 */
+    text-shadow: 0 0 10px #99208d, 0 0 10px #99208d, 0 0 10px #99208d, 0 0 10px #99208d, 0 0 10px #99208d;
+    white-space: normal;
+}
+
+    .final-table th, .final-table td {
+        border: 2px solid #4311a9; /* 灰色表格边框 */
+        padding: 8px;
+        text-align: left;
+        font-size: 16px;
+        color: #fff; /* 浅灰色文字 */
+        text-align: center; /* 文本居中 */
+    }
+
+
+    .final-table th {
+        background-color: #4c088c; /* 番茄红色表头背景 */
+        color: #fff; /* 黑色表头文字 */
+    }
+
+    .final-table tr:nth-child(even) {
+        background-color: #210564; /* 灰色偶数行背景 */
+        align-items: center;
+        position: relative;
+        width: 100%;
+        margin-bottom: 10px;
+        padding: 10px;
+        background: #420862;
+        z-index: 10;
+        /*cursor: pointer;*/
+        background: linear-gradient(90deg,#420862,#24007f 25%,#24007f 50%,#24007f 75%,#420862);
+        border: 2px solid #9636b2
+    }
+
+    .final-table tr:nth-child(odd) {
+        background-color: #1d025a; /* 深灰色奇数行背景 */
+        align-items: center;
+        position: relative;
+        width: 100%;
+        margin-bottom: 10px;
+        padding: 10px;
+        background: #420862;
+        z-index: 10;
+        /*cursor: pointer;*/
+        background: linear-gradient(90deg,#420862,#24007f 25%,#24007f 50%,#24007f 75%,#420862);
+        border: 2px solid #9636b2
+    }
+
+
+.accordion-item {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    overflow: hidden;
+    transition: box-shadow 0.3s ease;
+}
+
+    .accordion-item.highlight {
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    }
+
+.accordion-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    top: calc(1px - min(15.3846153846vw, 118px));
+    right: min(1.3037809648vw, 10px);
+    border: 1px solid #c68c35;
+    background: #3f270fBB;
+    color: #ffc549;
+    cursor: pointer;
+}
+
+.accordion-text {
+    flex-grow: 1;
+}
+
+.accordion-arrow {
+    transition: transform 0.3s ease;
+}
+
+.accordion-content {
+    max-height: 0;
+    overflow-y: auto;
+    /*max-height: 400px;*/
+    transition: max-height 0.5s ease-out;
+    background-color: #fff;
+}
+
+    .accordion-content table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .accordion-content th, .accordion-content td {
+        padding: 10px;
+        border: 1px solid #ddd;
+        text-align: left;
+    }
+
+/* ...（与之前相同的CSS样式）... */
+
+/* 为动态创建的收纳板添加一些额外的样式 */
+.accordion-item {
+    margin-bottom: 10px; /* 添加一些间距以分隔收纳板 */
+}
+
+
+
+.tour-table {
+    width: 100%;
+    border-collapse: collapse;
+
+}
+
+    .tour-table th, .tour-table td {
+        border: 2px solid #4311a9; /* 灰色表格边框 */
+        padding: 8px;
+        text-align: left;
+        font-size: 16px;
+        color: #fff; /* 浅灰色文字 */
+    }
+
+    .tour-table th {
+        background-color:rgba(234,0,255,.6); /* 番茄红色表头背景 */
+        color: #fff; /* 黑色表头文字 */
+    }
+
+    .tour-table tr:nth-child(even) {
+        background-color: #210564; /* 灰色偶数行背景 */
+    }
+
+    .tour-table tr:nth-child(odd) {
+        background-color: #1d025a; /* 深灰色奇数行背景 */
+    }

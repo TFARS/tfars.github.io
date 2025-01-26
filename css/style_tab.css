@@ -1,0 +1,200 @@
+﻿.tab-section {
+    margin-bottom: 50px;
+
+}
+
+
+.tab-container {
+    max-height: 50px;
+    position: fixed;
+    top: 0;
+    left: 0; /* 不再需要50%和transform来居中，因为我们将使用justify-content */
+    right: 0; /* 使用left和right来确保容器宽度覆盖整个视口宽度（如果需要的话） */
+    width: auto; /* 或者设置一个具体的宽度，但这里我们让它自动调整 */
+    max-width: 720px; /* 限制最大宽度 */
+    margin: 0 auto; /* 水平居中容器（如果需要的话） */
+    display: flex;
+    justify-content: space-around; /* 或者使用space-between，取决于你想要的间距 */
+
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    box-sizing: border-box; /* 包括内边距和边框在内计算宽度 */
+    flex-wrap: nowrap; /* 防止tab换行 */
+
+    background: #8917ab;
+    background: linear-gradient(90deg, rgba(137, 23, 171, 0), rgba(137, 23, 171, .5) 18%, rgba(234, 0, 255, .5) 50%, rgba(137, 23, 171, .5) 88%, rgba(137, 23, 171, 0));
+    color: #fff;
+}
+
+
+    .tab-container::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px; /* 边框高度 */
+        background: linear-gradient(90deg,rgba(137,23,171,0),#8917ab 10%,#8917ab 50%,#8917ab 90%,rgba(137,23,171,0)); /* 渐变颜色 */
+        animation: glowing 2s infinite; /* 动画效果 */
+    }
+
+    .tab-container::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 3px; /* 边框高度 */
+        background: linear-gradient(90deg,rgba(137,23,171,0),#8917ab 10%,#8917ab 50%,#8917ab 90%,rgba(137,23,171,0));
+        animation: glowing 2s infinite reverse; /* 动画效果，reverse使动画反向播放 */
+    }
+
+/* 动画定义 */
+@keyframes glowing {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.tab, .dropdown-tab {
+    flex: 1 0 auto; /* 每个tab等宽，但允许最小宽度 */
+    min-width: 100px; /* 设置一个合理的最小宽度 */
+    max-width: 33%; /* 限制最大宽度，防止tab过宽 */
+    box-sizing: border-box;
+    padding: 10px 20px;
+    text-align: center;
+    cursor: pointer;
+    white-space: nowrap; /* 防止文字换行 */
+    overflow: visible;
+    text-overflow: ellipsis; /* 溢出文字显示省略号 */
+    max-height: 50px; /* 限制tab的高度 */
+    line-height: normal; /* 确保行高正常，可能需要根据实际情况调整 */
+    display: flex; /* 使用flex布局来更好地控制内部内容 */
+    align-items: center; /* 垂直居中内容 */
+    justify-content: center; /* 水平居中内容（如果需要的话） */
+
+    flex-direction: column;
+    position: relative;
+    height: min(10vw, 74px);
+    color: #ffb0b0;
+    font-size: min(3vw, 22px);
+    text-transform: uppercase;
+    letter-spacing: 0;
+    transition: background .3s;
+    /*font-family: Oswald, sans-serif;*/
+
+    font-weight: bold;
+    text-decoration: none;
+    text-shadow: 2px 3px 2px #161414;
+    text-shadow: 0 0 5px #99208d, 0 0 5px #99208d, 0 0 5px #99208d, 0 0 5px #99208d, 0 0 5px #99208d;
+}
+
+    .tab:hover, .tab.active {
+        background: linear-gradient(90deg, rgba(137, 23, 171, 0), #8917ab 30%, #a413cf 50%, #8917ab 70%, rgba(137, 23, 171, 0));
+        color: #fff;
+    }
+    .dropdown-tab:hover, .dropdown-tab.active {
+        background: linear-gradient(90deg, rgba(137, 23, 171, 0), #8917ab 30%, #a413cf 50%, #8917ab 70%, rgba(137, 23, 171, 0));
+        color: #fff;
+    }
+
+
+.dropdown {
+    width: 100%;
+    display: none;
+    position: absolute;
+    top: 95%; /* 位置在tab按钮的下方 */
+    left: 0%;
+    background: #8917ab;
+    background: linear-gradient(90deg, rgba(137, 23, 171, 0), rgba(137, 23, 171, .5) 18%, rgba(234, 0, 255, .5) 50%, rgba(137, 23, 171, .5) 88%, rgba(137, 23, 171, 0));
+    color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+}
+
+    .dropdown::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 3px; /* 边框高度 */
+        background: linear-gradient(90deg,rgba(137,23,171,0),#8917ab 10%,#8917ab 50%,#8917ab 90%,rgba(137,23,171,0));
+        animation: glowing 2s infinite reverse; /* 动画效果，reverse使动画反向播放 */
+    }
+
+
+.dropdown-item {
+    padding: 10px 20px;
+    cursor: pointer;
+    color: #ffb0b0;
+    font-size: min(3vw, 22px);
+    text-transform: uppercase;
+    letter-spacing: 0;
+    transition: background .3s;
+    /*font-family: Oswald, sans-serif;*/
+
+    font-weight: bold;
+    text-decoration: none;
+    text-shadow: 2px 3px 2px #161414;
+    text-shadow: 0 0 5px #99208d, 0 0 5px #99208d, 0 0 5px #99208d, 0 0 5px #99208d, 0 0 5px #99208d;
+}
+
+    .dropdown-item:hover {
+        background: linear-gradient(90deg, rgba(137, 23, 171, 0), #8917ab 30%, #a413cf 50%, #8917ab 70%, rgba(137, 23, 171, 0));
+        color: #fff;
+    }
+
+.dropdown-tab:hover .dropdown {
+    display: flex;
+    flex-direction: column;
+}
+
+/*滚动条部分*/
+/* 所有浏览器的默认滚动条样式 */
+::-webkit-scrollbar {
+    width: 10px; /* 宽度 */
+    height: 10px;
+}
+
+/* 滚动条轨道 */
+::-webkit-scrollbar-track {
+    background: #f1f1f1; /* 颜色 */
+}
+
+/* 滚动条的滑块 */
+::-webkit-scrollbar-thumb {
+    background: #888; /* 颜色 */
+}
+
+    /* 滚动条的滑块hover效果 */
+    ::-webkit-scrollbar-thumb:hover {
+        background: #555; /* 颜色 */
+    }
+
+/* Firefox */
+::-moz-scrollbar {
+    width: 10px; /* 宽度 */
+    height: 10px;
+}
+
+::-moz-scrollbar-thumb {
+    background: #888; /* 颜色 */
+}
+
+/* IE and Edge */
+::-ms-scrollbar {
+    width: 10px; /* 宽度 */
+}
+
+::-ms-scrollbar-thumb {
+    background: #888; /* 颜色 */
+}

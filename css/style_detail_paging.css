@@ -1,0 +1,72 @@
+﻿.page-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    /* 根据需要设置宽度和高度 */
+    width: 50%;
+    max-width: 100px;
+    position: relative; /* 允许子元素使用绝对定位 */
+}
+
+.page-content {
+    /* 页面内容样式 */
+    flex: 1; /* 占据剩余空间 */
+    text-align: center;
+    padding: 20px;
+}
+
+.page-controls {
+    text-align:right;
+    position: absolute;
+    top: -5px; /* 距离顶部10px */
+    right: 0; /* 距离右侧10px */
+    gap: 5px; /* 控件之间的间距 */
+    z-index: 10
+}
+
+    .page-controls button {
+        width: auto;
+        padding:1px 5px 1px 5px ;
+        font-size: 16px;
+        color:white;
+        border: 1px solid #891dad;
+        background: #271233;
+        cursor: pointer;
+    }
+    .page-controls input[type="number"] {
+        /*adding: 5px 5px;*/
+        width:30%;
+        font-size: 15px;
+    }
+
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 16px;
+    text-align: center;
+    text-decoration: none;
+    outline: none;
+    border: none;
+    border-radius: 4px; /* 可根据需要调整 */
+    cursor: pointer;
+}
+
+.btn-primary {
+    background-color: #007BFF; /* 假设这是您的主题颜色 */
+    color: white;
+}
+
+    .btn-primary:hover {
+        background-color: #0056b3; /* 悬停时的颜色变化 */
+    }
+
+/* 为返回首页按钮添加一些额外的样式，如果需要的话 */
+.back-to-home-button {
+    margin-bottom: 20px; /* 根据需要调整间距 */
+    text-align: center; /* 如果想在页面中居中显示 */
+}

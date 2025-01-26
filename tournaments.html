@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>赛事信息</title>
+    <link rel="stylesheet" href="css/style_tour.css">
+    <link rel="stylesheet" href="css/style_tab.css">
+</head>
+<body>
+    <div class="tab-section">
+        <div class="tab-container">
+            <a href="/index.html" class="tab" data-tab="tab1">积分榜</a>
+            <a href="/detail.html" class="tab" data-tab="tab2">详细信息</a>
+            <a href="/tournaments.html" class="tab" data-tab="tab3">赛事信息</a>
+            <div class="dropdown-tab" data-tab="tab4">
+                <a id="season">赛季切换</a>
+                <div class="dropdown">
+                    <a class="dropdown-item" onclick="changeSeason(0)">最新赛季</a>
+                    <a class="dropdown-item" onclick="changeSeason(2024)">2024赛季</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <section class="section">
+            <section class="title">
+                <p>WAY TO FINAL</p>
+            </section>
+            <ul class="final-rule">
+                <li>天格会年终总决赛(TFAAC)门票来源：
+                <li>历届升龙杯(DPC)的冠、亚军
+                <li>
+                    每月天格会月赛冠军
+                <li>11、12月天格会月赛冠军重复顺延名额
+                <li>
+                    LCQ(Last Chance Qualifier)的冠、亚军
+                <li>
+                    LCQ后积分榜上未获得上述资格的最高积分玩家
+                <li>
+                    有资格的玩家缺席时按照积分榜排行顺序递补
+            </ul>
+            <table class="final-table" id="final">
+                <tr>
+                    <th>选手ID</th>
+                    <th>资格来源</th>
+                </tr>
+                <tbody>
+                    <tr>
+                        <td>升龙杯冠亚军</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>天格会月赛冠军</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>天格会积分资格</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>LCQ冠亚军</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>月赛顺延名额</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>月赛顺延名额</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>月赛顺延名额</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>月赛顺延名额</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>月赛顺延名额</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>待定</td>
+                        <td>LCQ冠军</td>
+                    </tr>
+                    <tr>
+                        <td>待定</td>
+                        <td>LCQ亚军</td>
+                    </tr>
+                    <tr>
+                        <td>待定</td>
+                        <td>积分榜最高积分</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+        <section class="section">
+            <section class="title">
+                <p>赛事记录</p>
+            </section>
+            <section class="tour-area" id="accordionContainer">
+            </section>
+        </section>
+    </div>
+
+
+
+    <script src="/js/jquery-3.7.1.min.js"></script>
+    <script type="text/javascript" src="/js/script_tour.js" charset="utf-8"></script>
+    <script type="text/javascript" src="/js/script_tab.js" charset="utf-8"></script>
+
+</body>
+</html>

@@ -1,0 +1,162 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 20px;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background-color: #fff;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    text-align: center;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+input, textarea {
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+}
+
+.activity-list {
+    background-image: url("/img/poster_back.png");
+    text-align: center;
+
+    width:1080px;
+    height: 2350px;
+    background-size: cover;
+}
+
+.activity-title {
+    text-shadow: 1px 1px 6px #000, -1px -1px 6px #000, 1px -1px 6px #000, -1px 1px 6px #000;
+    display: block;
+    padding-top: 125px;
+    padding-bottom: 40px;
+    font-size: 90px;
+    color: #fff;
+}
+
+.activity-content {
+    /*font-family: 'Microsoft YaHei';*/
+    color: black;
+    margin: 0 auto;
+    text-shadow: 0px 0px 5px #0000008c;
+    font-weight: 300;
+}
+
+.activity-name {
+    font-weight: 400;
+    font-size: 75px;
+}
+
+.activity-time {
+    font-size: 50px;
+}
+
+.activity-desc {
+    white-space: pre-wrap; /* 保留空白符和换行符 */
+    word-wrap: break-word; /* 防止长单词溢出 */
+    font-size: 40px;
+}
+
+
+.activity-card {
+    width: 80%;
+    height: 340px;
+    margin: auto;
+    margin-top:120px;
+    margin-bottom: 240px;/*5图 25px*/
+    padding-left: 20px;
+    background-size: cover;
+    background-position: center;
+    border-radius: 10px;
+    border: 2px solid #000;
+    opacity: 0.9;
+    box-shadow: 5px 0 20px rgba(0, 0, 0, 1);
+    /*box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);*/
+    position: relative;
+    text-align: left;
+}
+
+
+
+    .activity-card::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        
+        pointer-events: none;
+        border-radius: 10px;
+    }
+
+    .activity-card .content {
+        position: relative;
+        z-index: 1;
+        color: #fff;
+    }
+
+#downloadBtn {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+    #downloadBtn:hover {
+        background-color: #0056b3;
+    }
+
+
+
+/*字体设置相关*/
+#colorPickerDialog {
+    position: fixed; /* 使用fixed定位，以便对话框在滚动时保持位置 */
+    top: 50%; /* 将顶部边缘置于视口高度的50% */
+    left: 50%; /* 将左侧边缘置于视口宽度的50% */
+    transform: translate(-50%, -50%); /* 将对话框的中心点对齐到视口的中心点 */
+    /* 其他样式，如背景色、边框、阴影等 */
+    background-color: white;
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    z-index: 1000; /* 确保对话框位于其他内容之上 */
+}
+
+.hidden {
+    display: none;
+}
+
+#colorPicker {
+    position: fixed; /* 使用fixed定位，以便对话框在滚动时保持位置 */
+    top: 50%; /* 将顶部边缘置于视口高度的50% */
+    left: 50%; /* 将左侧边缘置于视口宽度的50% */
+    transform: translate(-50%, -50%); /* 将对话框的中心点对齐到视口的中心点 */
+    /* 其他样式，如背景色、边框、阴影等 */
+    background-color: white;
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    z-index: 1000; /* 确保对话框位于其他内容之上 */
+}

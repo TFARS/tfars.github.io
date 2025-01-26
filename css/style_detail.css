@@ -1,0 +1,392 @@
+﻿/* 重置浏览器默认样式 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #111; /* 深灰色背景 */
+    color: #fff; /* 白色文字 */
+    padding: 10px;
+}
+
+.container {
+    max-width: 720px;
+    margin: 0 auto;
+
+    padding: 10px 5px 5px 5px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+h1 {
+    text-align: center;
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #ff6347; /* 番茄红色标题 */
+}
+
+
+
+.section {
+
+    margin-bottom: 20px;
+    padding: 10px;
+    border-radius: 5px;
+    /*background-color: #333; /* 灰色内容区域背景 */
+    width: 100%;
+    /*background: #1c1821;
+            background: linear-gradient(325deg,#1c1821,#9500db 50%,#1c1821);*/
+    /*height:2px;*/
+    background: url(/img/sf6_back2.jpg) no-repeat;
+    background-attachment:fixed;
+    z-index: 10;
+
+    overflow-x: auto; /* 允许水平滚动 */
+    white-space: nowrap; /* 防止内容换行 */
+}
+
+.info-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    width: 100%; /* 父元素的宽度 */
+    position: relative; /* 如果子元素需要绝对定位，则保留此行；否则可以删除 */
+}
+
+    .section h2 {
+        font-size: 20px;
+        margin-bottom: 10px;
+        color: #ff6347; /* 番茄红色子标题 */
+    }
+
+
+
+
+
+.profile-pic img {
+    display: block;
+    margin: 0 auto;
+    max-width: 100%;
+    height: auto;
+    border-radius: 50%; /* 圆形头像 */
+    border: 2px solid #ff6347; /* 红色边框 */
+}
+
+
+.info-area {
+    display: flex;
+    justify-content: space-between; /* 这将使两列之间的空间均匀分布 */
+    align-items: flex-start; /* 这将使内容在垂直方向上对齐到顶部（可选） */
+}
+
+.info-rank {
+
+    color:#ff6347;
+    text-align:right;
+}
+
+
+.info-list {
+    position: relative;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    font: inherit;
+    vertical-align: baseline;
+}
+    .info-list left-info {
+        text-align: left;
+    }
+    .info-list right-info {
+        text-align: right;
+    }
+
+.info-rank {
+    margin: 5px 25px 5px 25px;
+    width: min(25vw, 240px);
+    height: min(12vw,auto);
+    font-size: min(2.6075619296vw, 20px);
+    background: linear-gradient(45deg, #420862, #24007f 25%, #24007f 50%, #24007f 75%, #420862);
+    border: 5px solid #331167;
+    border-image: linear-gradient(180deg, #4c2ea5 0, #331167 100%, #4c2ea5);
+    border-image-slice: 1;
+    padding: min(1.6604166667vw, 10px);
+    display: block;
+    text-align: center;
+    align-items: stretch;
+    box-shadow: 0 0 15px -5px #5a1dbb;
+    border-radius: 10px;
+}
+
+.rank-name {
+    display: block;
+    text-shadow: 0px 1px 2px #acacac;
+    font-size: 16px;
+    color: #e0cece;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.rank-text {
+    font-size: min(2.5vw,40px);
+    color: #ecfb01; 
+    border-radius: 0px;
+    text-transform: uppercase;
+    text-align: center;
+    text-shadow: 2px 3px 2px #161414;
+    padding-bottom: 5px;
+    font-family: 'Montserrat', sans-serif;
+}
+
+
+    .info-item {
+        display: flex;
+        flex-wrap: wrap;
+    }
+.item-name {
+    width: min(19.556714472vw, 150px);
+    margin: 0 min(.6518904824vw, 5px) min(1.3037809648vw, 10px) 0;
+    padding: min(.260756193vw, 2px) min(1.3037809648vw, 10px);
+    font-size: min(2.6075619296vw, 20px);
+    display: block;
+    border-left: 1px solid hsla(0, 0%, 100%, .6);
+    background: #000;
+    box-sizing: border-box;
+    color: #bb82ff;
+    text-align: right;
+    line-height: 1.2;
+}
+
+.item-text {
+    margin: 0 0 min(1.3037809648vw, 10px);
+    padding: min(.260756193vw, 2px) min(1.3037809648vw, 10px);
+    font-size: min(2.3468057366vw, 18px);
+    display: block;
+    background: #000;
+    box-sizing: border-box;
+    color: #fff;
+    text-align: left;
+}
+
+.tfa-name {
+    text-shadow: 2px 3px 2px #161414;
+    text-shadow: 0 0 10px #99208d, 0 0 20px #99208d, 0 0 20px #99208d, 0 0 20px #99208d, 0 0 20px #99208d;
+    font-size: min(7.5vw, 60px);
+    font-family: 'Montserrat', sans-serif;
+    height: min(11.25vw, 90px);
+}
+
+.tfa-index {
+    text-shadow: 2px 3px 2px #161414;
+    font-size: min(2.5vw, 20px);
+    font-family: 'Montserrat', sans-serif;
+    color: #9f9696;
+}
+
+.info-container {
+    position: relative;
+    width: 100%;
+    box-sizing: border-box;
+    text-align: left;
+    line-height: 1;
+    border-bottom: 1px solid #fff;
+    padding-bottom: 10px; /* 可根据需要调整，确保方块不紧贴边框 */
+}
+
+    .info-container::before,
+    .info-container::after {
+        content: '';
+        position: absolute;
+        bottom: -2.5px; /* 调整此值使方块与边框底部对齐 */
+        width: 5px; /* 方块宽度，可根据需要调整 */
+        height: 5px; /* 方块高度，可根据需要调整 */
+        background-color: #fff;
+        right: 0;
+    }
+
+    .info-container::before {
+        left: 0;
+    }
+
+
+
+/*历史荣誉部分*/
+.honor-container {
+    display: flex;
+    align-items: center;
+    position: relative;
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 10px;
+    line-height: 1;
+    background: linear-gradient(90deg, #420862, #24007f 25%, #24007f 50%, #24007f 75%, #420862);
+    border: 2px solid #9636b2;
+    z-index: 10;
+}
+
+.honor-image {
+    width: min(12vw,100px); /* 根据你的奖杯图片大小调整 */
+    height: auto;
+    margin-right: 10px; /* 奖杯和成绩之间的间距 */
+}
+
+.honor-tour {
+    flex: 1; /* 占据剩余空间，可以灵活调整 */
+    text-align: center;
+    font-size: 18px; /* 根据需要调整字体大小 */
+    color: #fff; /* 字体颜色，可以根据背景调整 */
+    text-shadow: 0 0 10px #99208d, 0 0 10px #99208d, 0 0 10px #99208d, 0 0 10px #99208d, 0 0 10px #99208d;
+}
+
+.honor-time {
+    margin-left: auto; /* 自动推至右侧 */
+    font-size: 16px; /* 根据需要调整字体大小 */
+    color: grey; /* 字体颜色，可以根据背景调整 */
+}
+
+
+.section_rival {
+    margin-bottom: 20px;
+    padding: 10px;
+    border-radius: 5px;
+    /*background-color: #333; /* 灰色内容区域背景 */
+    width: 100%;
+    max-height:500px;
+    /*background: #1c1821;
+            background: linear-gradient(325deg,#1c1821,#9500db 50%,#1c1821);*/
+    /*height:2px;*/
+    background: url(/img/sf6_back.png) no-repeat;
+    z-index: 10;
+    display: block;
+    overflow-y: auto; /* 允许水平滚动 */
+    white-space: nowrap; /* 防止内容换行 */
+}
+    .section_rival h2 {
+        font-size: 20px;
+        margin-bottom: 10px;
+        color: #ff6347; /* 番茄红色子标题 */
+    }
+
+
+.record-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+    .record-table th, .record-table td {
+        border: 2px solid #4311a9; /* 灰色表格边框 */
+        padding: 8px;
+        text-align: left;
+        font-size: 16px;
+        color: #fff; /* 浅灰色文字 */
+    }
+
+    .record-table th {
+        background-color: #4c088c; /* 番茄红色表头背景 */
+        color: #fff; /* 黑色表头文字 */
+    }
+
+    .record-table tr:nth-child(even) {
+        background-color: #210564; /* 灰色偶数行背景 */
+    }
+
+    .record-table tr:nth-child(odd) {
+        background-color: #1d025a; /* 深灰色奇数行背景 */
+    }
+
+
+.tour-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+    .tour-table th, .tour-table td {
+        border: 2px solid #4311a9; /* 灰色表格边框 */
+        padding: 8px;
+        text-align: left;
+        font-size: 16px;
+        color: #fff; /* 浅灰色文字 */
+    }
+
+    .tour-table th {
+        background-color: #4c088c; /* 番茄红色表头背景 */
+        color: #fff; /* 黑色表头文字 */
+    }
+
+    .tour-table tr:nth-child(even) {
+        background-color: #210564; /* 灰色偶数行背景 */
+        align-items: center;
+        position: relative;
+        width: 100%;
+        margin-bottom: 10px;
+        padding: 10px;
+        background: #420862;
+        z-index: 10;
+        /*cursor: pointer;*/
+        background: linear-gradient(90deg,#420862,#24007f 25%,#24007f 50%,#24007f 75%,#420862);
+        border: 2px solid #9636b2
+    }
+
+    .tour-table tr:nth-child(odd) {
+        background-color: #1d025a; /* 深灰色奇数行背景 */
+        align-items: center;
+        position: relative;
+        width: 100%;
+        margin-bottom: 10px;
+        padding: 10px;
+        background: #420862;
+        z-index: 10;
+        /*cursor: pointer;*/
+        background: linear-gradient(90deg,#420862,#24007f 25%,#24007f 50%,#24007f 75%,#420862);
+        border: 2px solid #9636b2
+    }
+
+#chart_area {
+    width:100%;
+    overflow-x: auto; /* 允许水平滚动 */
+    white-space: nowrap; /* 防止内容换行 */
+}
+
+#donutchart {
+    display: inline-block; /* 使图表成为内联块元素，以便可以水平滚动 */
+}
+
+
+.vs-symbol {
+    font-weight: bold; /* 加粗 */
+    font-style: italic; /* 斜体 */
+    /* 扁平化通常不是CSS能直接控制的，但你可以选择一个看起来更扁平的字体 */
+    font-family: 'Arial Narrow', Arial, sans-serif; /* Arial Narrow 看起来比 Arial 更扁平 */
+    color:#7c7c7c;
+    font-size:20px;
+}
+
+.test-text {
+    text-align: center;
+    display: block;
+    width: 100%;
+    position: relative;
+    font-size: min(1.1458333333vw,22px);
+    padding: min(.8333333333vw,16px) min(.5208333333vw,10px);
+    margin: 0 0 min(1.5625vw,30px);
+    background: #8917ab;
+    background: linear-gradient(90deg,rgba(137,23,171,0),rgba(137,23,171,.5) 18%,rgba(234,0,255,.5) 50%,rgba(137,23,171,.5) 88%,rgba(137,23,171,0));
+    border: 2px solid #9636b2;
+}
+
+.test-text2 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    width: 100%;
+    min-height: min(34.6805736636vw, 266px);
+    background: linear-gradient(90deg, rgba(27, 1, 67, 0), rgba(27, 1, 67, .7) 10%, rgba(27, 1, 67, .7) 50%, rgba(27, 1, 67, .7) 90%, rgba(27, 1, 67, 0));
+    text-shadow: 0 0 30px #99208d, 0 0 30px #99208d, 0 0 30px #99208d, 0 0 30px #99208d, 0 0 30px #99208d;
+}
+

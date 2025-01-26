@@ -1,0 +1,163 @@
+/* Codepen Specific */
+* {
+    margin: 0;
+    padding: 0;
+    font-family: Helvetica, Arial, sans-serif;
+    box-sizing: border-box;
+}
+
+.leaderboard-parent {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 10px 5px 5px 5px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+
+body {
+    background: #232323;
+    padding: 10px;
+}
+
+input[type=text], textarea, input[type=email], input[type=password], input[type=tel], input[type=url], input[type=search], input[type=date] {
+    padding: 10px;
+    width: 100%;
+    font-size: 14px;
+    font-family: inherit;
+    line-height: 24px;
+    color: #555;
+    background-color: #f1f1f1;
+    border: none;
+    transition: all 0.2s ease;
+    -webkit-transition: all 0.2s ease;
+}
+
+input[type=text], textarea, input[type=email], input[type=password], input[type=tel], input[type=url], input[type=search], input[type=date], .material.woocommerce-page[data-form-style="default"] input#coupon_code {
+    background-color: rgba(0,0,0,0.1);
+    border-radius: 4px;
+    border: 2px solid rgba(0,0,0,0);
+}
+/* /end Codepen Specific */
+/* Ladder Navigation */
+#leaderboard {
+    padding: 5px;
+}
+
+.ladder-nav {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    background: #5055CB;
+    padding: 10px 25px;
+    border-radius: 10px;
+
+    line-height: 1;
+    background: linear-gradient(90deg, #420862, #24007f 25%, #24007f 50%, #24007f 75%, #420862);
+    border: 1px solid #9636b2;
+}
+
+.ladder-title {
+    flex: 2;
+}
+
+.ladder-search {
+    flex: 1;
+    padding-left:5px;
+    padding-right: 5px;
+}
+
+.ladder-title {
+    font-size: 20px;
+    color: #888DFF !important;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.ladder-search input {
+    color: white
+}
+
+    .ladder-search input::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+        color: #888DFF;
+    }
+
+    .ladder-search input::-moz-placeholder { /* Firefox 19+ */
+        color: #888DFF;
+    }
+
+    .ladder-search input:-ms-input-placeholder { /* IE 10+ */
+        color: #888DFF;
+    }
+
+    .ladder-search input:-moz-placeholder { /* Firefox 18- */
+        color: #888DFF;
+    }
+/* /end Ladder Navigation */
+/* Leaderboard Results */
+.leaderboard-results {
+    width: 100%;
+    text-align: left;
+    border-collapse: collapse;
+    word-wrap: break-word; /* 或使用 overflow-wrap: break-word; */
+    table-layout: auto; /* 通常使用auto，但fixed在某些情况下也有用 */
+}
+
+    .leaderboard-results thead th {
+        padding: 25px;
+        color: #747474;
+        font-size: 14px;
+        font-weight: bold;
+    }
+
+    .leaderboard-results tbody td {
+        width: auto;
+        padding: 10px min(2vw,25px);
+        background: #1a1a1a;
+        border-bottom: 5px solid #232323;
+        word-wrap: break-word; /* 确保长内容换行 */
+    }
+
+        .leaderboard-results tbody td:nth-of-type(7) {
+            font-weight: bold;
+        }
+
+    .leaderboard-results tbody tr:hover td {
+        background: #1d1d1d;
+    }
+
+    .leaderboard-results tbody tr {
+        color: #747474;
+        font-size:min(4vw,16px);
+    }
+
+        .leaderboard-results tbody tr:first-child {
+            font-size: min(5vw,20px);
+            color: #CD7F32;
+        }
+
+        .leaderboard-results tbody tr:nth-child(2) {
+            font-size: min(4.5vw,18px);
+            color: #E6E8FA;
+        }
+
+        .leaderboard-results tbody tr:nth-child(3) {
+            color: #8C7853;
+        }
+
+    .leaderboard-results tbody span {
+        font-weight: bold;
+        padding: 10px 15px;
+        border-radius: 50%;
+    }
+
+    .leaderboard-results tbody tr:first-child span {
+        background: #5055CB;
+        color: white;
+    }
+
+    .leaderboard-results tbody tr span {
+        background: #262626;
+        color: #747474;
+    }
+/* /end Leaderboard Results */
