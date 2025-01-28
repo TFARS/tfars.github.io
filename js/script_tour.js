@@ -20,12 +20,13 @@
                 //const settingObject = JSON.parse(settingData.qualifys);
                 settings = settingData.qualifys;
 
-                jsonData[0].tournaments.reverse().forEach(function (tour) {
+                jsonData[globalSeason].tournaments.reverse().forEach(function (tour) {
+                    console.log(tour);
                     addAccordionPanel(tour);
                     checkQualify(tour);
                 });
 
-                for (const player of jsonData[0].members) {
+                for (const player of jsonData[globalSeason].members) {
                     if (!banlist.includes(player.tfaName)) {
                         //finalist[2].push(player.tfaName + "(暂)");
                         let beforeLCQ = ""

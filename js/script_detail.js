@@ -39,7 +39,7 @@ function dataUpdate() {
 
 var data;
 var rank = getQueryParam('rank') - 1; // 获取rank参数
-var season = getQueryParam('season') ; // 获取rank参数
+//var globalSeason = getQueryParam('globalSeason') ; // 获取rank参数
 
 //获取页面布局元素id
 var headName = document.getElementById('name');
@@ -61,9 +61,9 @@ document.addEventListener('DOMContentLoaded', function () {
         })
         .then(jsonData => {
             console.log("数据长度:" + jsonData.length);
-            season = 2023 + jsonData.length - season;
-            season = Math.min(Math.max(0, season), jsonData.length - 1)
-            data = jsonData[season];
+            //globalSeason = 2023 + jsonData.length - globalSeason;
+            //globalSeason = Math.min(Math.max(0, globalSeason), jsonData.length - 1)
+            data = jsonData[globalSeason];
 
             rank = Math.min(Math.max(0, rank), data.members.length - 1);
 

@@ -1,8 +1,9 @@
 ﻿// 页面加载时执行的函数
 function onPageLoad() {
     if (queryParams.has('season')) {
-        var season = queryParams.get('season');
-        ShowSeason(season);
+        globalSeason = queryParams.get('season');
+        globalSeason = globalSeason != 2024 ? 0 : 1;
+        ShowSeason(globalSeason);
     }
 
     // 如果有其他参数，也可以在这里处理
@@ -11,13 +12,14 @@ function onPageLoad() {
 
 function ShowSeason(season) {
     var seasonTab = document.getElementById('season');
-    var seasonInfo = season == 0 ? "最新" : season;
+    var seasonInfo = season == 0 ? "最新" : 2024;
     seasonTab.innerHTML = seasonInfo + "赛季";
 }
 
 
 var currentUrl = new URL(window.location.href);
 var queryParams = new URLSearchParams(currentUrl.search);
+var globalSeason = 0;
 // 使用DOMContentLoaded事件确保DOM完全加载后再执行onPageLoad函数
 document.addEventListener('DOMContentLoaded', onPageLoad);
 
@@ -55,7 +57,8 @@ document.querySelectorAll('.tab').forEach(button => {
 function hrefSeason(season) {
     queryParams.set('season', season);
     var newUrl = currentUrl.origin + currentUrl.pathname + '?' + queryParams.toString();
-    window.history.pushState({}, '', newUrl);
+    window.location.href = newUrl;
+    //window.history.pushState({}, '', newUrl);
 }
 
 
@@ -76,12 +79,12 @@ function changeSeason(season) {
     hrefSeason(season);
     ShowSeason(season);
 
-    /*var a = queryParams.get('season');
+    /*var a = queryParams.get('globalSeason');
     if (a == null) {
         a = 0;
     }
 
-    if (a == season) {
+    if (a == globalSeason) {
         return;
     }
     else {

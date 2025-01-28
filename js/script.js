@@ -1,7 +1,6 @@
 ﻿const rankingsBody = document.querySelector("#rankings > tbody");
-
-
 var table = document.querySelector('#rankings > tbody');
+
 
 fetch('/data/data.json')
     .then(response =>
@@ -25,11 +24,12 @@ fetch('/data/data.json')
 
         //var jsonString = JSON.stringify(jsonData);
         //localStorage.setItem("members", jsonString);
+        console.log('testtest:' + globalSeason);
         var name = document.getElementById('title-name');
-        var season = jsonData[0].seasonID + 2023;
-        name.innerHTML = "天格会积分排行榜-SF6 " + season +"<br>更新于 " + jsonData[0].tournaments[0].desc + " 后";
+        var season = jsonData[globalSeason].seasonID + 2023;
+        name.innerHTML = "天格会积分排行榜-SF6 " + season + "<br>更新于 " + jsonData[globalSeason].tournaments[0].desc + " 后";
 
-        jsonData[0].members.forEach(function (player, index) {
+        jsonData[globalSeason].members.forEach(function (player, index) {
             var row = table.insertRow(-1); // 在表格末尾添加新行
             var cell1 = row.insertCell(0); // 当前名次
             var cell2 = row.insertCell(1); // 选手ID
