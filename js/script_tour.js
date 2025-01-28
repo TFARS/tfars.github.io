@@ -6,7 +6,6 @@
         throw new Error('Network response was not ok.');
     })
     .then(jsonData => {
-
         fetch('/data/settings.json')
             .then(response => {
                 if (response.ok) {
@@ -21,10 +20,20 @@
                 settings = settingData.qualifys;
 
                 jsonData[globalSeason].tournaments.reverse().forEach(function (tour) {
-                    console.log(tour);
                     addAccordionPanel(tour);
                     checkQualify(tour);
                 });
+
+
+                if (globalSeason == 0) {
+                    var rule = document.getElementById('rule');
+                    rule.innerHTML = "<li>2025年天格会年终总决赛(TFAAC)规则待定，敬请期待！";
+
+                    var list = document.getElementById('final');
+                    list.style.display = 'none';
+                        return;
+                }
+
 
                 for (const player of jsonData[globalSeason].members) {
                     if (!banlist.includes(player.tfaName)) {
@@ -58,7 +67,12 @@
 
     })
     .catch(error => {
-        console.error('There has been a problem with your fetch operation:', error);
+        if (error === 'INTERRUPTED') {
+            console.log('待定！');
+        }
+        else {
+            console.error('There has been a problem with your fetch operation:', error);
+        }
     });
 
 
