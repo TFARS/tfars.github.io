@@ -209,9 +209,19 @@ document.addEventListener('DOMContentLoaded', function () {
                 chartData.addColumn({ type: 'string', role: 'annotation' });
                 chartData.addColumn({ type: 'string', role: 'annotation' });
                 chartData.addRow(["初始", 1500, '1500', '初始']);
-                for (var i = player.historyMMR.length; i > 0; i--) {
-                    var join = (player.historyIn[i - 1]) ? '参赛' : '';
-                    chartData.addRow([data.tournaments[i - 1].desc, player.historyMMR[i - 1], String(player.historyMMR[i - 1]), join]);
+                for (var i = player.historyDisplayMMR.length; i > 0; i--) {
+                    var join = '';
+                    if (player.historyIn[i - 1]) {
+                        join = "参赛";
+                        if (player.historyDQ[i - 1] > 0) {
+                            join = "鸽了";
+                        }
+                    }
+                    else if (player.historyDecay[i - 1]) {
+                        join = join + "衰减";
+                    }
+                    //var join = (player.historyIn[i - 1]) ? '参赛' : '';
+                    chartData.addRow([data.tournaments[i - 1].desc, player.historyDisplayMMR[i - 1], String(player.historyDisplayMMR[i - 1]), join]);
                 }
 
                 var pointWidth = 90;
