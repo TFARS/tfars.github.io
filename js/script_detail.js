@@ -23,7 +23,7 @@ function dataUpdate() {
 
     //积分排名相关
     document.getElementById('rank').textContent = '#' + data.members[rank].rank;
-    document.getElementById('mmr').textContent = data.members[rank].currentMMR;
+    document.getElementById('mmr').textContent = data.members[rank].displayMMR;
     //赛事数据相关
     document.getElementById('tours').textContent = data.members[rank].showInfo.toursCount;
     document.getElementById('lastTour').textContent = data.members[rank].showInfo.lastTour;
