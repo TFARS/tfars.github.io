@@ -37,7 +37,7 @@ fetch('/data/data.json')
             var cell4 = row.insertCell(3); // 天格会ID
             cell1.textContent = index + 1;
             cell2.textContent = player.tfaName;
-            cell3.textContent = player.diplayMMR;
+            cell3.textContent = player.displayMMR;
             cell4.textContent = player.tfaIndex;
         });
 
