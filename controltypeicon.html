@@ -1,0 +1,1026 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>街霸6风格文字图标生成器</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        streetfighter: {
+                            red: '#e63946',
+                            blue: '#1d3557',
+                            yellow: '#f1faee',
+                            light: '#a8dadc',
+                            dark: '#1d3557'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .control-panel {
+                @apply bg-gray-800 text-white p-4 rounded-lg shadow-lg;
+            }
+
+            .control-group {
+                @apply mb-6;
+            }
+
+            .control-label {
+                @apply block text-sm font-medium mb-2 text-gray-300;
+            }
+
+            .control-item {
+                @apply mb-4;
+            }
+
+            .streetfighter-bg {
+                background: linear-gradient(145deg, #2d2d2d, #1a1a1a);
+                border: 2px solid #444;
+                box-shadow: 5px 5px 0 #000;
+            }
+
+            .bg-option {
+                @apply relative p-2 rounded cursor-pointer transition-all duration-200;
+            }
+
+                .bg-option:hover {
+                    @apply bg-gray-700;
+                }
+
+                .bg-option.active {
+                    @apply bg-streetfighter-red/30 border border-streetfighter-red;
+                }
+
+            .canvas-container {
+                @apply relative overflow-hidden rounded-lg;
+            }
+
+            .preview-wrapper {
+                @apply flex items-center justify-center overflow-hidden;
+            }
+
+            .preset-option {
+                @apply relative p-4 rounded cursor-pointer transition-all duration-200 border border-gray-700 hover:border-streetfighter-light flex flex-col items-center justify-center;
+            }
+
+                .preset-option.active {
+                    @apply bg-streetfighter-red/20 border-streetfighter-red;
+                }
+
+            .preset-label {
+                @apply font-medium mt-2 text-sm;
+            }
+
+            .preset-description {
+                @apply text-xs text-gray-400 mt-1 text-center;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white min-h-screen">
+    <div class="container mx-auto px-4 py-8 max-w-7xl">
+        <header class="text-center mb-8">
+            <h1 class="text-[clamp(2rem,5vw,3rem)] font-bold mb-2 text-streetfighter-light">
+                <span class="text-streetfighter-red">街霸6</span>操作模式风格文字图标生成器
+            </h1>
+            <p class="text-gray-400 max-w-2xl mx-auto">创建三种街霸6操作模式风格的图标，也可自定义各种混合样式</p>
+        </header>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <!-- 第一列设置项 -->
+            <div class="lg:col-span-1">
+                <div class="control-panel h-full">
+                    <!-- 预制方案选择区域 -->
+                    <div class="control-group border-b border-gray-700 pb-6 mb-6">
+                        <label class="control-label">预制方案</label>
+                        <div class="grid grid-cols-3 gap-3">
+                            <div class="preset-option active" data-preset="classic">
+                                <i class="fa fa-star text-streetfighter-red text-xl"></i>
+                                <span class="preset-label">经典</span>
+                                <span class="preset-description">紫色调风格</span>
+                            </div>
+                            <div class="preset-option" data-preset="modern">
+                                <i class="fa fa-bolt text-streetfighter-light text-xl"></i>
+                                <span class="preset-label">现代</span>
+                                <span class="preset-description">红黄调风格</span>
+                            </div>
+                            <div class="preset-option" data-preset="dynamic">
+                                <i class="fa fa-tint text-streetfighter-blue text-xl"></i>
+                                <span class="preset-label">动感</span>
+                                <span class="preset-description">蓝色调风格</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label">输入文字 (单个字符)</label>
+                        <input type="text" id="textInput" maxlength="1" value="街"
+                               class="w-full bg-gray-700 border border-gray-600 rounded px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-streetfighter-red">
+                    </div>
+
+                    <div class="control-group">
+                        <h3 class="text-lg mb-3 text-streetfighter-light">文字本体设置</h3>
+                        <div class="control-item">
+                            <label class="block text-sm mb-1">文字颜色</label>
+                            <input type="color" id="textColor" value="#fed9ac"
+                                   class="w-full h-10 bg-gray-700 border border-gray-600 rounded">
+                        </div>
+                        <div class="control-item">
+                            <label class="block text-sm mb-1">文字大小: <span id="fontSizeValue">265</span></label>
+                            <input type="range" id="fontSize" min="150" max="300" value="265"
+                                   class="w-full accent-streetfighter-red">
+                        </div>
+                        <div class="control-item">
+                            <label class="block text-sm mb-1">文字粗细: <span id="fontWeightValue">900</span></label>
+                            <input type="range" id="fontWeight" min="400" max="1000" step="50" value="900"
+                                   class="w-full accent-streetfighter-red">
+                        </div>
+                        <div class="control-item">
+                            <label class="block text-sm mb-1">垂直偏移: <span id="verticalOffsetValue">0</span></label>
+                            <input type="range" id="verticalOffset" min="-50" max="50" value="0"
+                                   class="w-full accent-streetfighter-red">
+                            <p class="text-xs text-gray-400 mt-1">微调文字垂直位置</p>
+                        </div>
+                        <div class="control-item">
+                            <label class="block text-sm mb-1">字体补偿: <span id="fontCompensationValue">0</span></label>
+                            <input type="range" id="fontCompensation" min="-30" max="30" value="0"
+                                   class="w-full accent-streetfighter-red">
+                            <p class="text-xs text-gray-400 mt-1">针对不同字体的补偿</p>
+                        </div>
+                        <div class="control-item">
+                            <label class="block text-sm mb-1">字体: <span id="fontFamilyValue">Arial</span></label>
+                            <select id="fontFamily" class="w-full bg-gray-700 border border-gray-600 rounded px-3 py-2 text-white">
+                                <option value="Arial">Arial</option>
+                                <option value="SimHei">黑体</option>
+                                <option value="Microsoft YaHei">微软雅黑</option>
+                                <option value="SimSun">宋体</option>
+                                <option value="KaiTi">楷体</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 第二列设置项 - 内描边设置 -->
+            <div class="lg:col-span-1">
+                <div class="control-panel h-full">
+                    <div class="control-group">
+                        <h3 class="text-lg mb-3 text-streetfighter-light">内描边设置</h3>
+                        <div class="control-item">
+                            <label class="block text-sm mb-1">内描边颜色</label>
+                            <input type="color" id="innerStrokeColor" value="#ffffff"
+                                   class="w-full h-10 bg-gray-700 border border-gray-600 rounded">
+                        </div>
+                        <div class="control-item">
+                            <label class="block text-sm mb-1">内描边大小: <span id="innerStrokeSizeValue">6</span></label>
+                            <input type="range" id="innerStrokeSize" min="1" max="10" value="6"
+                                   class="w-full accent-streetfighter-red">
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <h3 class="text-lg mb-3 text-streetfighter-light">外描边设置</h3>
+                        <div class="control-item">
+                            <label class="block text-sm mb-1">外描边渐变(上)</label>
+                            <input type="color" id="outerStrokeColor1" value="#FFD829"
+                                   class="w-full h-10 bg-gray-700 border border-gray-600 rounded">
+                        </div>
+                        <div class="control-item">
+                            <label class="block text-sm mb-1">外描边渐变(下)</label>
+                            <input type="color" id="outerStrokeColor2" value="#F00000"
+                                   class="w-full h-10 bg-gray-700 border border-gray-600 rounded">
+                        </div>
+                        <div class="control-item">
+                            <label class="block text-sm mb-1">外描边大小: <span id="outerStrokeSizeValue">15</span></label>
+                            <input type="range" id="outerStrokeSize" min="1" max="20" value="15"
+                                   class="w-full accent-streetfighter-red">
+                        </div>
+                        <div class="control-item">
+                            <label class="block text-sm mb-1">外描边圆角: <span id="strokeRoundnessValue">50</span></label>
+                            <input type="range" id="strokeRoundness" min="0" max="100" value="50"
+                                   class="w-full accent-streetfighter-red">
+                            <p class="text-xs text-gray-400 mt-1">控制外描边的圆角程度</p>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <h3 class="text-lg mb-3 text-streetfighter-light">文字效果设置</h3>
+                        <div class="control-item">
+                            <label class="block text-sm mb-1">文字上下分色</label>
+                            <div class="flex items-center gap-4">
+                                <label class="inline-flex items-center">
+                                    <input type="radio" name="textStyle" value="split" checked class="form-radio text-streetfighter-red">
+                                    <span class="ml-2">上下分色</span>
+                                </label>
+                                <label class="inline-flex items-center">
+                                    <input type="radio" name="textStyle" value="normal" class="form-radio text-streetfighter-red">
+                                    <span class="ml-2">普通</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="control-item" id="splitPositionContainer">
+                            <label class="block text-sm mb-1">分色位置: <span id="splitPositionValue">60</span></label>
+                            <input type="range" id="splitPosition" min="30" max="70" value="60"
+                                   class="w-full accent-streetfighter-red">
+                            <p class="text-xs text-gray-400 mt-1">控制上下分色的分割位置</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 第三列设置项 -->
+            <div class="lg:col-span-1">
+                <div class="control-panel h-full">
+                    <div class="control-group">
+                        <h3 class="text-lg mb-3 text-streetfighter-light">发光效果设置</h3>
+                        <div class="control-item">
+                            <label class="block text-sm mb-1">发光强度: <span id="glowStrengthValue">50</span></label>
+                            <input type="range" id="glowStrength" min="0" max="100" value="50"
+                                   class="w-full accent-streetfighter-red">
+                        </div>
+                        <div class="control-item">
+                            <label class="block text-sm mb-1">发光颜色模式</label>
+                            <select id="glowColorMode" class="w-full bg-gray-700 border border-gray-600 rounded px-3 py-2 text-white">
+                                <option value="single" selected>自定义单色</option>
+                                <option value="gradient">使用外描边渐变</option>
+                            </select>
+                        </div>
+                        <div class="control-item" id="glowColorContainer">
+                            <label class="block text-sm mb-1">发光颜色</label>
+                            <input type="color" id="glowColor" value="#FF4000"
+                                   class="w-full h-10 bg-gray-700 border border-gray-600 rounded">
+                        </div>
+                        <div class="control-item">
+                            <label class="block text-sm mb-1">发光浓度: <span id="glowIntensityValue">50</span></label>
+                            <input type="range" id="glowIntensity" min="1" max="100" value="50"
+                                   class="w-full accent-streetfighter-red">
+                            <p class="text-xs text-gray-400 mt-1">值越大光晕越明显</p>
+                        </div>
+                        <div class="control-item">
+                            <label class="block text-sm mb-1">发光层数: <span id="glowLayersValue">3</span></label>
+                            <input type="range" id="glowLayers" min="1" max="5" value="3" step="1"
+                                   class="w-full accent-streetfighter-red">
+                            <p class="text-xs text-gray-400 mt-1">值越大光晕越广</p>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <h3 class="text-lg mb-3 text-streetfighter-light">背景设置</h3>
+                        <div class="control-item">
+                            <label class="block text-sm mb-1">背景模式</label>
+                            <select id="bgMode" class="w-full bg-gray-700 border border-gray-600 rounded px-3 py-2 text-white">
+                                <option value="image" selected>图片背景</option>
+                                <option value="color">纯色背景</option>
+                            </select>
+                        </div>
+                        <div class="control-item" id="bgColorContainer">
+                            <label class="block text-sm mb-1">背景颜色</label>
+                            <input type="color" id="bgColor" value="#1d3557"
+                                   class="w-full h-10 bg-gray-700 border border-gray-600 rounded">
+                        </div>
+                        <div class="control-item" id="bgImageContainer">
+                            <label class="block text-sm mb-1">选择背景图片</label>
+                            <div class="grid grid-cols-3 gap-2">
+                                <div class="bg-option active" data-bg="bg1">
+                                    <div class="w-full h-16 bg-cover bg-center rounded" style="background-image: url('/img/icon_c.png');"></div>
+                                    <div class="text-xs text-center mt-1">经典</div>
+                                </div>
+                                <div class="bg-option" data-bg="bg2">
+                                    <div class="w-full h-16 bg-cover bg-center rounded" style="background-image: url('/img/icon_m.png');"></div>
+                                    <div class="text-xs text-center mt-1">现代</div>
+                                </div>
+                                <div class="bg-option" data-bg="bg3">
+                                    <div class="w-full h-16 bg-cover bg-center rounded" style="background-image: url('/img/icon_d.png');"></div>
+                                    <div class="text-xs text-center mt-1">动感</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 右侧预览区域 -->
+            <div class="lg:col-span-1 flex flex-col">
+                <div class="streetfighter-bg p-6 rounded-lg flex-grow flex flex-col">
+                    <div class="bg-gray-800 p-4 rounded-lg mb-6 canvas-container overflow-hidden flex-grow">
+                        <div class="preview-wrapper h-full">
+                            <canvas id="previewCanvas" width="400" height="400" class="max-w-full max-h-full"></canvas>
+                        </div>
+                    </div>
+                    <div class="text-center text-gray-400 text-sm mb-4">
+                        预览区域 (点击可刷新)
+                    </div>
+                    <button id="downloadBtn" class="w-full bg-streetfighter-red hover:bg-red-600 text-white font-bold py-3 px-4 rounded transition duration-300 flex items-center justify-center gap-2">
+                        <i class="fa fa-download"></i> 下载图标
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <footer class="mt-12 text-center text-gray-500 text-sm">
+            <p>© 2025 天津格斗游戏同好会 | TFA DESIGNS.</p>
+        </footer>
+    </div>
+
+    <script>
+        // 定义三套预制方案的配置
+        const presets = {
+            classic: {
+                textColor: '#EAAAFF',
+                innerStrokeColor: '#FFFFFF',
+                innerStrokeSize: 8,
+                outerStrokeColor1: '#FC62FE',
+                outerStrokeColor2: '#710BF1',
+                outerStrokeSize: 13,
+                glowStrength: 80,
+                glowColor: '#C158FE',
+                glowIntensity: 85,
+                glowLayers: 4,
+                fontSize: 275,
+                fontWeight: 650,
+                splitPosition: 60,
+                bgImage: 'bg1'
+            },
+            modern: {
+                textColor: '#fed9ac',
+                innerStrokeColor: '#FFFFFF',
+                innerStrokeSize: 8,
+                outerStrokeColor1: '#FFD829',
+                outerStrokeColor2: '#F00000',
+                outerStrokeSize: 13,
+                glowStrength: 80,
+                glowColor: '#FF4000',
+                glowIntensity: 85,
+                glowLayers: 4,
+                fontSize: 275,
+                fontWeight: 650,
+                splitPosition: 60,
+                bgImage: 'bg2'
+            },
+            dynamic: {
+                textColor: '#b9d1f7',
+                innerStrokeColor: '#FFFFFF',
+                innerStrokeSize: 8,
+                outerStrokeColor1: '#8da1f4',
+                outerStrokeColor2: '#3ea1cf',
+                outerStrokeSize: 13,
+                glowStrength: 80,
+                glowColor: '#1c97f0',
+                glowIntensity: 85,
+                glowLayers: 4,
+                fontSize: 275,
+                fontWeight: 650,
+                splitPosition: 60,
+                bgImage: 'bg3'
+            }
+        };
+
+        // 获取DOM元素
+        const canvas = document.getElementById('previewCanvas');
+        const ctx = canvas.getContext('2d');
+        const textInput = document.getElementById('textInput');
+        const textColor = document.getElementById('textColor');
+        const innerStrokeColor = document.getElementById('innerStrokeColor');
+        const innerStrokeSize = document.getElementById('innerStrokeSize');
+        const innerStrokeSizeValue = document.getElementById('innerStrokeSizeValue');
+        const outerStrokeColor1 = document.getElementById('outerStrokeColor1');
+        const outerStrokeColor2 = document.getElementById('outerStrokeColor2');
+        const outerStrokeSize = document.getElementById('outerStrokeSize');
+        const outerStrokeSizeValue = document.getElementById('outerStrokeSizeValue');
+        const glowStrength = document.getElementById('glowStrength');
+        const glowStrengthValue = document.getElementById('glowStrengthValue');
+        const bgColor = document.getElementById('bgColor');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const glowColorMode = document.getElementById('glowColorMode');
+        const glowColorContainer = document.getElementById('glowColorContainer');
+        const glowColor = document.getElementById('glowColor');
+        const fontSize = document.getElementById('fontSize');
+        const fontSizeValue = document.getElementById('fontSizeValue');
+        const bgMode = document.getElementById('bgMode');
+        const bgColorContainer = document.getElementById('bgColorContainer');
+        const bgImageContainer = document.getElementById('bgImageContainer');
+        const bgOptions = document.querySelectorAll('.bg-option');
+        const fontWeight = document.getElementById('fontWeight');
+        const fontWeightValue = document.getElementById('fontWeightValue');
+        const verticalOffset = document.getElementById('verticalOffset');
+        const verticalOffsetValue = document.getElementById('verticalOffsetValue');
+        const fontFamily = document.getElementById('fontFamily');
+        const fontFamilyValue = document.getElementById('fontFamilyValue');
+        const strokeRoundness = document.getElementById('strokeRoundness');
+        const strokeRoundnessValue = document.getElementById('strokeRoundnessValue');
+        const textStyleRadios = document.querySelectorAll('input[name="textStyle"]');
+        const splitPosition = document.getElementById('splitPosition');
+        const splitPositionValue = document.getElementById('splitPositionValue');
+        const splitPositionContainer = document.getElementById('splitPositionContainer');
+        const fontCompensation = document.getElementById('fontCompensation');
+        const fontCompensationValue = document.getElementById('fontCompensationValue');
+        const glowIntensity = document.getElementById('glowIntensity');
+        const glowIntensityValue = document.getElementById('glowIntensityValue');
+        const glowLayers = document.getElementById('glowLayers');
+        const glowLayersValue = document.getElementById('glowLayersValue');
+        const presetOptions = document.querySelectorAll('.preset-option');
+
+        // 字体特定的垂直补偿值
+        const fontSpecificOffsets = {
+            'Arial': 30,
+            'Microsoft YaHei': 22,
+            'SimHei': 0,
+            'SimSun': 0,
+            'KaiTi': 0
+        };
+
+        // 背景图片配置
+        const backgroundImages = {
+            bg1: '/img/icon_c.png',
+            bg2: '/img/icon_m.png',
+            bg3: '/img/icon_d.png'
+        };
+
+        // 存储图片的原始宽高比例
+        const imageRatios = {
+            bg1: 1,  // 默认1:1比例
+            bg2: 1,
+            bg3: 1
+        };
+
+        let selectedBg = 'bg1';
+        let bgImagesLoaded = false;
+        const bgImageElements = {};
+
+        // 应用预制方案
+        function applyPreset(presetName) {
+            const preset = presets[presetName];
+            if (!preset) return;
+
+            // 更新UI控件值
+            textColor.value = preset.textColor;
+            innerStrokeColor.value = preset.innerStrokeColor;
+            innerStrokeSize.value = preset.innerStrokeSize;
+            innerStrokeSizeValue.textContent = preset.innerStrokeSize;
+            outerStrokeColor1.value = preset.outerStrokeColor1;
+            outerStrokeColor2.value = preset.outerStrokeColor2;
+            outerStrokeSize.value = preset.outerStrokeSize;
+            outerStrokeSizeValue.textContent = preset.outerStrokeSize;
+            glowStrength.value = preset.glowStrength;
+            glowStrengthValue.textContent = preset.glowStrength;
+            glowColor.value = preset.glowColor;
+            glowIntensity.value = preset.glowIntensity;
+            glowIntensityValue.textContent = preset.glowIntensity;
+            glowLayers.value = preset.glowLayers;
+            glowLayersValue.textContent = preset.glowLayers;
+            fontSize.value = preset.fontSize;
+            fontSizeValue.textContent = preset.fontSize;
+            fontWeight.value = preset.fontWeight;
+            fontWeightValue.textContent = preset.fontWeight;
+            splitPosition.value = preset.splitPosition;
+            splitPositionValue.textContent = preset.splitPosition;
+
+            // 切换背景图片
+            bgOptions.forEach(option => {
+                if (option.dataset.bg === preset.bgImage) {
+                    option.click(); // 触发点击事件来更新背景
+                }
+            });
+
+            // 确保使用单色调发光
+            glowColorMode.value = 'single';
+            updateGlowColorUI();
+
+            // 确保使用上下分色
+            document.querySelector('input[name="textStyle"][value="split"]').checked = true;
+            updateTextStyleUI();
+
+            // 重新绘制图标
+            drawIcon();
+        }
+
+        // 绑定预制方案点击事件
+        presetOptions.forEach(option => {
+            option.addEventListener('click', () => {
+                // 移除所有选中状态
+                presetOptions.forEach(opt => opt.classList.remove('active'));
+                // 添加当前选中状态
+                option.classList.add('active');
+                // 应用对应的预制方案
+                applyPreset(option.dataset.preset);
+            });
+        });
+
+        // 当字体变化时自动应用特定字体的补偿值
+        fontFamily.addEventListener('change', function () {
+            const selectedFont = fontFamily.value;
+            // 设置字体补偿值
+            const defaultOffset = fontSpecificOffsets[selectedFont] || 0;
+            fontCompensation.value = defaultOffset;
+            fontCompensationValue.textContent = defaultOffset;
+            fontFamilyValue.textContent = selectedFont;
+            drawIcon();
+        });
+
+        // 显示/隐藏发光颜色选择器
+        function updateGlowColorUI() {
+            if (glowColorMode.value === 'single') {
+                if (glowColorContainer) {
+                    glowColorContainer.style.display = 'block';
+                }
+            } else {
+                if (glowColorContainer) {
+                    glowColorContainer.style.display = 'none';
+                }
+            }
+            drawIcon();
+        }
+
+        // 显示/隐藏背景设置选项
+        function updateBgModeUI() {
+            if (bgMode.value === 'color') {
+                bgColorContainer.style.display = 'block';
+                bgImageContainer.style.display = 'none';
+                // 恢复默认画布尺寸
+                setCanvasSize(400, 400);
+            } else {
+                bgColorContainer.style.display = 'none';
+                bgImageContainer.style.display = 'block';
+
+                // 如果背景图片还没加载，初始化加载
+                if (!bgImagesLoaded) {
+                    loadBackgroundImages();
+                    bgImagesLoaded = true;
+                }
+
+                // 根据当前选中的背景图片调整画布尺寸
+                adjustCanvasSizeToImage(selectedBg);
+            }
+            drawIcon();
+        }
+
+        // 显示/隐藏分色位置滑块
+        function updateTextStyleUI() {
+            const selectedStyle = document.querySelector('input[name="textStyle"]:checked').value;
+            if (selectedStyle === 'split') {
+                splitPositionContainer.style.display = 'block';
+            } else {
+                splitPositionContainer.style.display = 'none';
+            }
+            drawIcon();
+        }
+
+        // 加载背景图片并获取其比例
+        function loadBackgroundImages() {
+            // 跟踪已加载的图片数量
+            let loadedCount = 0;
+            const totalImages = Object.keys(backgroundImages).length;
+
+            for (const [key, url] of Object.entries(backgroundImages)) {
+                const img = new Image();
+
+                // 图片加载完成后记录其宽高比例
+                img.onload = function () {
+                    imageRatios[key] = img.height / img.width;
+                    loadedCount++;
+
+                    // 所有图片加载完成后，如果当前是图片背景模式，则调整画布尺寸
+                    if (loadedCount === totalImages && bgMode.value === 'image') {
+                        adjustCanvasSizeToImage(selectedBg);
+                    }
+                };
+
+                img.src = url;
+                bgImageElements[key] = img;
+            }
+        }
+
+        // 根据图片比例调整画布尺寸
+        function adjustCanvasSizeToImage(bgKey) {
+            const ratio = imageRatios[bgKey] || 1;
+            const width = 400;
+            const height = Math.round(width * ratio);
+            setCanvasSize(width, height);
+        }
+
+        // 设置画布尺寸
+        function setCanvasSize(width, height) {
+            canvas.width = width;
+            canvas.height = height;
+
+            // 更新画布容器的高度以匹配画布
+            const canvasContainer = canvas.parentElement.parentElement;
+            canvasContainer.style.height = `${height + 32}px`; // 加上内边距
+
+            // 重新绘制图标
+            drawIcon();
+        }
+
+        // 初始化背景图片UI
+        bgOptions.forEach(option => {
+            option.addEventListener('click', () => {
+                // 移除所有选中状态
+                bgOptions.forEach(opt => opt.classList.remove('active'));
+                // 添加当前选中状态
+                option.classList.add('active');
+                // 更新选中的背景
+                selectedBg = option.dataset.bg;
+
+                // 如果是图片背景模式，则调整画布尺寸
+                if (bgMode.value === 'image') {
+                    adjustCanvasSizeToImage(selectedBg);
+                }
+
+                drawIcon();
+            });
+        });
+
+        // 初始化发光颜色UI
+        updateGlowColorUI();
+        glowColorMode.addEventListener('change', updateGlowColorUI);
+
+        // 初始化背景模式UI
+        updateBgModeUI();
+        bgMode.addEventListener('change', updateBgModeUI);
+
+        // 初始化文字样式UI
+        updateTextStyleUI();
+        textStyleRadios.forEach(radio => {
+            radio.addEventListener('change', updateTextStyleUI);
+        });
+
+        // 更新显示的数值
+        innerStrokeSize.addEventListener('input', () => {
+            innerStrokeSizeValue.textContent = innerStrokeSize.value;
+            drawIcon();
+        });
+
+        outerStrokeSize.addEventListener('input', () => {
+            outerStrokeSizeValue.textContent = outerStrokeSize.value;
+            drawIcon();
+        });
+
+        glowStrength.addEventListener('input', () => {
+            glowStrengthValue.textContent = glowStrength.value;
+            drawIcon();
+        });
+
+        glowIntensity.addEventListener('input', () => {
+            glowIntensityValue.textContent = glowIntensity.value;
+            drawIcon();
+        });
+
+        glowLayers.addEventListener('input', () => {
+            glowLayersValue.textContent = glowLayers.value;
+            drawIcon();
+        });
+
+        fontSize.addEventListener('input', () => {
+            fontSizeValue.textContent = fontSize.value;
+            drawIcon();
+        });
+
+        fontWeight.addEventListener('input', () => {
+            fontWeightValue.textContent = fontWeight.value;
+            drawIcon();
+        });
+
+        verticalOffset.addEventListener('input', () => {
+            verticalOffsetValue.textContent = verticalOffset.value;
+            drawIcon();
+        });
+
+        fontCompensation.addEventListener('input', () => {
+            fontCompensationValue.textContent = fontCompensation.value;
+            drawIcon();
+        });
+
+        fontFamily.addEventListener('change', () => {
+            fontFamilyValue.textContent = fontFamily.value;
+            // 应用字体特定补偿
+            const defaultOffset = fontSpecificOffsets[fontFamily.value] || 0;
+            fontCompensation.value = defaultOffset;
+            fontCompensationValue.textContent = defaultOffset;
+            drawIcon();
+        });
+
+        strokeRoundness.addEventListener('input', () => {
+            strokeRoundnessValue.textContent = strokeRoundness.value;
+            drawIcon();
+        });
+
+        splitPosition.addEventListener('input', () => {
+            splitPositionValue.textContent = splitPosition.value;
+            drawIcon();
+        });
+
+        // 所有输入变化时重新绘制
+        [textInput, textColor, innerStrokeColor, outerStrokeColor1,
+            outerStrokeColor2, bgColor, glowColor].forEach(element => {
+                element.addEventListener('input', drawIcon);
+            });
+
+        // 点击画布重新绘制
+        canvas.addEventListener('click', drawIcon);
+
+        // 下载功能
+        downloadBtn.addEventListener('click', () => {
+            const link = document.createElement('a');
+            link.download = `街霸6图标_${textInput.value}.png`;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        });
+
+        // 将颜色字符串转换为RGBA数组
+        function colorToRGBA(color) {
+            const ctx = document.createElement('canvas').getContext('2d');
+            ctx.fillStyle = color;
+            const rgb = ctx.fillStyle;
+
+            // 解析rgb(r, g, b)或rgba(r, g, b, a)格式
+            const match = rgb.match(/^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+(?:\.\d+)?))?\)$/);
+            if (match) {
+                return [
+                    parseInt(match[1]),
+                    parseInt(match[2]),
+                    parseInt(match[3]),
+                    match[4] ? parseFloat(match[4]) : 1
+                ];
+            }
+            return [0, 0, 0, 0];
+        }
+
+        // 对图像进行腐蚀操作，用于创建内描边
+        function erodeImage(imageData, radius) {
+            const width = imageData.width;
+            const height = imageData.height;
+            const data = imageData.data;
+            const result = ctx.createImageData(width, height);
+            const resultData = result.data;
+
+            // 复制原始数据
+            for (let i = 0; i < data.length; i++) {
+                resultData[i] = data[i];
+            }
+
+            // 对每个像素进行处理
+            for (let y = 0; y < height; y++) {
+                for (let x = 0; x < width; x++) {
+                    const idx = (y * width + x) * 4;
+
+                    // 如果当前像素是不透明的（属于文字）
+                    if (data[idx + 3] > 128) {
+                        let hasTransparentNeighbor = false;
+
+                        // 检查周围指定半径内的像素
+                        for (let dy = -radius; dy <= radius; dy++) {
+                            for (let dx = -radius; dx <= radius; dx++) {
+                                // 计算距离，确保在圆形范围内
+                                if (dx * dx + dy * dy <= radius * radius) {
+                                    const nx = x + dx;
+                                    const ny = y + dy;
+
+                                    // 检查边界
+                                    if (nx >= 0 && nx < width && ny >= 0 && ny < height) {
+                                        const nidx = (ny * width + nx) * 4;
+
+                                        // 如果找到透明像素，说明当前像素在边缘
+                                        if (data[nidx + 3] < 128) {
+                                            hasTransparentNeighbor = true;
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                            if (hasTransparentNeighbor) break;
+                        }
+
+                        // 如果是边缘像素，将其设为透明（侵蚀）
+                        if (hasTransparentNeighbor) {
+                            resultData[idx + 3] = 0; // 设为透明
+                        }
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        // 绘制图标函数
+        function drawIcon() {
+            // 清空画布
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // 获取当前设置值
+            const text = textInput.value || 'A';
+            const textCol = textColor.value;
+            const innerStrokeCol = innerStrokeColor.value;
+            const innerStrokeWidth = parseInt(innerStrokeSize.value);
+            const outerStrokeCol1 = outerStrokeColor1.value;
+            const outerStrokeCol2 = outerStrokeColor2.value;
+            const outerStrokeWidth = parseInt(outerStrokeSize.value);
+            const glow = parseInt(glowStrength.value);
+            const glowIntensityVal = parseInt(glowIntensity.value) / 100; // 转换为0-1的比例
+            const glowLayerCount = parseInt(glowLayers.value);
+            const useGlowGradient = glowColorMode.value === 'gradient';
+            const glowCol = glowColor.value;
+            const currentFontSize = parseInt(fontSize.value);
+            const currentFontWeight = parseInt(fontWeight.value);
+            const currentVerticalOffset = parseInt(verticalOffset.value);
+            const currentFontCompensation = parseInt(fontCompensation.value);
+            const useBgImage = bgMode.value === 'image';
+            const currentFontFamily = fontFamily.value;
+            const roundness = parseInt(strokeRoundness.value) / 100; // 转换为0-1的比例
+            const selectedTextStyle = document.querySelector('input[name="textStyle"]:checked').value;
+            const splitPos = parseInt(splitPosition.value) / 100; // 分色位置，0-1的比例
+
+            // 计算文字应该绘制的中心点
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+
+            // 绘制背景
+            if (useBgImage && bgImageElements[selectedBg]) {
+                // 使用图片背景
+                ctx.drawImage(bgImageElements[selectedBg], 0, 0, canvas.width, canvas.height);
+            } else {
+                // 使用纯色背景
+                ctx.fillStyle = bgColor.value;
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+            }
+
+            // 设置文字基础样式
+            ctx.font = `${currentFontWeight} ${currentFontSize}px ${currentFontFamily}, Arial, sans-serif`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+
+            // 文字绘制位置 = 背景中心 + 垂直偏移 + 字体特定补偿
+            const x = centerX;
+            const y = centerY + currentVerticalOffset + currentFontCompensation;
+
+            // 1. 绘制发光效果
+            if (glow > 0) {
+                // 创建临时画布用于发光效果
+                const glowCanvas = document.createElement('canvas');
+                glowCanvas.width = canvas.width;
+                glowCanvas.height = canvas.height;
+                const glowCtx = glowCanvas.getContext('2d');
+
+                // 根据选择决定使用渐变还是单色
+                let glowStyle;
+                if (useGlowGradient) {
+                    // 使用外描边的渐变
+                    glowStyle = glowCtx.createLinearGradient(x, y - currentFontSize / 2, x, y + currentFontSize / 2);
+                    glowStyle.addColorStop(0, outerStrokeCol1);
+                    glowStyle.addColorStop(1, outerStrokeCol2);
+                } else {
+                    // 使用自定义单色
+                    glowStyle = glowCol;
+                }
+
+                // 绘制多层发光效果，实现更强烈的光晕
+                glowCtx.font = ctx.font;
+                glowCtx.textAlign = ctx.textAlign;
+                glowCtx.textBaseline = ctx.textBaseline;
+
+                // 计算每层光晕的强度衰减
+                const intensityStep = glowIntensityVal / glowLayerCount;
+
+                for (let i = 0; i < glowLayerCount; i++) {
+                    const layerSize = glow * (1 - i / (glowLayerCount * 2));
+                    const layerIntensity = intensityStep * (glowLayerCount - i);
+
+                    glowCtx.save();
+                    glowCtx.fillStyle = glowStyle;
+                    glowCtx.shadowColor = useGlowGradient ? outerStrokeCol1 : glowCol;
+                    glowCtx.shadowBlur = layerSize;
+                    glowCtx.globalAlpha = layerIntensity;
+                    glowCtx.fillText(text, x, y);
+                    glowCtx.restore();
+                }
+
+                // 将发光效果绘制到主画布
+                ctx.drawImage(glowCanvas, 0, 0);
+            }
+
+            // 2. 绘制外描边 (向外扩散)
+            ctx.save();
+
+            // 创建渐变
+            const outerGradient = ctx.createLinearGradient(x, y - currentFontSize / 2, x, y + currentFontSize / 2);
+            outerGradient.addColorStop(0, outerStrokeCol1);
+            outerGradient.addColorStop(1, outerStrokeCol2);
+
+            // 绘制圆角外描边
+            ctx.strokeStyle = outerGradient;
+            ctx.lineWidth = outerStrokeWidth;
+
+            // 启用圆角
+            ctx.lineJoin = 'round';
+            ctx.lineCap = 'round';
+
+            ctx.strokeText(text, x, y);
+            ctx.restore();
+
+            // 3. 绘制内描边 (精确实现每个笔画的内描边)
+            // 3.1 首先绘制完整的内描边颜色文字
+            ctx.save();
+            ctx.fillStyle = innerStrokeCol;
+            ctx.fillText(text, x, y);
+            ctx.restore();
+
+            // 3.2 对原始文字进行侵蚀处理，创建内描边蒙版
+            const tempCanvas = document.createElement('canvas');
+            tempCanvas.width = canvas.width;
+            tempCanvas.height = canvas.height;
+            const tempCtx = tempCanvas.getContext('2d');
+
+            tempCtx.font = ctx.font;
+            tempCtx.textAlign = ctx.textAlign;
+            tempCtx.textBaseline = ctx.textBaseline;
+            tempCtx.fillText(text, x, y);
+
+            const originalImageData = tempCtx.getImageData(0, 0, canvas.width, canvas.height);
+            const erodedImageData = erodeImage(originalImageData, innerStrokeWidth);
+
+            // 3.3 将侵蚀后的文字（内部核心）绘制为文字本体颜色，形成内描边效果
+            tempCtx.clearRect(0, 0, tempCanvas.width, tempCanvas.height);
+            tempCtx.putImageData(erodedImageData, 0, 0);
+
+            // 检查是否使用上下分色模式
+            if (selectedTextStyle === 'split') {
+                // 上下分色模式
+
+                // 创建一个临时画布用于存储上下分色的文字
+                const splitCanvas = document.createElement('canvas');
+                splitCanvas.width = canvas.width;
+                splitCanvas.height = canvas.height;
+                const splitCtx = splitCanvas.getContext('2d');
+
+                // 绘制上分色部分（使用内描边颜色）
+                splitCtx.font = ctx.font;
+                splitCtx.textAlign = ctx.textAlign;
+                splitCtx.textBaseline = ctx.textBaseline;
+                splitCtx.fillStyle = innerStrokeCol;
+
+                // 计算上分色区域的高度
+                const splitY = y - currentFontSize * splitPos;
+
+                // 绘制上分色部分
+                splitCtx.save();
+                splitCtx.beginPath();
+                splitCtx.rect(0, 0, canvas.width, splitY + currentFontSize / 2);
+                splitCtx.clip();
+                splitCtx.fillText(text, x, y);
+                splitCtx.restore();
+
+                // 绘制下分色部分（使用文字颜色）
+                splitCtx.fillStyle = textCol;
+                splitCtx.save();
+                splitCtx.beginPath();
+                splitCtx.rect(0, splitY + currentFontSize / 2, canvas.width, canvas.height);
+                splitCtx.clip();
+                splitCtx.fillText(text, x, y);
+                splitCtx.restore();
+
+                // 应用到侵蚀后的区域
+                tempCtx.globalCompositeOperation = 'source-in';
+                tempCtx.drawImage(splitCanvas, 0, 0);
+                tempCtx.globalCompositeOperation = 'source-over';
+            } else {
+                // 普通模式，直接使用文字颜色
+                tempCtx.globalCompositeOperation = 'source-in';
+                tempCtx.fillStyle = textCol;
+                tempCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
+                tempCtx.globalCompositeOperation = 'source-over';
+            }
+
+            // 将处理好的内描边效果绘制到主画布
+            ctx.drawImage(tempCanvas, 0, 0);
+        }
+
+        // 初始化时设置字体特定补偿值
+        fontCompensation.value = fontSpecificOffsets[fontFamily.value] || 0;
+        fontCompensationValue.textContent = fontCompensation.value;
+
+        // 页面加载完成后自动应用经典预设
+        document.addEventListener('DOMContentLoaded', function () {
+            // 移除所有预制方案的选中状态
+            presetOptions.forEach(opt => opt.classList.remove('active'));
+
+            // 选中经典预设
+            const classicPreset = document.querySelector('.preset-option[data-preset="classic"]');
+            if (classicPreset) {
+                classicPreset.classList.add('active');
+                // 应用经典预设
+                applyPreset('classic');
+            }
+
+            // 初始绘制
+            drawIcon();
+        });
+    </script>
+</body>
+</html>
