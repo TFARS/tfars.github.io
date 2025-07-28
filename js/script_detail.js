@@ -83,6 +83,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 cell0.textContent = tour.date;
                 cell1.textContent = item.standing;
+                if (item.standing < 0) {
+                    cell1.textContent = "小组淘汰";
+                }
                 switch (item.standing) {
                     case 1:
                         cell1.style.backgroundColor = "#CD7F32";
