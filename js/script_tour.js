@@ -19,20 +19,22 @@
                 //const settingObject = JSON.parse(settingData.qualifys);
                 settings = settingData.qualifys;
 
+                console.log(settings);
+
                 jsonData[globalSeason].tournaments.reverse().forEach(function (tour) {
                     addAccordionPanel(tour);
                     checkQualify(tour);
                 });
 
 
-                if (globalSeason == 0) {
+                /*if (globalSeason == 0) {
                     var rule = document.getElementById('rule');
                     rule.innerHTML = "<li>2025年天格会年终总决赛(TFAAC)规则待定，敬请期待！";
 
                     var list = document.getElementById('final');
                     list.style.display = 'none';
                         return;
-                }
+                }*/
 
 
                 for (const player of jsonData[globalSeason].members) {
@@ -40,7 +42,7 @@
                         //finalist[2].push(player.tfaName + "(暂)");
                         let beforeLCQ = ""
                         finalists.set(player.tfaName + beforeLCQ, ["积分榜最高积分（顺延）"]);
-                        finalists_index.set(12, player.tfaName + beforeLCQ);
+                        finalists_index.set(20, player.tfaName + beforeLCQ);
                         boolShunyan = false;
                         break;
                     }
@@ -49,7 +51,7 @@
 
                 var ft = document.getElementById('final');
                 var rows = ft.rows;
-                for (i = 1; i <= 12; i++) {
+                for (i = 1; i <= 20; i++) {
                     console.log(finalists_index.get(i));
                     if (finalists_index.has(i)) {
                         let key = finalists_index.get(i);
@@ -123,6 +125,7 @@ function checkQualify(tour) {
     };
     let name = '';
     let number = settings[tour.id].count;
+    console.log("检查赛事：" + tour.desc + " 类型：" + type + " 名额：" + number);
     let shunyan = settings[tour.id].extension;
     boolShunyan = false;
     for (let i = 1; i <= number; i++) {
