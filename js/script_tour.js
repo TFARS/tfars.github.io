@@ -27,29 +27,29 @@
                 });
 
 
-                /*if (globalSeason == 0) {
+                if (globalSeason == 0) {
                     var rule = document.getElementById('rule');
-                    rule.innerHTML = "<li>2025年天格会年终总决赛(TFAAC)规则待定，敬请期待！";
+                    rule.innerHTML = "<li>2025年天格会年终总决赛(TFAAC)门票来源：<li>历届升龙杯的冠亚军（名额顺延）<li>每月天格会月赛冠军（名额顺延）<li>赛季结束时积分榜最高分玩家（名额顺延）<li>更多门票敬请期待";
 
-                    var list = document.getElementById('final');
-                    list.style.display = 'none';
-                        return;
-                }*/
+                    /*var list = document.getElementById('final');
+                    list.style.display = 'none';*/
+                        //return;
+                }
 
 
                 for (const player of jsonData[globalSeason].members) {
                     if (!banlist.includes(player.tfaName)) {
                         //finalist[2].push(player.tfaName + "(暂)");
-                        let beforeLCQ = ""
-                        finalists.set(player.tfaName + beforeLCQ, ["积分榜最高积分（顺延）"]);
-                        finalists_index.set(20, player.tfaName + beforeLCQ);
+                        let beforeLCQ = "(暂)"
+                        finalists.set(player.tfaName + beforeLCQ, ["当前积分榜最高积分（顺延）"]);
+                        finalists_index.set(finalists.size, player.tfaName + beforeLCQ);
                         boolShunyan = false;
                         break;
                     }
                     boolShunyan = true;
                 };
 
-                var ft = document.getElementById('final');
+                /*var ft = document.getElementById('final');
                 var rows = ft.rows;
                 for (i = 1; i <= 20; i++) {
                     console.log(finalists_index.get(i));
@@ -60,6 +60,27 @@
                         let arrayString = finalists.get(key).join('<br>');
 
                         rows[i].cells[1].innerHTML = arrayString;
+                    }
+                }*/
+
+                var ft = document.getElementById('final');
+                // 清空表格中除表头外的所有行（可选）
+                while (ft.rows.length > 1) {
+                    ft.deleteRow(1);
+                }
+
+                for (i = 1; i <= 20; i++) {
+                    if (finalists_index.has(i)) {
+                        console.log(finalists_index.get(i));
+
+                        var row = ft.insertRow();
+                        var cell1 = row.insertCell(0);
+                        var cell2 = row.insertCell(1);
+
+                        let key = finalists_index.get(i);
+                        cell1.innerText = key;
+                        let arrayString = finalists.get(key).join('<br>');
+                        cell2.innerHTML = arrayString;
                     }
                 }
 
@@ -104,6 +125,7 @@ let boolShunyan = false;
 let banlist = [];
 
 let panelCount = 0; // 用于生成唯一的收纳板ID
+let qualify_count = 0;
 
 function getKeyByValue(object, value) {
     for (let key in object) {
@@ -113,6 +135,7 @@ function getKeyByValue(object, value) {
     }
     return null; // 如果没有找到匹配的键，则返回null
 }
+
 
 function checkQualify(tour) {
     let title = tour.desc.toLowerCase();
@@ -124,16 +147,23 @@ function checkQualify(tour) {
         }
     };
     let name = '';
-    let number = settings[tour.id].count;
+    let number = Object.keys(tour.result).length;;
     console.log("检查赛事：" + tour.desc + " 类型：" + type + " 名额：" + number);
     let shunyan = settings[tour.id].extension;
-    boolShunyan = false;
+    //boolShunyan = false;
+    qualify_count = settings[tour.id].count;
     for (let i = 1; i <= number; i++) {
-        FinalListsPush(tour, i, type, shunyan);
+        if (qualify_count > 0) {
+            FinalListsPush(tour, i, qualify_count, shunyan);
+        }
+        else {
+            return;
+        }
     }
 }
 
-function FinalListsPush(tour, index, type, shunyan) {
+
+function FinalListsPush(tour, index, count, shunyan) {
     let name = getKeyByValue(tour.result, index);
     let honor;
     switch (index) {
@@ -150,29 +180,27 @@ function FinalListsPush(tour, index, type, shunyan) {
             honor = " 第" + index + "名";
             break;
     }
-
-    let number = settings[tour.id].count;
+    //let number = settings[tour.id].count;
     let suffix = "";
-    if (index > number) {
+    let boolShunyan = false;
+    if (index > count) {
         boolShunyan = true;
         suffix = "（顺延）"
     }
-
+    console.log(name + tour.desc + honor);
     if (!banlist.includes(name)) {
         finalists.set(name, [tour.desc + honor + suffix]);
         finalists_index.set(finalists.size, name);
         banlist.push(name);
+        qualify_count--;
         return;
     }
     else {
         if (!boolShunyan) {
             finalists.get(name).push(tour.desc + honor);
         }
-        if (shunyan) {
-            index++;
-            FinalListsPush(tour, index, 5, shunyan);
-        }
     }
+
 }
 
 
