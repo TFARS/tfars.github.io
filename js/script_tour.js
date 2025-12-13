@@ -29,7 +29,7 @@
 
                 if (globalSeason == 0) {
                     var rule = document.getElementById('rule');
-                    rule.innerHTML = "<li>2025年天格会年终总决赛(TFAAC)门票来源：<li>历届升龙杯的冠亚军（名额顺延）<li>每月天格会月赛冠军（名额顺延）<li>赛季结束时积分榜最高分玩家（名额顺延）<li>更多门票敬请期待";
+                    rule.innerHTML = "<li>2025年天格会年终总决赛(TFAAC)门票来源：<li>历届升龙杯的冠亚军（名额顺延）<li>每月天格会月赛冠军（名额顺延）<li>赛季结束时积分榜最高分玩家（名额顺延）<li>TFAAC LCQ 冠军";
 
                     /*var list = document.getElementById('final');
                     list.style.display = 'none';*/
