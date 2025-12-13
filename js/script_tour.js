@@ -40,7 +40,7 @@
                 for (const player of jsonData[globalSeason].members) {
                     if (!banlist.includes(player.tfaName)) {
                         //finalist[2].push(player.tfaName + "(暂)");
-                        let beforeLCQ = "(暂)"
+                        let beforeLCQ = ""
                         finalists.set(player.tfaName + beforeLCQ, ["当前积分榜最高积分（顺延）"]);
                         finalists_index.set(finalists.size, player.tfaName + beforeLCQ);
                         boolShunyan = false;
