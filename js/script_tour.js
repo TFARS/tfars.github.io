@@ -84,7 +84,14 @@
                     }
                 }
 
+                var row = ft.insertRow();
+                var cell1 = row.insertCell(0);
+                var cell2 = row.insertCell(1);
 
+                //let key = finalists_index.get(i);
+                cell1.innerText = "待定";
+                //let arrayString = finalists.get(key).join('<br>');
+                cell2.innerHTML = 'TFAAC LCQ 冠军<br>';
             });
 
 
@@ -126,6 +133,7 @@ let banlist = [];
 
 let panelCount = 0; // 用于生成唯一的收纳板ID
 let qualify_count = 0;
+
 
 function getKeyByValue(object, value) {
     for (let key in object) {
