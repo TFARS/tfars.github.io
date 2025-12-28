@@ -1,0 +1,130 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:700" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style_detail.css">
+    <link rel="stylesheet" href="../css/style_detail_paging.css">
+    <link rel="stylesheet" href="../css/style_tab.css">
+    <script type="text/javascript" src="js/loader.js"></script>
+    <script type="text/javascript" src="js/cdmc_detail_paging.js"></script>
+    <title>详细信息</title>
+</head>
+<body>
+    <div class="tab-section">
+        <div class="tab-container">
+            <a href="rank.html" class="tab" data-tab="tab1">积分榜</a>
+            <a href="detail.html" class="tab" data-tab="tab2">详细信息</a>
+            <a href="tournaments.html" class="tab" data-tab="tab3">赛事信息</a>
+            <div class="dropdown-tab" data-tab="tab4">
+                <a id="season">赛季切换</a>
+                <div class="dropdown">
+                    <a class="dropdown-item" onclick="changeSeason(0)">最新赛季</a>
+                    <!--<a class="dropdown-item" onclick="changeSeason(2024)">2024赛季</a>-->
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="section">
+            <div class="info-section">
+                <div class="page-controls" id="page-controls">
+                    <button id="prev-page" disabled>前一页</button>
+                    <input type="number" id="goto-page" min="1" placeholder="跳转到页面">
+                    <button id="goto-btn">Go</button>
+                    <button id="next-page">后一页</button>
+                </div>
+            </div>
+            <h2 class="info-container">基础信息</h2>
+            <ul class="info-list">
+                <li id="index" class="tfa-index"></li>
+                <li id="name" class="tfa-name"></li>
+            </ul>
+            <div class="info-area">
+                <ul class="info-list left-info">
+                    <li class="info-item">
+                        <span class="item-name">比赛场数</span>
+                        <span class="item-text" id="matches"></span>
+                    </li>
+                    <li class="info-item">
+                        <span class="item-name">比赛胜场</span>
+                        <span class="item-text" id="wins"></span>
+                    </li>
+                    <li class="info-item">
+                        <span class="item-name">比赛胜率</span>
+                        <span class="item-text" id="winRate"></span>
+                    </li>
+                    <li class="info-item">
+                        <span class="item-name">参赛次数</span>
+                        <span class="item-text" id="tours"></span>
+                    </li>
+                    <li class="info-item">
+                        <span class="item-name">上次参赛</span>
+                        <span class="item-text" id="lastTour"></span>
+                    </li>
+                    <li class="info-item">
+                        <span class="item-name">上次名次</span>
+                        <span class="item-text" id="lastStanding"></span>
+                    </li>
+                </ul>
+                <ul class="info-list right-info">
+                    <li class="info-rank">
+                        <span class="rank-name">当前排名</span>
+                        <span class="rank-text" id="rank"> </span>
+                    </li>
+                    <li class="info-rank">
+                        <span class="rank-name">当前积分</span>
+                        <span class="rank-text" id="mmr"> </span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section" id="history-honor">
+            <h2>历史荣誉</h2>
+        </div>
+
+
+        <div class="section">
+            <h2>参赛记录</h2>
+            <table class="tour-table" id="tourTable">
+                <tr>
+                    <th>时间</th>
+                    <th>成绩</th>
+                    <th>赛事</th>
+                    <th>最后之敌</th>
+                    <th>比分</th>
+                </tr>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section">
+            <h2>积分变化</h2>
+            <div id="chart-area">
+                <div id="donutchart">
+                    <!-- 替换为实际积分曲线图链接 -->
+                </div>
+            </div>
+        </div>
+
+        <div class="section_rival">
+            <h2>交手记录</h2>
+            <table class="record-table" id="rivalTable">
+                <tr>
+                    <th>对手</th>
+                    <th>交手次数</th>
+                    <th>胜率</th>
+                </tr>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</body>
+</html>
+<script src="js/cdmc_detail.js"></script>
+<script type="text/javascript" src="js/cdmc_tab.js" charset="utf-8"></script>

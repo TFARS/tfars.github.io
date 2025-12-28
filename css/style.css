@@ -20,6 +20,14 @@ body {
     padding: 10px;
 }
 
+footer {
+    text-align: center;
+    margin-top: 0px;
+    padding: 20px;
+    color: #a67fd6;
+    font-size: 0.9rem;
+}
+
 input[type=text], textarea, input[type=email], input[type=password], input[type=tel], input[type=url], input[type=search], input[type=date] {
     padding: 10px;
     width: 100%;
@@ -99,8 +107,8 @@ input[type=text], textarea, input[type=email], input[type=password], input[type=
     width: 100%;
     text-align: left;
     border-collapse: collapse;
-    word-wrap: break-word; /* »òÊ¹ÓÃ overflow-wrap: break-word; */
-    table-layout: auto; /* Í¨³£Ê¹ÓÃauto£¬µ«fixedÔÚÄ³Ğ©Çé¿öÏÂÒ²ÓĞÓÃ */
+    word-wrap: break-word; /* æˆ–ä½¿ç”¨ overflow-wrap: break-word; */
+    table-layout: auto; /* é€šå¸¸ä½¿ç”¨autoï¼Œä½†fixedåœ¨æŸäº›æƒ…å†µä¸‹ä¹Ÿæœ‰ç”¨ */
 }
 
     .leaderboard-results thead th {
@@ -115,7 +123,7 @@ input[type=text], textarea, input[type=email], input[type=password], input[type=
         padding: 10px min(2vw,25px);
         background: #1a1a1a;
         border-bottom: 5px solid #232323;
-        word-wrap: break-word; /* È·±£³¤ÄÚÈİ»»ĞĞ */
+        word-wrap: break-word; /* ç¡®ä¿é•¿å†…å®¹æ¢è¡Œ */
     }
 
         .leaderboard-results tbody td:nth-of-type(7) {

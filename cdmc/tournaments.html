@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>赛事信息</title>
+    <link rel="stylesheet" href="../css/style_tour.css">
+    <link rel="stylesheet" href="../css/style_tab.css">
+</head>
+<body>
+    <div class="tab-section">
+        <div class="tab-container">
+            <a href="rank.html" class="tab" data-tab="tab1">积分榜</a>
+            <a href="detail.html" class="tab" data-tab="tab2">详细信息</a>
+            <a href="tournaments.html" class="tab" data-tab="tab3">赛事信息</a>
+            <div class="dropdown-tab" data-tab="tab4">
+                <a id="season">赛季切换</a>
+                <div class="dropdown">
+                    <a class="dropdown-item" onclick="changeSeason(0)">最新赛季</a>
+                    <!--<a class="dropdown-item" onclick="changeSeason(2024)">2024赛季</a>-->
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <section class="section">
+            <section class="title">
+                <p>赛事记录</p>
+            </section>
+            <section class="tour-area" id="accordionContainer">
+            </section>
+        </section>
+    </div>
+
+
+
+    <script src="/js/jquery-3.7.1.min.js"></script>
+    <script type="text/javascript" src="js/cdmc_tour.js" charset="utf-8"></script>
+    <script type="text/javascript" src="js/cdmc_tab.js" charset="utf-8"></script>
+
+</body>
+</html>

@@ -27,16 +27,6 @@
                 });
 
 
-                if (globalSeason == 0) {
-                    var rule = document.getElementById('rule');
-                    rule.innerHTML = "<li>2025年天格会年终总决赛(TFAAC)门票来源：<li>历届升龙杯的冠亚军（名额顺延）<li>每月天格会月赛冠军（名额顺延）<li>赛季结束时积分榜最高分玩家（名额顺延）<li>TFAAC LCQ 冠军";
-
-                    /*var list = document.getElementById('final');
-                    list.style.display = 'none';*/
-                        //return;
-                }
-
-
                 for (const player of jsonData[globalSeason].members) {
                     if (!banlist.includes(player.tfaName)) {
                         //finalist[2].push(player.tfaName + "(暂)");
@@ -84,14 +74,24 @@
                     }
                 }
 
-                var row = ft.insertRow();
-                var cell1 = row.insertCell(0);
-                var cell2 = row.insertCell(1);
+                if (globalSeason == 0) {
+                    var rule = document.getElementById('rule');
+                    rule.innerHTML = "<li>2025年天格会年终总决赛(TFAAC)门票来源：<li>历届升龙杯的冠亚军（名额顺延）<li>每月天格会月赛冠军（名额顺延）<li>赛季结束时积分榜最高分玩家（名额顺延）<li>TFAAC LCQ 冠军";
 
-                //let key = finalists_index.get(i);
-                cell1.innerText = "待定";
-                //let arrayString = finalists.get(key).join('<br>');
-                cell2.innerHTML = 'TFAAC LCQ 冠军<br>';
+
+                    var row = ft.insertRow();
+                    var cell1 = row.insertCell(0);
+                    var cell2 = row.insertCell(1);
+
+                    //let key = finalists_index.get(i);
+                    cell1.innerText = "zzZ";
+                    //let arrayString = finalists.get(key).join('<br>');
+                    cell2.innerHTML = 'TFAAC LCQ 冠军<br>';
+                    /*var list = document.getElementById('final');
+                    list.style.display = 'none';*/
+                    //return;
+                }
+
             });
 
 
