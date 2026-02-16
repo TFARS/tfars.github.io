@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>街霸6风格图标生成器 - TFA版</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
@@ -80,10 +80,10 @@
         }
     </style>
 </head>
-<body class="bg-gray-900 text-white min-h-screen">
+<body class="bg-gray-900 text-white min-h-screen pb-10">
     <div class="container mx-auto px-4 py-8 max-w-7xl">
         <header class="text-center mb-8">
-            <h1 class="text-[clamp(1.8rem,5vw,2.8rem)] font-bold mb-1 text-streetfighter-light">
+            <h1 class="text-[clamp(1.5rem,5vw,2.8rem)] font-bold mb-1 text-streetfighter-light">
                 <span class="text-streetfighter-red">街霸6</span>操作风格图标生成器
             </h1>
             <p class="text-gray-400 text-sm italic">made by 天格会整活部</p>
@@ -91,14 +91,14 @@
 
         <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
             <div class="lg:col-span-1">
-                <div class="control-panel flex flex-col gap-6">
+                <div class="control-panel flex flex-col gap-5">
                     <div class="flex justify-center py-2 border-b border-gray-700">
-                        <img src="/img/logo_pixel.png" alt="TFA Logo" class="h-16 object-contain opacity-90 hover:opacity-100 transition-opacity" onerror="this.src='https://placehold.co/200x80/1d3557/a8dadc?text=TFA+LOGO'">
+                        <img src="/img/logo_pixel.png" alt="TFA Logo" class="h-16 object-contain opacity-90" onerror="this.src='https://placehold.co/200x80/1d3557/a8dadc?text=TFA+LOGO'">
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium mb-2 text-gray-300">输入文字 (支持换行/空格)</label>
-                        <textarea id="textInput" maxlength="100" rows="4"
+                        <label class="block text-sm font-medium mb-2 text-gray-300">输入文字 (回车换行)</label>
+                        <textarea id="textInput" maxlength="100" rows="3"
                                   class="w-full bg-gray-900 border border-gray-600 rounded px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-streetfighter-red resize-none font-bold"
                                   placeholder="在此输入文字...">街霸6&#13;图标生成</textarea>
                     </div>
@@ -122,10 +122,10 @@
                     </div>
 
                     <div class="flex flex-col gap-3 pt-2">
-                        <button id="downloadBtn" class="w-full bg-streetfighter-red hover:bg-red-600 text-white font-bold py-3 rounded transition flex items-center justify-center gap-2 shadow-lg">
+                        <button id="downloadBtn" class="w-full bg-streetfighter-red hover:bg-red-600 text-white font-bold py-3 rounded transition flex items-center justify-center gap-2 shadow-lg active:scale-95">
                             <i class="fa fa-download"></i> 高清大图 (100%)
                         </button>
-                        <button id="downloadSmallBtn" class="w-full bg-gray-600 hover:bg-gray-500 text-white font-bold py-3 rounded transition flex items-center justify-center gap-2">
+                        <button id="downloadSmallBtn" class="w-full bg-gray-600 hover:bg-gray-500 text-white font-bold py-3 rounded transition flex items-center justify-center gap-2 active:scale-95">
                             <i class="fa fa-file-image-o"></i> 分享小图 (25%)
                         </button>
                     </div>
@@ -133,11 +133,12 @@
             </div>
 
             <div class="lg:col-span-3 flex flex-col h-full">
-                <div class="streetfighter-bg p-4 md:p-6 rounded-lg flex-grow flex flex-col min-h-[500px]">
+                <div class="streetfighter-bg p-4 md:p-6 rounded-lg flex-grow flex flex-col min-h-[400px]">
                     <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-streetfighter-light font-bold">实时预览预览 (1:1 比例排版)</h3>
+                        <h3 class="text-streetfighter-light font-bold flex items-center gap-2">
+                            <i class="fa fa-eye"></i> 实时预览 (1:1 排版)
+                        </h3>
                     </div>
-
                     <div id="previewContainer" class="bg-black/40 p-4 rounded-lg flex-grow overflow-auto">
                         <div id="gridContainer" class="flex flex-col gap-2"></div>
                     </div>
@@ -151,65 +152,11 @@
     </div>
 
     <script>
-        // --- 此处为您要求的预制方案配置，您可以直接在此修改参数 ---
+        // 完全恢复之前的配置参数
         const presets = {
-            classic: {
-                textColor: '#EAAAFF',
-                innerStrokeColor: '#FFFFFF',
-                innerStrokeSize: 8,
-                outerStrokeColor1: '#FC62FE',
-                outerStrokeColor2: '#710BF1',
-                outerStrokeSize: 13,
-                glowStrength: 80,
-                glowColor: '#C158FE',
-                glowIntensity: 85,
-                glowLayers: 4,
-                fontSize: 275,
-                fontWeight: 650,
-                splitPosition: 60,
-                fontFamily: 'Arial',
-                fontCompensation: 30, // 垂直校准补偿
-                verticalOffset: 0,
-                bgImage: 'bg1'
-            },
-            modern: {
-                textColor: '#fed9ac',
-                innerStrokeColor: '#FFFFFF',
-                innerStrokeSize: 8,
-                outerStrokeColor1: '#FFD829',
-                outerStrokeColor2: '#F00000',
-                outerStrokeSize: 13,
-                glowStrength: 90,
-                glowColor: '#FF4000',
-                glowIntensity: 100,
-                glowLayers: 5,
-                fontSize: 275,
-                fontWeight: 650,
-                splitPosition: 60,
-                fontFamily: 'Arial',
-                fontCompensation: 30,
-                verticalOffset: 0,
-                bgImage: 'bg2'
-            },
-            dynamic: {
-                textColor: '#b9d1f7',
-                innerStrokeColor: '#FFFFFF',
-                innerStrokeSize: 8,
-                outerStrokeColor1: '#8da1f4',
-                outerStrokeColor2: '#3ea1cf',
-                outerStrokeSize: 13,
-                glowStrength: 80,
-                glowColor: '#1c97f0',
-                glowIntensity: 85,
-                glowLayers: 4,
-                fontSize: 275,
-                fontWeight: 650,
-                splitPosition: 60,
-                fontFamily: 'Arial',
-                fontCompensation: 30,
-                verticalOffset: 0,
-                bgImage: 'bg3'
-            }
+            classic: { textColor: '#EAAAFF', innerStrokeColor: '#FFFFFF', innerStrokeSize: 8, outerStrokeColor1: '#FC62FE', outerStrokeColor2: '#710BF1', outerStrokeSize: 13, glowStrength: 80, glowColor: '#C158FE', glowIntensity: 85, glowLayers: 4, fontSize: 275, fontWeight: 650, splitPosition: 60, fontFamily: 'Arial', fontCompensation: 30, verticalOffset: 0, bgImage: 'bg1' },
+            modern: { textColor: '#fed9ac', innerStrokeColor: '#FFFFFF', innerStrokeSize: 8, outerStrokeColor1: '#FFD829', outerStrokeColor2: '#F00000', outerStrokeSize: 13, glowStrength: 80, glowColor: '#FF4000', glowIntensity: 85, glowLayers: 4, fontSize: 275, fontWeight: 650, splitPosition: 60, fontFamily: 'Arial', fontCompensation: 30, verticalOffset: 0, bgImage: 'bg2' },
+            dynamic: { textColor: '#b9d1f7', innerStrokeColor: '#FFFFFF', innerStrokeSize: 8, outerStrokeColor1: '#8da1f4', outerStrokeColor2: '#3ea1cf', outerStrokeSize: 13, glowStrength: 80, glowColor: '#1c97f0', glowIntensity: 85, glowLayers: 4, fontSize: 275, fontWeight: 650, splitPosition: 60, fontFamily: 'Arial', fontCompensation: 30, verticalOffset: 0, bgImage: 'bg3' }
         };
 
         const textInput = document.getElementById('textInput');
@@ -225,6 +172,7 @@
         let bgImagesLoaded = false;
         const bgImageElements = {};
         const imageRatios = { bg1: 1, bg2: 1, bg3: 1 };
+        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
         function loadBackgroundImages() {
             let loadedCount = 0;
@@ -242,7 +190,6 @@
             });
         }
 
-        // 侵蚀算法：用于精确复刻原版内描边逻辑
         function erodeImage(imageData, radius) {
             const width = imageData.width, height = imageData.height, data = imageData.data;
             const result = new ImageData(new Uint8ClampedArray(data), width, height);
@@ -269,21 +216,29 @@
             return result;
         }
 
-        function generateSingleCharCanvas(char, width, height) {
+        function generateSingleCharCanvas(char, width, height, isForDownload = false) {
             const canvas = document.createElement('canvas');
-            canvas.width = width; canvas.height = height;
+            const dpr = isForDownload ? 1 : (window.devicePixelRatio || 1);
+            canvas.width = width * dpr;
+            canvas.height = height * dpr;
             const ctx = canvas.getContext('2d');
-            const config = presets[currentPreset];
-            const x = width / 2, y = height / 2 + (config.verticalOffset || 0) + (config.fontCompensation || 0);
+            ctx.scale(dpr, dpr);
 
-            // 1. 绘制底图
+            const config = presets[currentPreset];
+
+            // 【核心修正1】恢复 middle 基线逻辑，通过 mobileY 仅在移动端微调中心点
+            const mobileY = isMobile ? -8 : 0;
+            const x = width / 2;
+            const y = height / 2 + config.verticalOffset + config.fontCompensation + mobileY;
+
             if (bgImageElements[selectedBg]) ctx.drawImage(bgImageElements[selectedBg], 0, 0, width, height);
             if (!char.trim() || char === '\n') return canvas;
 
             ctx.font = `${config.fontWeight} ${config.fontSize}px ${config.fontFamily}, Arial, sans-serif`;
-            ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle'; // 恢复为最稳定的 middle
 
-            // 2. 绘制发光 (Glow Layers)
+            // 1. 发光层
             if (config.glowStrength > 0) {
                 const intensityStep = (config.glowIntensity / 100) / config.glowLayers;
                 for (let i = 0; i < config.glowLayers; i++) {
@@ -295,17 +250,16 @@
                 }
             }
 
-            // 3. 绘制外描边 (Outer Stroke)
+            // 2. 【核心修正2】恢复渐变坐标，确保外描边颜色和原版一致
             ctx.save();
             const grad = ctx.createLinearGradient(x, y - config.fontSize / 2, x, y + config.fontSize / 2);
             grad.addColorStop(0, config.outerStrokeColor1); grad.addColorStop(1, config.outerStrokeColor2);
             ctx.strokeStyle = grad; ctx.lineWidth = config.outerStrokeSize; ctx.lineJoin = 'round';
             ctx.strokeText(char, x, y); ctx.restore();
 
-            // 4. 绘制内描边层 (核心逻辑：隔离计算)
+            // 3. 内层逻辑
             ctx.save(); ctx.fillStyle = config.innerStrokeColor; ctx.fillText(char, x, y); ctx.restore();
 
-            // 创建侵蚀层
             const temp = document.createElement('canvas'); temp.width = width; temp.height = height;
             const tCtx = temp.getContext('2d');
             tCtx.font = ctx.font; tCtx.textAlign = 'center'; tCtx.textBaseline = 'middle';
@@ -313,43 +267,40 @@
             const eroded = erodeImage(tCtx.getImageData(0, 0, width, height), config.innerStrokeSize);
             tCtx.clearRect(0, 0, width, height); tCtx.putImageData(eroded, 0, 0);
 
-            // 创建分色层
             const split = document.createElement('canvas'); split.width = width; split.height = height;
             const sCtx = split.getContext('2d');
             sCtx.font = ctx.font; sCtx.textAlign = 'center'; sCtx.textBaseline = 'middle';
+
+            // 【核心修正3】恢复分色位置计算，确保切割线完美
             const splitPos = y - config.fontSize * (config.splitPosition / 100);
 
             sCtx.save(); sCtx.beginPath(); sCtx.rect(0, 0, width, splitPos + config.fontSize / 2); sCtx.clip();
             sCtx.fillStyle = config.innerStrokeColor; sCtx.fillText(char, x, y); sCtx.restore();
-
             sCtx.save(); sCtx.beginPath(); sCtx.rect(0, splitPos + config.fontSize / 2, width, height); sCtx.clip();
             sCtx.fillStyle = config.textColor; sCtx.fillText(char, x, y); sCtx.restore();
 
-            // 混合：内侵蚀效果
             tCtx.globalCompositeOperation = 'source-in'; tCtx.drawImage(split, 0, 0);
             ctx.drawImage(temp, 0, 0);
-
             return canvas;
         }
 
+        // 下面逻辑保持稳定
         function updatePreview() {
             if (!bgImagesLoaded) return;
             gridContainer.innerHTML = '';
             const lines = textInput.value.split('\n');
             const baseWidth = 400, ratio = imageRatios[selectedBg], baseHeight = Math.round(baseWidth * ratio);
-
             lines.forEach(line => {
                 const rowDiv = document.createElement('div');
                 rowDiv.className = "grid grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-2 mb-2";
                 const chars = line.split('');
-                if (chars.length === 0) rowDiv.className = "h-10";
-
+                if (chars.length === 0) rowDiv.classList.add("h-8");
                 chars.forEach(char => {
                     const charWrapper = document.createElement('div');
                     if (char === ' ') {
                         charWrapper.className = "aspect-square";
                     } else {
-                        const canvas = generateSingleCharCanvas(char, baseWidth, baseHeight);
+                        const canvas = generateSingleCharCanvas(char, baseWidth, baseHeight, false);
                         canvas.className = 'char-canvas';
                         charWrapper.appendChild(canvas);
                     }
@@ -360,7 +311,8 @@
         }
 
         async function doDownload(scale = 1) {
-            const lines = textInput.value.split('\n');
+            const rawText = textInput.value;
+            const lines = rawText.split('\n');
             const baseW = 400, ratio = imageRatios[selectedBg], baseH = Math.round(baseW * ratio), gap = 12;
             let maxChars = 0;
             lines.forEach(l => maxChars = Math.max(maxChars, l.length));
@@ -372,54 +324,37 @@
             const master = document.createElement('canvas');
             master.width = finalW; master.height = finalH;
             const mCtx = master.getContext('2d');
-            mCtx.scale(scale, scale);
 
             lines.forEach((line, r) => {
                 line.split('').forEach((char, c) => {
                     if (char !== ' ') {
-                        const charCanvas = generateSingleCharCanvas(char, baseW, baseH);
-                        mCtx.drawImage(charCanvas, c * (baseW + gap), r * (baseH + gap));
+                        const charCanvas = generateSingleCharCanvas(char, baseW, baseH, true);
+                        mCtx.drawImage(charCanvas, 0, 0, baseW, baseH, c * (baseW + gap) * scale, r * (baseH + gap) * scale, baseW * scale, baseH * scale);
                     }
                 });
             });
 
             const link = document.createElement('a');
-            const fileName = textInput.value.trim().replace(/\n/g, '_').substring(0, 10) || 'icon';
-            link.download = `tfaicon_${fileName}.png`;
+            link.download = `tfaicon_${Date.now()}.png`;
             link.href = master.toDataURL('image/png');
             link.click();
-        }
-
-        // 切换风格逻辑（自动切换对应背景）
-        function switchPreset(presetName) {
-            currentPreset = presetName;
-            const config = presets[presetName];
-
-            // 自动更新背景图选择
-            if (config.bgImage) {
-                selectedBg = config.bgImage;
-                bgOptions.forEach(opt => {
-                    opt.classList.toggle('active', opt.dataset.bg === selectedBg);
-                });
-            }
-
-            presetOptions.forEach(opt => opt.classList.toggle('active', opt.dataset.preset === presetName));
-            updatePreview();
         }
 
         textInput.addEventListener('input', updatePreview);
         downloadBtn.addEventListener('click', () => doDownload(1));
         downloadSmallBtn.addEventListener('click', () => doDownload(0.25));
-
-        presetOptions.forEach(opt => opt.addEventListener('click', () => switchPreset(opt.dataset.preset)));
-
-        bgOptions.forEach(opt => opt.addEventListener('click', () => {
-            selectedBg = opt.dataset.bg;
-            bgOptions.forEach(o => o.classList.remove('active'));
-            opt.classList.add('active');
+        presetOptions.forEach(opt => opt.addEventListener('click', () => {
+            currentPreset = opt.dataset.preset;
+            selectedBg = presets[currentPreset].bgImage;
+            presetOptions.forEach(o => o.classList.toggle('active', o === opt));
+            bgOptions.forEach(o => o.classList.toggle('active', o.dataset.bg === selectedBg));
             updatePreview();
         }));
-
+        bgOptions.forEach(opt => opt.addEventListener('click', () => {
+            selectedBg = opt.dataset.bg;
+            bgOptions.forEach(o => o.classList.toggle('active', o === opt));
+            updatePreview();
+        }));
         window.addEventListener('load', loadBackgroundImages);
     </script>
 </body>
