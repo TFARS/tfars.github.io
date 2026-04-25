@@ -1,335 +1,201 @@
-﻿fetch('/data/data.json')
-    .then(response => {
-        if (response.ok) {
-            return response.json(); // 将响应转换为JSON
-        }
-        throw new Error('Network response was not ok.');
-    })
-    .then(jsonData => {
-        fetch('/data/settings.json')
-            .then(response => {
-                if (response.ok) {
-                    return response.json(); // 将响应转换为JSON
-                }
-                throw new Error('Network response was not ok.');
-            })
-            .then(settingData => {
-                //console.log(settingData.qualifys[14310995]);
-                //settingData.qualifys[]
-                //const settingObject = JSON.parse(settingData.qualifys);
-                settings = settingData.qualifys;
-
-                console.log(settings);
-
-                jsonData[globalSeason].tournaments.reverse().forEach(function (tour) {
-                    addAccordionPanel(tour);
-                    checkQualify(tour);
-                });
-
-
-                for (const player of jsonData[globalSeason].members) {
-                    if (!banlist.includes(player.tfaName)) {
-                        //finalist[2].push(player.tfaName + "(暂)");
-                        let beforeLCQ = ""
-                        finalists.set(player.tfaName + beforeLCQ, ["当前积分榜最高积分（顺延）"]);
-                        finalists_index.set(finalists.size, player.tfaName + beforeLCQ);
-                        boolShunyan = false;
-                        break;
-                    }
-                    boolShunyan = true;
-                };
-
-                /*var ft = document.getElementById('final');
-                var rows = ft.rows;
-                for (i = 1; i <= 20; i++) {
-                    console.log(finalists_index.get(i));
-                    if (finalists_index.has(i)) {
-                        let key = finalists_index.get(i);
-                        rows[i].cells[0].innerText = key;
-
-                        let arrayString = finalists.get(key).join('<br>');
-
-                        rows[i].cells[1].innerHTML = arrayString;
-                    }
-                }*/
-
-                var ft = document.getElementById('final');
-                // 清空表格中除表头外的所有行（可选）
-                while (ft.rows.length > 1) {
-                    ft.deleteRow(1);
-                }
-
-                for (i = 1; i <= 20; i++) {
-                    if (finalists_index.has(i)) {
-                        console.log(finalists_index.get(i));
-
-                        var row = ft.insertRow();
-                        var cell1 = row.insertCell(0);
-                        var cell2 = row.insertCell(1);
-
-                        let key = finalists_index.get(i);
-                        cell1.innerText = key;
-                        let arrayString = finalists.get(key).join('<br>');
-                        cell2.innerHTML = arrayString;
-                    }
-                }
-
-                if (globalSeason == 0) {
-                    var rule = document.getElementById('rule');
-                    rule.innerHTML = "<li>2025年天格会年终总决赛(TFAAC)门票来源：<li>历届升龙杯的冠亚军（名额顺延）<li>每月天格会月赛冠军（名额顺延）<li>赛季结束时积分榜最高分玩家（名额顺延）<li>TFAAC LCQ 冠军";
-
-
-                    var row = ft.insertRow();
-                    var cell1 = row.insertCell(0);
-                    var cell2 = row.insertCell(1);
-
-                    //let key = finalists_index.get(i);
-                    cell1.innerText = "zzZ";
-                    //let arrayString = finalists.get(key).join('<br>');
-                    cell2.innerHTML = 'TFAAC LCQ 冠军<br>';
-                    /*var list = document.getElementById('final');
-                    list.style.display = 'none';*/
-                    //return;
-                }
-
-            });
-
-
-    })
-    .catch(error => {
-        if (error === 'INTERRUPTED') {
-            console.log('待定！');
-        }
-        else {
-            console.error('There has been a problem with your fetch operation:', error);
-        }
-    });
-
-
+﻿// js/script_tour.js
+// 状态变量
 let checks = [
-    { text: "DPCUP", value: 1 }, // 如果包含 "keyword1"，则设置值为 1
-    { text: "月赛", value: 2 },  // 如果包含 "example"，则设置值为 2
-    { text: "初中级", value: 3 },  // 如果都不包含，则默认值为 3
-    { text: "", value: 4 },  // 如果都不包含，则默认值为 4
-    { text: "升龙杯", value: 1 }   // 如果都不包含，则默认值为 3
+    { text: "DPCUP", value: 1 },
+    { text: "月赛", value: 2 },
+    { text: "初中级", value: 3 },
+    { text: "", value: 4 },
+    { text: "升龙杯", value: 1 }
 ];
-
-let settings;
-
-let finalist = [
-    [],//升龙杯
-    [],//月赛
-    [],//积分
-    ["（待定中）"],//LCQ
-    [],//月赛顺延
-];
-
 const finalists = new Map();
 const finalists_index = new Map();
-const final_count = 0; //入选数量
+let banlist = [];
+let panelCount = 0;
+let qualify_count = 0;
 let boolShunyan = false;
 
-let banlist = [];
-
-let panelCount = 0; // 用于生成唯一的收纳板ID
-let qualify_count = 0;
-
-
-function getKeyByValue(object, value) {
-    for (let key in object) {
-        if (object.hasOwnProperty(key) && object[key] === value) {
-            return key; // 找到第一个匹配的键后立即返回
+document.addEventListener('DOMContentLoaded', () => {
+    const checkData = setInterval(() => {
+        if (AppState.isDataLoaded) {
+            clearInterval(checkData);
+            initTournaments();
         }
+    }, 50);
+});
+
+async function initTournaments() {
+    const seasonData = getCurrentSeasonData();
+    const settings = AppState.settings.qualifys;
+    if (!seasonData) return;
+
+    // 1. 处理规则显示（兼容旧逻辑）
+    if (AppState.currentSeason === 0) {
+        const rule = document.getElementById('rule');
+        rule.innerHTML = "<li>2025年天格会年终总决赛(TFAAC)门票来源：<li>历届升龙杯的冠亚军（名额顺延）<li>每月天格会月赛冠军（名额顺延）<li>赛季结束时积分榜最高分玩家（名额顺延）<li>TFAAC LCQ 冠军";
     }
-    return null; // 如果没有找到匹配的键，则返回null
+
+    // 2. 处理赛事收纳板和资格
+    [...seasonData.tournaments].reverse().forEach(tour => {
+        addAccordionPanel(tour);
+        checkQualify(tour, settings);
+    });
+
+    // 3. 处理积分榜顺延资格
+    for (const player of seasonData.members) {
+        if (!banlist.includes(player.tfaName)) {
+            finalists.set(player.tfaName, ["当前积分榜最高积分（顺延）"]);
+            finalists_index.set(finalists.size, player.tfaName);
+            boolShunyan = false;
+            break;
+        }
+        boolShunyan = true;
+    }
+
+    // 4. 渲染Final Table
+    renderFinalTable();
+
+    // 5. 兼容旧逻辑的特殊处理
+    if (AppState.currentSeason === 0) {
+        const ft = document.getElementById('final');
+        const row = ft.insertRow();
+        row.insertCell(0).innerText = "zzZ";
+        row.insertCell(1).innerHTML = 'TFAAC LCQ 冠军<br>';
+    }
 }
 
+// --- 资格逻辑函数 (保持原有逻辑，封装参数) ---
+function getKeyByValue(object, value) {
+    for (let key in object) {
+        if (object.hasOwnProperty(key) && object[key] === value) return key;
+    }
+    return null;
+}
 
-function checkQualify(tour) {
-    let title = tour.desc.toLowerCase();
+function checkQualify(tour, settings) {
+    const title = tour.desc.toLowerCase();
     let type = 4;
     for (let check of checks) {
         if (title.includes(check.text.toLowerCase())) {
             type = check.value;
             break;
         }
-    };
-    let name = '';
-    let number = Object.keys(tour.result).length;;
-    console.log("检查赛事：" + tour.desc + " 类型：" + type + " 名额：" + number);
-    let shunyan = settings[tour.id].extension;
-    //boolShunyan = false;
+    }
+
+    const number = Object.keys(tour.result).length;
+    const shunyan = settings[tour.id].extension;
     qualify_count = settings[tour.id].count;
+
     for (let i = 1; i <= number; i++) {
         if (qualify_count > 0) {
             FinalListsPush(tour, i, qualify_count, shunyan);
-        }
-        else {
+        } else {
             return;
         }
     }
 }
 
-
 function FinalListsPush(tour, index, count, shunyan) {
-    let name = getKeyByValue(tour.result, index);
-    let honor;
-    switch (index) {
-        case 1:
-            honor = " 冠军";
-            break;
-        case 2:
-            honor = " 亚军";
-            break;
-        case 3:
-            honor = " 季军";
-            break;
-        default:
-            honor = " 第" + index + "名";
-            break;
-    }
-    //let number = settings[tour.id].count;
-    let suffix = "";
-    let boolShunyan = false;
-    if (index > count) {
-        boolShunyan = true;
-        suffix = "（顺延）"
-    }
-    console.log(name + tour.desc + honor);
+    const name = getKeyByValue(tour.result, index);
+    let honor = " 第" + index + "名";
+    if (index === 1) honor = " 冠军";
+    else if (index === 2) honor = " 亚军";
+    else if (index === 3) honor = " 季军";
+
+    const isShunyan = index > count;
+    const suffix = isShunyan ? "（顺延）" : "";
+
     if (!banlist.includes(name)) {
         finalists.set(name, [tour.desc + honor + suffix]);
         finalists_index.set(finalists.size, name);
         banlist.push(name);
         qualify_count--;
-        return;
-    }
-    else {
-        if (!boolShunyan) {
+    } else {
+        if (!isShunyan) {
             finalists.get(name).push(tour.desc + honor);
         }
     }
-
 }
 
+function renderFinalTable() {
+    const ft = document.getElementById('final');
+    while (ft.rows.length > 1) ft.deleteRow(1);
 
-function addPlayer(playerId, iniscore) {
-    finalists.push({
-        id: playerId,
-        scores: iniscore
-    });
-}
-
-
-function FinalListPush(tour,index,type,shunyan) {
-    let name = getKeyByValue(tour.result, index);
-    if (!banlist.includes(name)) {
-        finalist[type - 1].push(name);
-        banlist.push(name);
-        return;
-    }
-    else if (shunyan) {
-        index++;
-        FinalListPush(tour, index, 5, shunyan);
+    for (let i = 1; i <= 20; i++) {
+        if (finalists_index.has(i)) {
+            const row = ft.insertRow();
+            const key = finalists_index.get(i);
+            row.insertCell(0).innerText = key;
+            row.insertCell(1).innerHTML = finalists.get(key).join('<br>');
+        }
     }
 }
 
-
-
+// --- 收纳板逻辑 ---
 function createAccordionPanel(tour) {
-    // 创建一个新的收纳板元素
-    const accordionItem = document.createElement('div');
-    accordionItem.className = 'accordion-item';
-    accordionItem.id = `accordionItem-${panelCount++}`;
+    const item = document.createElement('div');
+    item.className = 'accordion-item';
+    item.id = `accordionItem-${panelCount++}`;
 
-    // 创建收纳板头部
-    const accordionHeader = document.createElement('div');
-    accordionHeader.className = 'accordion-header';
-    accordionHeader.onclick = function () {
-        toggleAccordion(this.nextElementSibling, this.querySelector('.accordion-arrow'));
-    };
+    // Header
+    const header = document.createElement('div');
+    header.className = 'accordion-header';
+    header.onclick = () => toggleAccordion(header.nextElementSibling, header.querySelector('.accordion-arrow'));
 
-    const accordionText = document.createElement('span');
-    accordionText.className = 'accordion-text';
-    accordionText.textContent = tour.desc + tour.date;
+    const text = document.createElement('span');
+    text.className = 'accordion-text';
+    text.textContent = tour.desc + tour.date;
 
-    const accordionArrow = document.createElement('span');
-    accordionArrow.className = 'accordion-arrow';
-    accordionArrow.innerHTML = '&#9650;'; // 初始状态为收缩
+    const arrow = document.createElement('span');
+    arrow.className = 'accordion-arrow';
+    arrow.innerHTML = '&#9650;';
 
-    accordionHeader.appendChild(accordionText);
-    accordionHeader.appendChild(accordionArrow);
+    header.appendChild(text);
+    header.appendChild(arrow);
 
-    // 创建收纳板内容
-    const accordionContent = document.createElement('div');
-    accordionContent.className = 'accordion-content';
-    accordionContent.style.maxHeight = '400px'; // 初始状态为收缩
+    // Content
+    const content = document.createElement('div');
+    content.className = 'accordion-content';
+    content.style.maxHeight = '400px';
 
-    //创建表格
-    //先创建表头，固定两列名次和ID
+    // Table
     const table = document.createElement('table');
     table.className = 'tour-table';
+    const thead = document.createElement('thead');
     const headerRow = document.createElement('tr');
-    const headers = ['名次', '选手ID'];
-
-    headers.forEach(headerText => {
+    ['名次', '选手ID'].forEach(txt => {
         const th = document.createElement('th');
-        th.textContent = headerText;
+        th.textContent = txt;
         headerRow.appendChild(th);
     });
+    thead.appendChild(headerRow);
+    table.appendChild(thead);
 
-    table.appendChild(headerRow);
-
-    //创建表体，从tour object中获取名次对应选手的KV结构，并逐个赋值
     const tbody = document.createElement('tbody');
-
-    const result = tour.result;
-
-    const map = new Map(Object.entries(result));
-
-    let sortedMap = new Map([...map.entries()].sort((a, b) => a[1] - b[1]));
-
-    for (const [key, value] of sortedMap) {
-        var row = tbody.insertRow(-1);
-        var cell1 = row.insertCell(0); // 当前名次
-        var cell2 = row.insertCell(1); // 选手ID
-        cell1.textContent = value;
-        cell2.textContent = key;
+    const sorted = new Map([...Object.entries(tour.result)].sort((a, b) => a[1] - b[1]));
+    for (const [key, value] of sorted) {
+        const row = tbody.insertRow(-1);
+        row.insertCell(0).textContent = value;
+        row.insertCell(1).textContent = key;
     }
-
     table.appendChild(tbody);
+    content.appendChild(table);
 
-    accordionContent.appendChild(table);
-
-    // 将头部和内容添加到收纳板中
-    accordionItem.appendChild(accordionHeader);
-    accordionItem.appendChild(accordionContent);
-
-    return accordionItem;
+    item.appendChild(header);
+    item.appendChild(content);
+    return item;
 }
 
 function toggleAccordion(content, arrow) {
-    console.log("点击nav" + '最大高度：' + content.style.maxHeight)
-    // 切换内容高度和箭头方向
     if (content.style.maxHeight == '0px') {
-        console.log('应该展开');
-        //content.style.maxHeight = content.scrollHeight + 'px';
         content.style.maxHeight = '400px';
-        arrow.innerHTML = '&#9650;'; // 切换为上箭头
+        arrow.innerHTML = '&#9650;';
     } else {
-        console.log('应该收缩');
         content.style.maxHeight = '0px';
-        arrow.innerHTML = '&#9660;'; // 切换为下箭头
+        arrow.innerHTML = '&#9660;';
     }
-
-    // 可选：添加或移除高亮效果
-    // const accordionItem = content.parentElement;
-    // accordionItem.classList.toggle('highlight');
 }
 
 function addAccordionPanel(tour) {
-    // 生成一个新的标题（例如，使用面板计数）
-    // 创建新的收纳板并添加到容器中
-    const newPanel = createAccordionPanel(tour);
     const container = document.getElementById('accordionContainer');
-    container.appendChild(newPanel);
+    container.appendChild(createAccordionPanel(tour));
 }
