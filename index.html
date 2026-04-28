@@ -8,8 +8,19 @@
     <link rel="stylesheet" href="css/style_tab.css">
 </head>
 <body>
-    <div class="tab-section"></div> <!-- Tab由JS动态生成 -->
-
+    <div class="tab-section">
+        <div class="tab-container">
+            <a href="/index.html" class="tab" data-tab="tab1">积分榜</a>
+            <a href="/detail.html" class="tab" data-tab="tab2">详细信息</a>
+            <a href="/tournaments.html" class="tab" data-tab="tab3">赛事信息</a>
+            <div class="dropdown-tab" data-tab="tab4">
+                <a id="season">赛季切换</a>
+                <div class="dropdown">
+                    <!-- 动态生成 -->
+                </div>
+            </div>
+        </div>
+    </div>
     <section id="leaderboard" class="leaderboard-parent">
         <nav class="ladder-nav">
             <div class="ladder-title">
@@ -21,23 +32,18 @@
         </nav>
         <table id="rankings" class="leaderboard-results" width="100%">
             <thead>
-                <tr>
-                    <th>当前名次</th>
-                    <th>选手ID</th>
-                    <th>选手积分</th>
-                    <th>天格会编号</th>
-                </tr>
+                <tr><th>当前名次</th><th>选手ID</th><th>选手积分</th><th>天格会编号</th></tr>
             </thead>
             <tbody></tbody>
         </table>
     </section>
-
     <footer>
         <p>© 2026 天津格斗游戏同好会 TFA</p>
     </footer>
-
+    <!-- 注意加载顺序 -->
     <script src="js/jquery-3.7.1.min.js"></script>
-    <script src="js/common.js"></script> <!-- 引入公共模块 -->
-    <script src="js/script.js"></script>
+    <script src="js/dataService.js"></script>
+    <script src="js/common.js"></script>
+    <script src="js/main.js"></script>
 </body>
 </html>
