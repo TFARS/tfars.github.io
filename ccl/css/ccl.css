@@ -1,0 +1,128 @@
+﻿/* ========== 交战记录卡片 ========== */
+.match-card {
+    margin-bottom: 25px;
+    padding: 10px;
+    /* 直接沿用 TFA 中 .honor-container 的紫色渐变边框 */
+    background: linear-gradient(90deg, #420862, #24007f 25%, #24007f 50%, #24007f 75%, #420862);
+    border: 2px solid #9636b2;
+    border-radius: 5px;
+    color: #fff;
+    overflow: hidden;
+}
+
+/* 队伍比分栏 - 三列布局，保证队徽队名等宽，VS 居中 */
+.match-score-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+    margin-bottom: 10px;
+}
+
+.team-side {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    text-align: center;
+}
+
+.team-logo {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.team-name {
+    font-size: 16px;
+    font-weight: bold;
+    font-family: 'Montserrat', sans-serif;
+    text-shadow: 0 0 10px #99208d;
+    min-width: 80px; /* 保证队名等宽 */
+    text-align: center;
+}
+
+.team-points {
+    font-size: 20px;
+    font-weight: bold;
+    min-width: 40px;
+    text-align: center;
+}
+
+    .team-points.win {
+        color: #00ff00;
+        text-shadow: 0 0 8px #00ff00;
+    }
+
+    .team-points.lose {
+        color: #ff4444;
+        text-shadow: 0 0 8px #ff4444;
+    }
+
+.vs-divider {
+    flex: 0 0 60px;
+    text-align: center;
+    font-size: 1.4em;
+    font-weight: bold;
+    color: #ecfb01;
+    text-shadow: 0 0 5px #99208d;
+}
+
+/* 详细比分区域 - 使用 TFA 表格的暗色背景 */
+.match-details {
+    margin-top: 5px;
+    padding: 10px;
+    background: rgba(0,0,0,0.3);
+    border-radius: 3px;
+    color: #ddd;
+    font-size: 14px;
+}
+
+.detail-title {
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #bb82ff;
+    border-bottom: 1px dashed #4311a9;
+    padding-bottom: 3px;
+}
+
+/* 底部赛事信息 */
+.match-footer {
+    text-align: right;
+    margin-top: 5px;
+    color: #aaa;
+    font-size: 0.9em;
+}
+
+/* ========== 积分榜第一行颜色修正 ========== */
+#ccl-rankings tbody tr:first-child {
+    color: #CD7F32;
+}
+
+#ccl-rankings tbody tr:nth-child(2) {
+    color: #E6E8FA;
+}
+
+#ccl-rankings tbody tr:nth-child(3) {
+    color: #8C7853;
+}
+
+/* 保证预告表格使用 final-table 样式，贴合 TFA */
+#ccl-upcoming .final-table {
+    margin-top: 10px;
+    width: 100%;
+}
+
+/* 浮动按钮的响应式微调 */
+@media (max-width: 800px) {
+    #site-switch-btn {
+        left: 5px;
+        top: 10px;
+        width: 50px;
+        height: 50px;
+        font-size: 12px;
+    }
+}

@@ -2,32 +2,36 @@
     let data = null;
     let settings = null;
     let ready = false;
+    let dataUrl = '/data/data.json';
+    let settingsUrl = '/data/settings.json';
+
+    // 根据当前页面路径自动判断
+    if (window.location.pathname.includes('/ccl/')) {
+        dataUrl = '/ccl/data/league_data.json';
+    }
 
     async function load() {
         if (ready) return;
         try {
-            const [dataRes, settingsRes] = await Promise.all([
-                fetch('/data/data.json').then(r => r.json()),
-                fetch('/data/settings.json').then(r => r.json()).catch(() => ({ qualifys: {} }))
-            ]);
-            data = dataRes;
-            settings = settingsRes;
+            const resp = await fetch(dataUrl);
+            if (!resp.ok) throw new Error('Data not found');
+            data = await resp.json();
+            const settingsResp = await fetch(settingsUrl).catch(() => ({ json: () => ({}) }));
+            settings = await settingsResp.json();
             ready = true;
-            console.log(`[DataService] 数据加载完成，赛季数：${data.length}`, data.map((s, i) => `索引${i}: ${2023 + s.seasonID}赛季`));
         } catch (e) {
-            console.error('[DataService] 数据加载失败', e);
+            console.error('[DataService] 加载失败', e);
         }
     }
 
     function getSeasonList() {
-        if (!ready) throw new Error('数据未加载');
-        const list = data.map((season, index) => ({
-            index,
-            year: 2023 + season.seasonID,
-            isLatest: index === 0
+        if (!ready) return [];
+        return data.map((s, i) => ({
+            index: i,
+            year: 2023 + s.seasonID,   // 高校联赛也用此映射
+            name: s.seasonName || (2023 + s.seasonID + '赛季'),
+            isLatest: i === 0
         }));
-        console.log('[DataService] 赛季列表:', list);
-        return list;
     }
 
     function getSeasonData(seasonYear) {
@@ -49,5 +53,5 @@
     // 暴露到全局便于检查
     window.DataService = { load, getSeasonList, getSeasonData, getSettings, isReady: () => ready };
 
-    return window.DataService;
+    return { load, getSeasonList, getSeasonData, getSettings, isReady: () => ready };
 })();

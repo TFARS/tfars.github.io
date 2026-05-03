@@ -1,9 +1,9 @@
-﻿// /js/common.js
-async function initCommon() {
+﻿// /ccl/js/ccl_common.js
+async function initCCLCommon() {
     try {
-        await DataService.load();
+        await CCLDataService.load();
     } catch (e) {
-        console.error('数据加载失败', e);
+        console.error('CCL 数据加载失败', e);
         return;
     }
 
@@ -11,10 +11,9 @@ async function initCommon() {
     const seasonParam = params.get('season') || 'latest';
     window.__currentSeason = seasonParam;
 
-    // 更新赛季悬浮标签文字
     const seasonLabel = document.getElementById('season');
     if (seasonLabel) {
-        const seasons = DataService.getSeasonList();
+        const seasons = CCLDataService.getSeasonList();
         const current = seasons.find(s =>
             (seasonParam === 'latest' && s.isLatest) || s.year === parseInt(seasonParam)
         );
@@ -23,24 +22,22 @@ async function initCommon() {
             : '最新赛季';
     }
 
-    // 动态生成下拉菜单
     const dropdown = document.querySelector('.dropdown');
     if (dropdown) {
         dropdown.innerHTML = '';
-        DataService.getSeasonList().forEach(season => {
+        CCLDataService.getSeasonList().forEach(season => {
             const a = document.createElement('a');
             a.className = 'dropdown-item';
             a.textContent = season.isLatest ? '最新赛季' : `${season.year}赛季`;
             a.href = '#';
             a.addEventListener('click', (e) => {
                 e.preventDefault();
-                changeSeason(season.year);
+                changeCCLSeason(season.year);
             });
             dropdown.appendChild(a);
         });
     }
 
-    // Tab 点击携带赛季参数
     document.querySelectorAll('.tab').forEach(button => {
         button.addEventListener('click', function (e) {
             e.preventDefault();
@@ -52,11 +49,10 @@ async function initCommon() {
         });
     });
 
-    // 添加浮动切换按钮
     addFloatingSwitch();
 }
 
-function changeSeason(year) {
+function changeCCLSeason(year) {
     const params = new URLSearchParams(window.location.search);
     const newSeason = year === 0 ? 'latest' : year.toString();
     if (params.get('season') === newSeason) return;
@@ -64,9 +60,9 @@ function changeSeason(year) {
     window.location.search = params.toString();
 }
 
-// 悬浮切换按钮（TFA ↔ CCL）
+// 悬浮按钮（与 TFA 共用同一逻辑）
 function addFloatingSwitch() {
-    if (document.getElementById('site-switch-btn')) return; // 防止重复
+    if (document.getElementById('site-switch-btn')) return;
 
     const isCCL = window.location.pathname.includes('/ccl/');
     const btn = document.createElement('div');
@@ -117,5 +113,4 @@ function addFloatingSwitch() {
     document.body.appendChild(btn);
 }
 
-// 等待 DOM 加载时启动
-document.addEventListener('DOMContentLoaded', initCommon);
+document.addEventListener('DOMContentLoaded', initCCLCommon);

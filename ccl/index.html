@@ -1,0 +1,68 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>高校联赛积分榜</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/style_tab.css">
+    <link rel="stylesheet" href="/ccl/css/ccl.css">
+</head>
+<body>
+    <!-- 导航栏 Tab -->
+    <div class="tab-section">
+        <div class="tab-container">
+            <a href="/ccl/index.html" class="tab active">积分榜</a>
+            <a href="/ccl/rules.html" class="tab">赛事规则</a>
+            <div class="dropdown-tab">
+                <a id="season">赛季切换</a>
+                <div class="dropdown"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 积分榜区块 -->
+    <section class="leaderboard-parent">
+        <nav class="ladder-nav">
+            <div class="ladder-title">
+                <h2>高校联赛积分榜</h2>
+            </div>
+        </nav>
+
+        <table id="ccl-rankings" class="leaderboard-results" width="100%">
+            <thead>
+                <tr>
+                    <th>名次</th>
+                    <th>队伍</th>
+                    <th>院校</th>
+                    <th>战绩</th>
+                    <th>总分</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+
+        <!-- 赛事预告 -->
+        <nav class="ladder-nav" style="margin-top:30px;">
+            <div class="ladder-title">
+                <h2>赛事预告</h2>
+            </div>
+        </nav>
+        <div id="ccl-upcoming"></div>
+
+        <!-- 交战记录 -->
+        <nav class="ladder-nav" style="margin-top:30px;">
+            <div class="ladder-title">
+                <h2>交战记录</h2>
+            </div>
+        </nav>
+        <div id="ccl-tournaments"></div>
+    </section>
+
+    <!-- 脚本 -->
+    <script src="/js/jquery-3.7.1.min.js"></script>
+    <script src="/ccl/js/cclDataService.js"></script>
+    <script src="/ccl/js/ccl_common.js"></script>
+    <script src="/ccl/js/ccl_main.js"></script>
+</body>
+</html>
