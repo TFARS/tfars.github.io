@@ -1,4 +1,5 @@
-﻿document.addEventListener('DOMContentLoaded', async () => {
+﻿// /ccl/js/ccl_main.js
+document.addEventListener('DOMContentLoaded', async () => {
     if (!CCLDataService.isReady()) {
         await CCLDataService.load();
     }
@@ -7,13 +8,12 @@
     const seasonData = CCLDataService.getSeasonData(season);
     const maxPointsDefault = 50;
 
-    // 初始化队伍统计
     const teamStats = {};
     seasonData.teams.forEach(team => {
         teamStats[team.id] = { ...team, wins: 0, losses: 0, totalPoints: 0 };
     });
 
-    // 统计所有比赛战绩与积分
+    // 统计所有比赛
     seasonData.tournaments.forEach(tour => {
         const maxPoints = tour.maxPoints || maxPointsDefault;
         tour.matches.forEach(match => {
@@ -45,7 +45,7 @@
         });
     });
 
-    // 生成积分榜
+    // 积分榜
     const leaderboard = Object.values(teamStats).sort(
         (a, b) => b.totalPoints - a.totalPoints || b.wins - a.wins
     );
@@ -62,17 +62,33 @@
         row.insertCell(4).textContent = team.totalPoints;
     });
 
-    // 赛事预告
+    // 赛事预告（图标与文字同行，队名+学校在右侧）
     const upcomingDiv = document.getElementById('ccl-upcoming');
     if (seasonData.upcoming && seasonData.upcoming.length > 0) {
-        let html = `<table class="final-table"><thead><tr><th>队伍A</th><th>VS</th><th>队伍B</th><th>日期</th></tr></thead><tbody>`;
+        let html = `<table class="ccl-upcoming-table"><thead><tr><th>队伍A</th><th>VS</th><th>队伍B</th><th>日期</th></tr></thead><tbody>`;
         seasonData.upcoming.forEach(m => {
             const ta = seasonData.teams.find(t => t.id === m.teamA);
             const tb = seasonData.teams.find(t => t.id === m.teamB);
             html += `<tr>
-                <td><img src="${ta.logo}" style="width:25px;height:25px;border-radius:50%;vertical-align:middle;"> ${ta.name}</td>
-                <td style="color:#ecfb01;">VS</td>
-                <td><img src="${tb.logo}" style="width:25px;height:25px;border-radius:50%;vertical-align:middle;"> ${tb.name}</td>
+                <td>
+                    <div class="team-text">
+                        <img src="${ta.logo}" class="team-logo-small">
+                        <div class="team-text-inner">
+                            <span class="team-name-main">${ta.name}</span>
+                            <span class="team-school-small">${ta.school}</span>
+                        </div>
+                    </div>
+                </td>
+                <td class="vs-cell"><span class="vs">VS</span></td>
+                <td>
+                    <div class="team-text">
+                        <img src="${tb.logo}" class="team-logo-small">
+                        <div class="team-text-inner">
+                            <span class="team-name-main">${tb.name}</span>
+                            <span class="team-school-small">${tb.school}</span>
+                        </div>
+                    </div>
+                </td>
                 <td>${m.date}</td>
             </tr>`;
         });
@@ -82,8 +98,7 @@
         upcomingDiv.innerHTML = '<div style="text-align:center;color:#888;padding:20px;">暂无赛事预告</div>';
     }
 
-    // ======== 交战记录（修正布局与保留紫色大框） ========
-    // 交战记录（新布局）
+    // 交战记录
     const recordContainer = document.getElementById('ccl-tournaments');
     seasonData.tournaments.forEach(tour => {
         const maxPoints = tour.maxPoints || maxPointsDefault;
@@ -99,17 +114,23 @@
                 const parts = [];
                 if (round.vanguard) {
                     const [a, b] = round.vanguard;
-                    parts.push(`先锋 ${a} : ${b}`);
+                    const aClass = a > b ? 'score-win' : 'score-lose';
+                    const bClass = b > a ? 'score-win' : 'score-lose';
+                    parts.push(`先锋 <span class="${aClass}">${a}</span> : <span class="${bClass}">${b}</span>`);
                     if (a > b) ptsA += 10; else if (b > a) ptsB += 10;
                 }
                 if (round.zhongjian) {
                     const [a, b] = round.zhongjian;
-                    parts.push(`中坚 ${a} : ${b}`);
+                    const aClass = a > b ? 'score-win' : 'score-lose';
+                    const bClass = b > a ? 'score-win' : 'score-lose';
+                    parts.push(`中坚 <span class="${aClass}">${a}</span> : <span class="${bClass}">${b}</span>`);
                     if (a > b) ptsA += 10; else if (b > a) ptsB += 10;
                 }
                 if (round.dajiang) {
                     const [a, b] = round.dajiang;
-                    parts.push(`大将 ${a} : ${b}`);
+                    const aClass = a > b ? 'score-win' : 'score-lose';
+                    const bClass = b > a ? 'score-win' : 'score-lose';
+                    parts.push(`大将 <span class="${aClass}">${a}</span> : <span class="${bClass}">${b}</span>`);
                     if (a > b) ptsA += 20; else if (b > a) ptsB += 20;
                 }
                 line += parts.join(' | ');
@@ -122,27 +143,33 @@
             const card = document.createElement('div');
             card.className = 'match-card';
             card.innerHTML = `
-            <div class="match-header-grid">
-                <div class="team-name left">
-                    <img src="${teamA.logo}" class="team-logo">
-                    <span>${teamA.name}</span>
+                <div class="match-header-grid">
+                    <div class="team-name left" style="color:${isAWin ? '#00ff00' : '#ff4444'}">
+                        <img src="${teamA.logo}" class="team-logo">
+                        <div class="team-text">
+                            <span class="team-name-main">${teamA.name}</span>
+                            <span class="team-school-small">${teamA.school}</span>
+                        </div>
+                    </div>
+                    <div class="score left-score" style="color:${isAWin ? '#00ff00' : '#ff4444'}">${dispA}</div>
+                    <div class="vs">VS</div>
+                    <div class="score right-score" style="color:${isAWin ? '#ff4444' : '#00ff00'}">${dispB}</div>
+                    <div class="team-name right" style="color:${isAWin ? '#ff4444' : '#00ff00'}">
+                        <div class="team-text">
+                            <span class="team-name-main">${teamB.name}</span>
+                            <span class="team-school-small">${teamB.school}</span>
+                        </div>
+                        <img src="${teamB.logo}" class="team-logo">
+                    </div>
                 </div>
-                <div class="score left-score" style="color:${isAWin ? '#00ff00' : '#ff4444'}">${dispA}</div>
-                <div class="vs">VS</div>
-                <div class="score right-score" style="color:${isAWin ? '#ff4444' : '#00ff00'}">${dispB}</div>
-                <div class="team-name right">
-                    <span>${teamB.name}</span>
-                    <img src="${teamB.logo}" class="team-logo">
+                <div class="match-detail">
+                    <div class="detail-title">详细比分</div>
+                    ${roundsDetail}
                 </div>
-            </div>
-            <div class="match-detail">
-                <div class="detail-title">详细比分</div>
-                ${roundsDetail}
-            </div>
-            <div class="match-footer">
-                赛事：${tour.desc} | 胜者：<span class="winner">${match.winner}</span>
-            </div>
-        `;
+                <div class="match-footer">
+                    赛事：${tour.desc} | 胜者：<span class="winner">${match.winner}</span>
+                </div>
+            `;
             recordContainer.appendChild(card);
         });
     });

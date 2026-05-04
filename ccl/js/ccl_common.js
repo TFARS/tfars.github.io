@@ -48,7 +48,15 @@
         });
     });
 
-    // 切换按钮由 site-switcher.js 负责
+    // 动态设置当前 tab 高亮（修复始终高亮问题）
+    document.querySelectorAll('.tab-container > a.tab').forEach(link => {
+        const href = link.getAttribute('href');
+        if (href && window.location.pathname.endsWith(href.split('/').pop())) {
+            link.classList.add('active');
+        } else {
+            link.classList.remove('active');
+        }
+    });
 }
 
 function changeCCLSeason(year) {

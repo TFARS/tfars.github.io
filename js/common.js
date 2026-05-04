@@ -37,6 +37,7 @@
         });
     }
 
+    // Tab 点击携带赛季参数
     document.querySelectorAll('.tab').forEach(button => {
         button.addEventListener('click', function (e) {
             e.preventDefault();
@@ -48,7 +49,15 @@
         });
     });
 
-    // 不再调用 addFloatingSwitch，由 site-switcher.js 自动处理
+    // 动态设置当前 tab 高亮
+    document.querySelectorAll('.tab-container > a.tab').forEach(link => {
+        const href = link.getAttribute('href');
+        if (href && window.location.pathname.endsWith(href.split('/').pop())) {
+            link.classList.add('active');
+        } else {
+            link.classList.remove('active');
+        }
+    });
 }
 
 function changeSeason(year) {

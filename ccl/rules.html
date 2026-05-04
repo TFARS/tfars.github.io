@@ -31,11 +31,38 @@
             <p><strong>三、赛制</strong><br>常规赛为单循环赛，每场比赛最多进行3轮。积分高者排名靠前，同分比较相互胜负关系。</p>
             <p><strong>四、其他</strong><br>具体赛程及对手以赛事预告为准，最终解释权归组委会所有。</p>
         </div>
+
+        <!-- 参赛队伍展示 -->
+        <nav class="ladder-nav" style="margin-top:30px;">
+            <div class="ladder-title"><h2>参赛队伍</h2></div>
+        </nav>
+        <div id="teams-container" class="teams-grid" style="margin-top:15px;"></div>
     </section>
 
     <script src="/js/jquery-3.7.1.min.js"></script>
     <script src="/ccl/js/cclDataService.js"></script>
     <script src="/ccl/js/ccl_common.js"></script>
     <script src="/js/site-switcher.js"></script>
+    <script>
+        (async function () {
+            if (!CCLDataService.isReady()) await CCLDataService.load();
+            const season = window.__currentSeason || 'latest';
+            const seasonData = CCLDataService.getSeasonData(season);
+            const container = document.getElementById('teams-container');
+            container.innerHTML = '';
+            seasonData.teams.forEach(team => {
+                const card = document.createElement('div');
+                card.className = 'match-card team-card';
+                card.innerHTML = `
+                    <div class="team-img">
+                        <img src="${team.logo}" alt="${team.name}">
+                    </div>
+                    <div class="team-name-text">${team.name}</div>
+                    <div class="team-school">${team.school}</div>
+                `;
+                container.appendChild(card);
+            });
+        })();
+    </script>
 </body>
 </html>
