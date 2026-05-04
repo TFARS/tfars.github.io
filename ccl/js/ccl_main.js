@@ -83,6 +83,7 @@
     }
 
     // ======== 交战记录（修正布局与保留紫色大框） ========
+    // 交战记录（新布局）
     const recordContainer = document.getElementById('ccl-tournaments');
     seasonData.tournaments.forEach(tour => {
         const maxPoints = tour.maxPoints || maxPointsDefault;
@@ -91,7 +92,6 @@
             const teamB = seasonData.teams.find(t => t.id === match.teamB);
             const isAWin = match.winner === match.teamA;
 
-            // 详细比分文本生成
             let ptsA = 0, ptsB = 0;
             let roundsDetail = '';
             match.rounds.forEach((round, idx) => {
@@ -113,38 +113,36 @@
                     if (a > b) ptsA += 20; else if (b > a) ptsB += 20;
                 }
                 line += parts.join(' | ');
-                roundsDetail += `<div style="margin-left:15px; line-height:1.8;">${line}</div>`;
+                roundsDetail += `<div style="margin-left:20px; line-height:1.8;">${line}</div>`;
             });
+
             const dispA = Math.min(ptsA, maxPoints);
             const dispB = Math.min(ptsB, maxPoints);
 
-            // 战斗卡片（复用 honor-container 风格的紫色边框）
             const card = document.createElement('div');
-            card.className = 'match-card';  // 样式已强化，见 ccl.css
+            card.className = 'match-card';
             card.innerHTML = `
-                <!-- 队伍比分栏：队徽 + 队名 + 积分 || VS || 积分 + 队名 + 队徽 -->
-                <div class="match-score-bar">
-                    <div class="team-side">
-                        <img src="${teamA.logo}" class="team-logo">
-                        <span class="team-name">${teamA.name}</span>
-                        <span class="team-points ${isAWin ? 'win' : 'lose'}">${dispA}</span>
-                    </div>
-                    <div class="vs-divider">VS</div>
-                    <div class="team-side">
-                        <span class="team-points ${isAWin ? 'lose' : 'win'}">${dispB}</span>
-                        <span class="team-name">${teamB.name}</span>
-                        <img src="${teamB.logo}" class="team-logo">
-                    </div>
+            <div class="match-header-grid">
+                <div class="team-name left">
+                    <img src="${teamA.logo}" class="team-logo">
+                    <span>${teamA.name}</span>
                 </div>
-                <!-- 详细比分区域 -->
-                <div class="match-details">
-                    <div class="detail-title">详细比分</div>
-                    ${roundsDetail}
+                <div class="score left-score" style="color:${isAWin ? '#00ff00' : '#ff4444'}">${dispA}</div>
+                <div class="vs">VS</div>
+                <div class="score right-score" style="color:${isAWin ? '#ff4444' : '#00ff00'}">${dispB}</div>
+                <div class="team-name right">
+                    <span>${teamB.name}</span>
+                    <img src="${teamB.logo}" class="team-logo">
                 </div>
-                <div class="match-footer">
-                    赛事：${tour.desc} | 胜者：<span style="color:#ecfb01;">${match.winner}</span>
-                </div>
-            `;
+            </div>
+            <div class="match-detail">
+                <div class="detail-title">详细比分</div>
+                ${roundsDetail}
+            </div>
+            <div class="match-footer">
+                赛事：${tour.desc} | 胜者：<span class="winner">${match.winner}</span>
+            </div>
+        `;
             recordContainer.appendChild(card);
         });
     });

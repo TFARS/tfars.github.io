@@ -116,6 +116,74 @@
     width: 100%;
 }
 
+/* 交战记录 grid 布局 */
+.match-header-grid {
+    display: grid;
+    grid-template-columns: 3.5fr 1fr 1fr 1fr 3.5fr;
+    align-items: center;
+    gap: 5px;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.team-name {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    font-weight: bold;
+}
+
+    .team-name.left {
+        flex-direction: row;
+    }
+
+    .team-name.right {
+        flex-direction: row-reverse;
+    }
+
+.team-logo {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.score {
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+.vs {
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #ecfb01;
+}
+
+.match-detail {
+    margin-top: 10px;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+}
+
+.detail-title {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.match-footer {
+    text-align: right;
+    margin-top: 5px;
+    color: #aaa;
+    font-size: 0.9em;
+}
+
+.winner {
+    color: #ecfb01;
+    font-weight: bold;
+}
+
 /* 浮动按钮的响应式微调 */
 @media (max-width: 800px) {
     #site-switch-btn {

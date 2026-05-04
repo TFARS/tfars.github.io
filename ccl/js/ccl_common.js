@@ -1,5 +1,4 @@
-﻿// /ccl/js/ccl_common.js
-async function initCCLCommon() {
+﻿async function initCCLCommon() {
     try {
         await CCLDataService.load();
     } catch (e) {
@@ -49,7 +48,7 @@ async function initCCLCommon() {
         });
     });
 
-    addFloatingSwitch();
+    // 切换按钮由 site-switcher.js 负责
 }
 
 function changeCCLSeason(year) {
@@ -58,59 +57,6 @@ function changeCCLSeason(year) {
     if (params.get('season') === newSeason) return;
     params.set('season', newSeason);
     window.location.search = params.toString();
-}
-
-// 悬浮按钮（与 TFA 共用同一逻辑）
-function addFloatingSwitch() {
-    if (document.getElementById('site-switch-btn')) return;
-
-    const isCCL = window.location.pathname.includes('/ccl/');
-    const btn = document.createElement('div');
-    btn.id = 'site-switch-btn';
-    btn.style.cssText = `
-        position: fixed;
-        top: 10px;
-        left: calc((100% - 720px) / 2 - 80px);
-        width: 60px;
-        height: 60px;
-        z-index: 2000;
-        cursor: pointer;
-        border-radius: 50%;
-        box-shadow: 0 0 10px #9636b2;
-        background: #420862;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 14px;
-        font-weight: bold;
-        color: #fff;
-        text-align: center;
-        line-height: 1.2;
-    `;
-
-    const fallbackText = isCCL ? '天格会' : '高校联赛';
-    const imgSrc = isCCL ? '/img/btn_tfa.png' : '/img/btn_ccl.png';
-
-    const img = new Image();
-    img.src = imgSrc;
-    img.style.cssText = 'width:100%;height:100%;border-radius:50%;object-fit:cover;';
-    img.onerror = function () {
-        btn.innerHTML = fallbackText;
-    };
-    img.onload = function () {
-        btn.innerHTML = '';
-        btn.appendChild(img);
-    };
-    btn.appendChild(img);
-
-    btn.addEventListener('click', () => {
-        const params = new URLSearchParams(window.location.search);
-        const season = params.get('season') || 'latest';
-        const target = isCCL ? '/' : '/ccl/';
-        window.location.href = `${target}index.html?season=${season}`;
-    });
-
-    document.body.appendChild(btn);
 }
 
 document.addEventListener('DOMContentLoaded', initCCLCommon);

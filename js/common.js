@@ -1,5 +1,4 @@
-﻿// /js/common.js
-async function initCommon() {
+﻿async function initCommon() {
     try {
         await DataService.load();
     } catch (e) {
@@ -11,7 +10,6 @@ async function initCommon() {
     const seasonParam = params.get('season') || 'latest';
     window.__currentSeason = seasonParam;
 
-    // 更新赛季悬浮标签文字
     const seasonLabel = document.getElementById('season');
     if (seasonLabel) {
         const seasons = DataService.getSeasonList();
@@ -23,7 +21,6 @@ async function initCommon() {
             : '最新赛季';
     }
 
-    // 动态生成下拉菜单
     const dropdown = document.querySelector('.dropdown');
     if (dropdown) {
         dropdown.innerHTML = '';
@@ -40,7 +37,6 @@ async function initCommon() {
         });
     }
 
-    // Tab 点击携带赛季参数
     document.querySelectorAll('.tab').forEach(button => {
         button.addEventListener('click', function (e) {
             e.preventDefault();
@@ -52,8 +48,7 @@ async function initCommon() {
         });
     });
 
-    // 添加浮动切换按钮
-    addFloatingSwitch();
+    // 不再调用 addFloatingSwitch，由 site-switcher.js 自动处理
 }
 
 function changeSeason(year) {
@@ -64,58 +59,4 @@ function changeSeason(year) {
     window.location.search = params.toString();
 }
 
-// 悬浮切换按钮（TFA ↔ CCL）
-function addFloatingSwitch() {
-    if (document.getElementById('site-switch-btn')) return; // 防止重复
-
-    const isCCL = window.location.pathname.includes('/ccl/');
-    const btn = document.createElement('div');
-    btn.id = 'site-switch-btn';
-    btn.style.cssText = `
-        position: fixed;
-        top: 10px;
-        left: calc((100% - 720px) / 2 - 80px);
-        width: 60px;
-        height: 60px;
-        z-index: 2000;
-        cursor: pointer;
-        border-radius: 50%;
-        box-shadow: 0 0 10px #9636b2;
-        background: #420862;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 14px;
-        font-weight: bold;
-        color: #fff;
-        text-align: center;
-        line-height: 1.2;
-    `;
-
-    const fallbackText = isCCL ? '天格会' : '高校联赛';
-    const imgSrc = isCCL ? '/img/btn_tfa.png' : '/img/btn_ccl.png';
-
-    const img = new Image();
-    img.src = imgSrc;
-    img.style.cssText = 'width:100%;height:100%;border-radius:50%;object-fit:cover;';
-    img.onerror = function () {
-        btn.innerHTML = fallbackText;
-    };
-    img.onload = function () {
-        btn.innerHTML = '';
-        btn.appendChild(img);
-    };
-    btn.appendChild(img);
-
-    btn.addEventListener('click', () => {
-        const params = new URLSearchParams(window.location.search);
-        const season = params.get('season') || 'latest';
-        const target = isCCL ? '/' : '/ccl/';
-        window.location.href = `${target}index.html?season=${season}`;
-    });
-
-    document.body.appendChild(btn);
-}
-
-// 等待 DOM 加载时启动
 document.addEventListener('DOMContentLoaded', initCommon);

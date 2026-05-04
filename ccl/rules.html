@@ -2,10 +2,12 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>赛事规则</title>
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/style_tab.css">
     <link rel="stylesheet" href="/ccl/css/ccl.css">
+    <link rel="stylesheet" href="/css/site-switcher.css">
 </head>
 <body>
     <div class="tab-section">
@@ -20,19 +22,20 @@
     </div>
 
     <section class="leaderboard-parent">
-        <div class="section" style="padding:20px;white-space:normal;">
-            <h2>CCL赛制规则</h2>
-            <p style="color:#fff;line-height:1.8;">
-                1. 每场比赛分为先锋、中坚、大将三场，先锋、中坚获胜各得10分，大将获胜得20分。<br>
-                2. 小组赛每场最多3轮，单场得分上限50分。<br>
-                3. 积分相同则比较胜场数，仍相同则比较相互胜负关系。<br>
-                4. 赛季末积分最高的队伍获得总冠军。
-            </p>
+        <nav class="ladder-nav">
+            <div class="ladder-title"><h2>赛事规则</h2></div>
+        </nav>
+        <div class="section" style="padding:20px;white-space:normal;color:#fff;line-height:1.8;">
+            <p><strong>一、队伍组成</strong><br>每队3-5人，每轮上场3人（先锋、中坚、大将）。</p>
+            <p><strong>二、得分规则</strong><br>先锋/中坚胜利各得10分，大将胜利得20分。单场比赛得分上限为50分。</p>
+            <p><strong>三、赛制</strong><br>常规赛为单循环赛，每场比赛最多进行3轮。积分高者排名靠前，同分比较相互胜负关系。</p>
+            <p><strong>四、其他</strong><br>具体赛程及对手以赛事预告为准，最终解释权归组委会所有。</p>
         </div>
     </section>
 
     <script src="/js/jquery-3.7.1.min.js"></script>
     <script src="/ccl/js/cclDataService.js"></script>
     <script src="/ccl/js/ccl_common.js"></script>
+    <script src="/js/site-switcher.js"></script>
 </body>
 </html>
