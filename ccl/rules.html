@@ -43,6 +43,7 @@
     <script src="/ccl/js/cclDataService.js"></script>
     <script src="/ccl/js/ccl_common.js"></script>
     <script src="/js/site-switcher.js"></script>
+    <script src="/js/footer.js"></script>
     <script>
         (async function () {
             if (!CCLDataService.isReady()) await CCLDataService.load();
@@ -54,12 +55,12 @@
                 const card = document.createElement('div');
                 card.className = 'match-card team-card';
                 card.innerHTML = `
-                    <div class="team-img">
-                        <img src="${team.logo}" alt="${team.name}">
-                    </div>
-                    <div class="team-name-text">${team.name}</div>
-                    <div class="team-school">${team.school}</div>
-                `;
+                        <div class="team-img">
+                            <img src="${team.logo}" alt="${team.name}">
+                        </div>
+                        <div class="team-name-text">${team.name}</div>
+                        <div class="team-school">${team.school}</div>
+                    `;
                 container.appendChild(card);
             });
         })();
