@@ -100,7 +100,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // 交战记录
     const recordContainer = document.getElementById('ccl-tournaments');
-    seasonData.tournaments.forEach(tour => {
+    seasonData.tournaments.reverse().forEach(tour => {
         const maxPoints = tour.maxPoints || maxPointsDefault;
         tour.matches.forEach(match => {
             const teamA = seasonData.teams.find(t => t.id === match.teamA);
