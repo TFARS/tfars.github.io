@@ -25,11 +25,75 @@
         <nav class="ladder-nav">
             <div class="ladder-title"><h2>赛事规则</h2></div>
         </nav>
-        <div class="section" style="padding:20px;white-space:normal;color:#fff;line-height:1.8;">
-            <p><strong>一、队伍组成</strong><br>每队3-5人，每轮上场3人（先锋、中坚、大将）。</p>
-            <p><strong>二、得分规则</strong><br>先锋/中坚胜利各得10分，大将胜利得20分。单场比赛得分上限为50分。</p>
-            <p><strong>三、赛制</strong><br>常规赛为单循环赛，每场比赛最多进行3轮。积分高者排名靠前，同分比较相互胜负关系。</p>
-            <p><strong>四、其他</strong><br>具体赛程及对手以赛事预告为准，最终解释权归组委会所有。</p>
+
+        <div class="section" style="padding:20px; white-space:normal; color:#fff; line-height:1.8;">
+
+            <!-- 报名规则 -->
+            <div class="honor-container" style="margin-bottom:6px; padding:6px; white-space:normal;">
+                <p>
+                    <strong style="color:#ff6347; font-size:1.1em;">参赛规则</strong><br>
+                    参赛选手<strong>在报名期间</strong>必须为天津市高校在读<strong>专科生、本科生、硕士研究生或博士研究生</strong>。报名时需提供学信网在线验证报告截图，以核验在校生身份。不符合资格者组委会有权取消参赛资格。
+</p>
+            </div>
+
+            <!-- 一、赛制概述 -->
+            <div class="honor-container" style="margin-bottom:6px; padding:6px; white-space:normal;">
+                <p>
+                    <strong style="color:#ff6347; font-size:1.1em;">一、赛制概述</strong><br>
+                    本联赛为3V3组队赛，采用 <strong>SFL</strong> 赛制，引入主客场概念，通过累计积分决定胜负。
+                </p>
+            </div>
+
+            <!-- 二、主客场机制 -->
+            <div class="honor-container" style="margin-bottom:6px; padding:6px; white-space:normal;">
+                <p>
+                    <strong style="color:#ff6347; font-size:1.1em;">二、主客场机制</strong><br>
+                    · <strong>主场优势</strong>：拥有后手选人权利，可针对客队出场选手进行反制。<br>
+                    · <strong>客场义务</strong>：必须率先公布出场选手及使用角色。<br>
+                    · <strong>确定方式</strong>：小组赛通过掷硬币或赛前排名决定；淘汰赛由排名高者优先选择主客场。
+                </p>
+            </div>
+
+            <!-- 三、队伍配置与角色 -->
+            <div class="honor-container" style="margin-bottom:6px; padding:6px; white-space:normal;">
+                <p>
+                    <strong style="color:#ff6347; font-size:1.1em;">三、队伍配置</strong><br>
+                    每队提交3名正式选手，按以下顺位出战：<br>
+                    · <strong>先锋战</strong>：抢二（FT2），获胜得 <strong>10分</strong><br>
+                    · <strong>中坚战</strong>：抢二（FT2），获胜得 <strong>10分</strong><br>
+                    · <strong>大将战</strong>：抢三（FT3），获胜得 <strong>20分</strong><br>
+                    若三轮结束后双方平分（如20:20），则进入<strong>加时赛</strong>：双方各选一名选手（可从已上场选手中选择）进行抢二决胜，胜者得 <strong>10分</strong>。
+                </p>
+            </div>
+
+            <!-- 四、比赛流程与选人 -->
+            <div class="honor-container" style="margin-bottom:6px; padding:6px; white-space:normal;">
+                <p>
+                    <strong style="color:#ff6347; font-size:1.1em;">四、比赛流程</strong><br>
+                    1. 客队先公布先锋战选手及角色；主队随后公布迎战选手及角色。<br>
+                    2. 第一场结束后，按同样流程进行中坚战选人。<br>
+                    3. 最后进行大将战选人。<br>
+                    4. 若需要加时赛，双方即时选择出战选手进行抢二决胜。
+                </p>
+            </div>
+
+            <!-- 五、获胜条件 -->
+            <div class="honor-container" style="margin-bottom:6px; padding:6px; white-space:normal;">
+                <p>
+                    <strong style="color:#ff6347; font-size:1.1em;">五、获胜条件</strong><br>
+                    比赛采用总分累计制，率先达到 <strong>50分</strong>（小组赛）或 <strong>70分</strong>（淘汰赛）的队伍获胜。若一轮结束后双方均未达标，则开始下一轮先锋－中坚－大将循环，直至一方率先达到目标分数。
+                </p>
+            </div>
+
+            <!-- 六、其他说明 -->
+            <div class="honor-container" style="margin-bottom:6px; padding:6px; white-space:normal;">
+                <p>
+                    <strong style="color:#ff6347; font-size:1.1em;">六、其他说明</strong><br>
+                    · 每位选手每轮只能出战一场（加时赛除外）。<br>
+                    · 具体赛程及对手以赛事预告为准。<br>
+                    · 最终解释权归组委会所有。
+                </p>
+            </div>
         </div>
 
         <!-- 参赛队伍展示 -->
@@ -55,12 +119,12 @@
                 const card = document.createElement('div');
                 card.className = 'match-card team-card';
                 card.innerHTML = `
-                        <div class="team-img">
-                            <img src="${team.logo}" alt="${team.name}">
-                        </div>
-                        <div class="team-name-text">${team.name}</div>
-                        <div class="team-school">${team.school}</div>
-                    `;
+                    <div class="team-img">
+                        <img src="${team.logo}" alt="${team.name}">
+                    </div>
+                    <div class="team-name-text">${team.name}</div>
+                    <div class="team-school">${team.school}</div>
+                `;
                 container.appendChild(card);
             });
         })();
