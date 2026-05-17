@@ -1,197 +1,287 @@
 [
-    {
-        "seasonID": 1,
-        "seasonName": "2026赛季",
-        "teams": [
-            {
-                "id": "VEX",
-                "name": "VEX",
-                "school": "天津商业大学",
-                "logo": "/ccl/img/商大VEX.jpg"
-            },
-            {
-                "id": "DriveSurge",
-                "name": "DriveSurge",
-                "school": "天津工业大学",
-                "logo": "/ccl/img/工业.jpg"
-            },
-            {
-                "id": "Addicted & Afflicted",
-                "name": "Addicted & Afflicted",
-                "school": "天津职业师范大学",
-                "logo": "/ccl/img/天职AA.jpg"
-            },
-            {
-                "id": "TeamSauce",
-                "name": "TeamSauce",
-                "school": "天津医科大学",
-                "logo": "/ccl/img/医科.jpg"
-            },
-            {
-                "id": "周末狂欢",
-                "name": "周末狂欢",
-                "school": "天津城建大学",
-                "logo": "/ccl/img/城建.jpg"
-            },
-            {
-                "id": "HGD",
-                "name": "HGD",
-                "school": "河北工业大学",
-                "logo": "/ccl/img/河北.jpg"
-            },
-            {
-                "id": "Air Music Fighters",
-                "name": "Air Music Fighters",
-                "school": "天津音乐学院",
-                "logo": "/ccl/img/音乐.jpg"
-            },
-            {
-                "id": "不爱凹升龙",
-                "name": "不爱凹升龙",
-                "school": "天津南开大学",
-                "logo": "/ccl/img/南开.png"
-            },
-            {
-                "id": "北洋理工舰队",
-                "name": "北洋理工舰队",
-                "school": "天津理工大学",
-                "logo": "/ccl/img/理工.png"
-            },
-            {
-                "id": "SRK",
-                "name": "SRK",
-                "school": "中国民航大学",
-                "logo": "/ccl/img/民航.jpg"
-            }
-        ],
-        "tournaments": [
-            {
-                "id": "day1",
-                "desc": "4月26日比赛",
-                "date": "2026-04-26",
-                "type": "group",
-                "maxPoints": 50,
-                "maxRounds": 3,
-                "matches": [
-                    {
-                        "teamA": "SRK",
-                        "teamB": "周末狂欢",
-                        "rounds": [
-                            {
-                                "vanguard": [ 2, 0 ],
-                                "zhongjian": [ 2, 0 ],
-                                "dajiang": [ 3, 0 ]
-                            },
-                            { "vanguard": [ 2, 0 ] }
-                        ],
-                        "winner": "SRK",
-                        "score": [ 2, 0 ]
-                    },
-                    {
-                        "teamA": "Addicted & Afflicted",
-                        "teamB": "不爱凹升龙",
-                        "rounds": [
-                            {
-                                "vanguard": [ 0, 2 ],
-                                "zhongjian": [ 2, 1 ],
-                                "dajiang": [ 3, 1 ]
-                            },
-                            {
-                                "vanguard": [ 0, 2 ],
-                                "zhongjian": [ 0, 2 ],
-                                "dajiang": [ 1, 3 ]
-                            }
-                        ],
-                        "winner": "不爱凹升龙",
-                        "score": [ 1, 1 ]
-                    },
-                    {
-                        "teamA": "TeamSauce",
-                        "teamB": "北洋理工舰队",
-                        "rounds": [
-                            {
-                                "vanguard": [ 2, 1 ],
-                                "zhongjian": [ 0, 2 ],
-                                "dajiang": [ 3, 0 ]
-                            },
-                            {
-                                "vanguard": [ 2, 1 ],
-                                "zhongjian": [ 3, 1 ]
-                            }
-                        ],
-                        "winner": "TeamSauce",
-                        "score": [ 2, 0 ]
-                    },
-                    {
-                        "teamA": "VEX",
-                        "teamB": "HGD",
-                        "rounds": [
-                            {
-                                "vanguard": [ 2, 0 ],
-                                "zhongjian": [ 2, 0 ],
-                                "dajiang": [ 3, 2 ]
-                            },
-                            { "vanguard": [ 2, 1 ] }
-                        ],
-                        "winner": "VEX",
-                        "score": [ 2, 0 ]
-                    }
-                ]
-            },
-            {
-                "id": "day2",
-                "desc": "4月30日比赛",
-                "date": "2026-04-30",
-                "type": "group",
-                "maxPoints": 50,
-                "maxRounds": 3,
-                "matches": [
-                    {
-                        "teamA": "Air Music Fighters",
-                        "teamB": "DriveSurge",
-                        "rounds": [
-                            {
-                                "vanguard": [ 2, 0 ],
-                                "zhongjian": [ 0, 2 ],
-                                "dajiang": [ 1, 3 ]
-                            },
-                            {
-                                "vanguard": [ 0, 2 ],
-                                "zhongjian": [ 0, 2 ]
-                            }
-                        ],
-                        "winner": "DriveSurge",
-                        "score": [ 0, 2 ]
-                    }
-                ]
-            }
-        ],
-        "upcoming": [
-            {
-                "teamA": "VEX",
-                "teamB": "DriveSurge",
-                "date": "2026-05-17"
-            },
-            {
-                "teamA": "TeamSauce",
-                "teamB": "不爱凹升龙",
-                "date": "2026-05-17"
-            },
-            {
-                "teamA": "Addicted & Afflicted",
-                "teamB": "SRK",
-                "date": "2026-05-17"
-            },
-            {
-                "teamA": "HGD",
-                "teamB": "北洋理工舰队",
-                "date": "2026-05-17"
-            },
-            {
-                "teamA": "周末狂欢",
-                "teamB": "Air Music Fighters",
-                "date": "2026-05-17"
-            }
+  {
+    "seasonID": 1,
+    "seasonName": "2026赛季",
+    "teams": [
+      {
+        "id": "VEX",
+        "name": "VEX",
+        "school": "天津商业大学",
+        "logo": "/ccl/img/商大VEX.jpg"
+      },
+      {
+        "id": "DriveSurge",
+        "name": "DriveSurge",
+        "school": "天津工业大学",
+        "logo": "/ccl/img/工业.jpg"
+      },
+      {
+        "id": "Addicted & Afflicted",
+        "name": "Addicted & Afflicted",
+        "school": "天津职业师范大学",
+        "logo": "/ccl/img/天职AA.jpg"
+      },
+      {
+        "id": "TeamSauce",
+        "name": "TeamSauce",
+        "school": "天津医科大学",
+        "logo": "/ccl/img/医科.jpg"
+      },
+      {
+        "id": "周末狂欢",
+        "name": "周末狂欢",
+        "school": "天津城建大学",
+        "logo": "/ccl/img/城建.jpg"
+      },
+      {
+        "id": "HGD",
+        "name": "HGD",
+        "school": "河北工业大学",
+        "logo": "/ccl/img/河北.jpg"
+      },
+      {
+        "id": "Air Music Fighters",
+        "name": "Air Music Fighters",
+        "school": "天津音乐学院",
+        "logo": "/ccl/img/音乐.jpg"
+      },
+      {
+        "id": "不爱凹升龙",
+        "name": "不爱凹升龙",
+        "school": "天津南开大学",
+        "logo": "/ccl/img/南开.png"
+      },
+      {
+        "id": "北洋理工舰队",
+        "name": "北洋理工舰队",
+        "school": "天津理工大学",
+        "logo": "/ccl/img/理工.png"
+      },
+      {
+        "id": "SRK",
+        "name": "SRK",
+        "school": "中国民航大学",
+        "logo": "/ccl/img/民航.jpg"
+      }
+    ],
+    "tournaments": [
+      {
+        "id": "day1",
+        "desc": "4月26日比赛",
+        "date": "2026-04-26",
+        "type": "group",
+        "maxPoints": 50,
+        "maxRounds": 3,
+        "matches": [
+          {
+            "teamA": "SRK",
+            "teamB": "周末狂欢",
+            "rounds": [
+              {
+                "vanguard": [2, 0],
+                "zhongjian": [2, 0],
+                "dajiang": [3, 0]
+              },
+              { "vanguard": [2, 0] }
+            ],
+            "winner": "SRK",
+            "score": [2, 0]
+          },
+          {
+            "teamA": "Addicted & Afflicted",
+            "teamB": "不爱凹升龙",
+            "rounds": [
+              {
+                "vanguard": [0, 2],
+                "zhongjian": [2, 1],
+                "dajiang": [3, 1]
+              },
+              {
+                "vanguard": [0, 2],
+                "zhongjian": [0, 2],
+                "dajiang": [1, 3]
+              }
+            ],
+            "winner": "不爱凹升龙",
+            "score": [1, 1]
+          },
+          {
+            "teamA": "TeamSauce",
+            "teamB": "北洋理工舰队",
+            "rounds": [
+              {
+                "vanguard": [2, 1],
+                "zhongjian": [0, 2],
+                "dajiang": [3, 0]
+              },
+              {
+                "vanguard": [2, 1],
+                "zhongjian": [3, 1]
+              }
+            ],
+            "winner": "TeamSauce",
+            "score": [2, 0]
+          },
+          {
+            "teamA": "VEX",
+            "teamB": "HGD",
+            "rounds": [
+              {
+                "vanguard": [2, 0],
+                "zhongjian": [2, 0],
+                "dajiang": [3, 2]
+              },
+              { "vanguard": [2, 1] }
+            ],
+            "winner": "VEX",
+            "score": [2, 0]
+          }
         ]
-    }
+      },
+      {
+        "id": "day2",
+        "desc": "4月30日比赛",
+        "date": "2026-04-30",
+        "type": "group",
+        "maxPoints": 50,
+        "maxRounds": 3,
+        "matches": [
+          {
+            "teamA": "Air Music Fighters",
+            "teamB": "DriveSurge",
+            "rounds": [
+              {
+                "vanguard": [2, 0],
+                "zhongjian": [0, 2],
+                "dajiang": [1, 3]
+              },
+              {
+                "vanguard": [0, 2],
+                "zhongjian": [0, 2]
+              }
+            ],
+            "winner": "DriveSurge",
+            "score": [0, 2]
+          }
+        ]
+      },
+      {
+        "id": "day_0511",
+        "desc": "5月11日比赛",
+        "date": "2026-05-11",
+        "type": "group",
+        "maxPoints": 50,
+        "maxRounds": 3,
+        "matches": [
+          {
+            "teamA": "不爱凹升龙",
+            "teamB": "TeamSauce",
+            "rounds": [
+              {
+                "vanguard": [2, 0],
+                "zhongjian": [1, 2],
+                "dajiang": [3, 0]
+              },
+              {
+                "vanguard": [2, 1],
+                "zhongjian": [2, 1]
+              }
+            ],
+            "winner": "不爱凹升龙",
+            "score": [2, 0]
+          }
+        ]
+      },
+      {
+        "id": "day_0516",
+        "desc": "5月16日比赛",
+        "date": "2026-05-16",
+        "type": "group",
+        "maxPoints": 50,
+        "maxRounds": 3,
+        "matches": [
+          {
+            "teamA": "Addicted & Afflicted",
+            "teamB": "SRK",
+            "rounds": [
+              {
+                "vanguard": [0, 2],
+                "zhongjian": [1, 2],
+                "dajiang": [0, 3]
+              },
+              {
+                "vanguard": [0, 2]
+              }
+            ],
+            "winner": "SRK",
+            "score": [0, 2]
+          },
+          {
+            "teamA": "HGD",
+            "teamB": "北洋理工舰队",
+            "rounds": [
+              {
+                "vanguard": [2, 1],
+                "zhongjian": [2, 0],
+                "dajiang": [0, 3]
+              },
+              {
+                "vanguard": [2, 1],
+                "zhongjian": [1, 2],
+                "dajiang": [3, 2]
+              }
+            ],
+            "winner": "HGD",
+            "score": [2, 0]
+          }
+        ]
+      },
+      {
+        "id": "day_0517",
+        "desc": "5月17日比赛",
+        "date": "2026-05-17",
+        "type": "group",
+        "maxPoints": 50,
+        "maxRounds": 3,
+        "matches": [
+          {
+            "teamA": "VEX",
+            "teamB": "DriveSurge",
+            "rounds": [
+              {
+                "vanguard": [2, 0],
+                "zhongjian": [1, 2],
+                "dajiang": [3, 2]
+              },
+              {
+                "vanguard": [2, 0],
+                "zhongjian": [0, 2],
+                "dajiang": [3, 0]
+              }
+            ],
+            "winner": "VEX",
+            "score": [2, 0]
+          },
+          {
+            "teamA": "Air Music Fighters",
+            "teamB": "周末狂欢",
+            "rounds": [
+              {
+                "vanguard": [1, 2],
+                "zhongjian": [2, 1],
+                "dajiang": [1, 3]
+              },
+              {
+                "vanguard": [2, 1],
+                "zhongjian": [2, 0],
+                "dajiang": [1, 3]
+              }
+            ],
+            "winner": "Draw",
+            "score": [1, 1]
+          }
+        ]
+      }
+    ]
+  }
 ]
