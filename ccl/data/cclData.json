@@ -282,6 +282,33 @@
           }
         ]
       }
+    ],
+    "upcoming": [
+      {
+        "date": "2026-05-31",
+        "teamA": "VEX",
+        "teamB": "不爱凹升龙"
+      },
+      {
+        "date": "2026-05-31",
+        "teamA": "Air Music Fighters",
+        "teamB": "SRK"
+      },
+      {
+        "date": "2026-05-31",
+        "teamA": "HGD",
+        "teamB": "DriveSurge"
+      },
+      {
+        "date": "2026-05-31",
+        "teamA": "Addicted & Afflicted",
+        "teamB": "TeamSauce"
+      },
+      {
+        "date": "2026-05-31",
+        "teamA": "北洋理工舰队",
+        "teamB": "周末狂欢"
+      }
     ]
   }
 ]
