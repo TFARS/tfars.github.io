@@ -1,0 +1,851 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>活动海报生成器 - 架构微调版</title>
+    <style>
+        /* 页面布局样式 */
+        .container {
+            display: flex;
+            gap: 20px;
+            padding: 20px;
+            background: #f0f0f0;
+            min-height: 100vh;
+            align-items: flex-start;
+            box-sizing: border-box;
+        }
+
+        .input-area {
+            width: 420px;
+            padding: 20px;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: relative;
+            flex-shrink: 0;
+            max-height: calc(100vh - 40px);
+            overflow-y: auto;
+            scrollbar-width: thin;
+        }
+
+        .batch-input-area {
+            width: 340px;
+            padding: 20px;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            max-height: calc(100vh - 40px);
+            overflow-y: auto;
+        }
+
+        .preview-area {
+            width: 1080px;
+            height: 2640px;
+            position: relative;
+            overflow: hidden;
+            border-radius: 20px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+            flex-shrink: 0;
+            background-color: #1a1a1a;
+            transform-origin: top left;
+        }
+
+        .poster-bg-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* 背景 4 层顺序明确划分 */
+        .poster-bg-solid {
+            z-index: 1; /* 第4层：底层颜色 */
+        }
+
+        .poster-bg-pattern {
+            z-index: 2; /* 第3层：花纹层 */
+            background-size: cover;
+            background-position: center;
+        }
+
+        .poster-bg-main {
+            z-index: 3; /* 第2层：中层背景图 */
+            background-image: url("/img/poster_back_new.png");
+            background-size: cover;
+            background-position: center;
+        }
+
+        .poster-bg-overlay {
+            z-index: 4; /* 第1层：顶层固定图 */
+            background-image: url("/img/poster_overlay.png");
+            background-size: cover;
+            background-position: center;
+            pointer-events: none; /* 防止遮挡下方卡片的可能交互 */
+        }
+
+        /* 顶端标题区：300px */
+        .poster-title {
+            text-shadow: 1px 1px 6px #000, -1px -1px 6px #000, 1px -1px 6px #000, -1px 1px 6px #000;
+            height: 300px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            padding-bottom: 30px;
+            text-align: center;
+            font-size: 80px;
+            color: #fff;
+            font-family: 'Microsoft YaHei', sans-serif;
+            box-sizing: border-box;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* 活动容器：2100px */
+        .activities-container {
+            height: 2100px;
+            padding: 0 40px;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-evenly;
+            position: relative;
+            z-index: 10;
+            box-sizing: border-box;
+        }
+
+        .activity-block {
+            border-radius: 10px;
+            border: 2px solid #000;
+            opacity: 0.9;
+            box-shadow: 5px 0 10px rgba(0, 0, 0, 1);
+            padding: 30px;
+            box-sizing: border-box;
+            backdrop-filter: blur(2px);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            background-color: white;
+            flex-shrink: 0;
+        }
+
+            .activity-block.align-left {
+                margin-right: auto;
+                margin-left: 0;
+            }
+
+            .activity-block.align-center {
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .activity-block.align-right {
+                margin-left: auto;
+                margin-right: 0;
+            }
+
+            .activity-block.mirrored {
+                box-shadow: -5px 0 10px rgba(0, 0, 0, 1);
+            }
+
+                .activity-block.mirrored .activity-title,
+                .activity-block.mirrored .activity-time,
+                .activity-block.mirrored .activity-content {
+                    text-align: right;
+                    margin-left: auto;
+                    margin-right: 0;
+                }
+
+        .activity-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-size: auto 100%;
+            background-repeat: no-repeat;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .activity-title {
+            font-weight: 400;
+            text-shadow: 0px 0px 5px #0000008c;
+            font-size: var(--title-size);
+            margin-bottom: 2%;
+            white-space: nowrap;
+            line-height: 1;
+            width: 90%;
+            position: relative;
+            z-index: 2;
+        }
+
+        .activity-time {
+            text-shadow: 0px 0px 5px #0000008c;
+            font-size: var(--time-size);
+            margin-bottom: 1.5%;
+            line-height: 1;
+            width: 90%;
+            position: relative;
+            z-index: 2;
+        }
+
+        .activity-content {
+            text-shadow: 0px 0px 5px #0000008c;
+            font-size: var(--content-size);
+            line-height: 1.2;
+            white-space: nowrap;
+            width: 90%;
+            position: relative;
+            z-index: 2;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #eee;
+        }
+
+            .input-group select,
+            .input-group input,
+            .input-group textarea {
+                width: 100%;
+                margin-bottom: 12px;
+                padding: 10px;
+                border: 2px solid #ddd;
+                border-radius: 6px;
+                font-size: 14px;
+                box-sizing: border-box;
+            }
+
+        .color-picker {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: 2px solid #ddd;
+            cursor: pointer;
+            vertical-align: middle;
+            margin: 0;
+            flex-shrink: 0;
+        }
+
+        .input-group-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 10px;
+            border-bottom: 1px solid #e0e0e0;
+            padding-bottom: 10px;
+        }
+
+        .controls-row {
+            display: flex;
+            gap: 15px;
+            width: 100%;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .control-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            color: #555;
+            background: #fff;
+            padding: 5px 8px;
+            border-radius: 4px;
+            border: 1px solid #e0e0e0;
+        }
+
+            .control-item label {
+                margin: 0;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                gap: 5px;
+                white-space: nowrap;
+            }
+
+            .control-item select {
+                margin: 0;
+                padding: 4px;
+                border: none;
+                background: transparent;
+                font-size: 12px;
+                width: auto;
+            }
+
+            .control-item input[type="checkbox"] {
+                width: auto;
+                margin: 0;
+            }
+
+        .color-picker-group {
+            display: flex;
+            gap: 10px;
+            flex-grow: 1;
+        }
+
+        .color-picker-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 11px;
+            color: #888;
+        }
+
+        .poster-bg-settings {
+            background: #fff3cd;
+            border: 1px solid #ffecb5;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+            .poster-bg-settings h4 {
+                margin: 0 0 10px 0;
+                color: #856404;
+            }
+
+        button {
+            padding: 12px 24px;
+            margin: 8px 0;
+            cursor: pointer;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            transition: all 0.3s;
+            font-size: 16px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+        }
+
+            button:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            }
+
+        .action-buttons {
+            position: sticky;
+            bottom: 0;
+            background: linear-gradient(to top, #fff 80%, transparent);
+            padding: 20px 0 0 0;
+            margin-top: 30px;
+            z-index: 100;
+        }
+
+        .batch-textarea {
+            min-height: 120px;
+            font-family: monospace;
+            resize: vertical;
+        }
+
+        .template-textarea {
+            min-height: 150px;
+            font-family: monospace;
+            font-size: 12px;
+            white-space: pre;
+        }
+
+        .batch-hint {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 10px;
+            background: #f0f7ff;
+            padding: 10px;
+            border-radius: 6px;
+            border-left: 3px solid #007bff;
+        }
+
+        .section-title {
+            font-size: 14px;
+            font-weight: bold;
+            margin-top: 15px;
+            margin-bottom: 8px;
+            color: #333;
+            border-top: 1px solid #eee;
+            padding-top: 15px;
+        }
+
+        .btn-delete {
+            background: #dc3545;
+            margin-top: 5px;
+            padding: 8px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 左侧：手动输入区域 -->
+        <div class="input-area">
+            <h2 style="color: #333; margin-bottom: 20px;">🎨 海报全局设置</h2>
+
+            <div class="poster-bg-settings">
+                <h4>🖼️ 海报背景分层设置</h4>
+
+                <!-- 层 1 隐藏/显示控制 -->
+                <div style="margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px dashed #ffecb5;">
+                    <label style="font-size: 12px; display: block; margin-bottom: 5px; font-weight: bold;">
+                        <input type="checkbox" id="toggleOverlayCheckbox" checked onchange="toggleOverlayLayer()" style="width: auto; margin:0;">
+                        显示Logo/联系方式
+                    </label>
+                </div>
+
+                <!-- 层 2 控制 -->
+                <div style="margin-bottom: 12px;">
+                    <label style="font-size: 12px; display: block; margin-bottom: 5px; font-weight: bold;">背景图层（1080*2640）:</label>
+                    <input type="file" id="bgUploadInput" accept="image/*" onchange="uploadMainBackground()" style="font-size: 12px; width: 100%; margin-bottom: 5px;">
+                    <span style="font-size: 11px; color: #666; display:block;">未上传则使用系统预设，本地上传自动铺满并自适应。</span>
+                </div>
+
+                <!-- 层 3 控制 -->
+                <div style="margin-bottom: 12px;">
+                    <label style="font-size: 12px; display: block; margin-bottom: 5px; font-weight: bold;">花纹层:</label>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <select id="posterPatternSelect" onchange="updatePosterBackground()" style="flex: 1; margin: 0;">
+                            <option value="">无花纹</option>
+                            <option value="pattern1">花纹 1</option>
+                            <option value="pattern2" selected>花纹 2</option>
+                            <option value="pattern3">花纹 3</option>
+                            <option value="pattern4">花纹 4</option>
+                        </select>
+                        <input type="color" id="posterPatternColor" value="#f7c628" oninput="updatePosterBackground()">
+                    </div>
+                </div>
+
+                <!-- 层 4 控制 -->
+                <div>
+                    <label style="font-size: 12px; display: WH; font-weight: bold;">
+                        纯色底层:
+                        <input type="color" id="posterBgColor" value="#ffe562" oninput="updatePosterBackground()">
+                    </label>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>主标题颜色：</label>
+                <input type="color" class="color-picker" id="mainTitleColor" value="#ffffff" oninput="updatePreview()">
+            </div>
+            <div class="input-group">
+                <label>海报标题：</label>
+                <input type="text" id="mainTitle" oninput="updatePreview()">
+            </div>
+
+            <h3 style="color: #444; margin-bottom: 20px;">🎡 活动内容管理</h3>
+            <div id="activitiesInput"></div>
+            <button onclick="addActivityInput()" style="width: 100%; justify-content: center;">➕ 添加活动</button>
+
+            <div class="action-buttons">
+                <button id="downloadBtn" style="background: #28a745; width: 100%;">💾 立即保存海报</button>
+            </div>
+        </div>
+
+        <!-- 中间：预览区域 -->
+        <div class="preview-area" id="posterPreview">
+            <!-- 背景 4 层节点叠放 -->
+            <div class="poster-bg-layer poster-bg-solid" id="posterBgSolid"></div>
+            <div class="poster-bg-layer poster-bg-pattern" id="posterBgPattern"></div>
+            <div class="poster-bg-layer poster-bg-main" id="posterBgMain"></div>
+            <div class="poster-bg-layer poster-bg-overlay" id="posterBgOverlay"></div>
+
+            <div class="poster-title" id="previewTitle"></div>
+            <div class="activities-container" id="previewActivities"></div>
+        </div>
+
+        <!-- 右侧：批量输入区域 -->
+        <div class="batch-input-area">
+            <h2 style="color: #333; margin-bottom: 20px;">⚡ 批量创建活动</h2>
+            <div class="batch-hint">
+                <strong>输入格式（严格用 | 分隔）：</strong><br>
+                每行一个活动：<code>日期|标题|描述</code><br>
+                提示：描述中如需换行，请用 <code>\n</code> 或 <code>[BR]</code> 标记。<br>
+                示例：<br>
+                11/8|街霸6新人讲习会|从零教起\n现场有精美茶点
+            </div>
+            <textarea id="batchInput" class="batch-textarea" placeholder="11/8|街霸6新人讲习会|从零教学\n欢迎新手参加"></textarea>
+            <button onclick="processBatchInput()" style="width: 100%; justify-content: center; background: #17a2b8;">🤖 解析并创建</button>
+            <button onclick="clearAllActivities()" style="width: 100%; justify-content: center; background: #dc3545;">🗑️ 清空所有活动</button>
+
+            <div class="section-title">🔧 自动描述模板配置</div>
+            <div class="batch-hint">
+                <strong>配置格式：</strong><br>
+                <code>关键词1,关键词2:描述内容</code><br>
+                提示：此处描述内容同样支持使用 <code>\n</code> 或 <code>[BR]</code> 进行换行。
+            </div>
+            <textarea id="templateConfig" class="template-textarea"></textarea>
+            <button onclick="saveTemplates()" style="width: 100%; justify-content: center; background: #6610f2;">💾 保存模板设置</button>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dom-to-image/2.6.0/dom-to-image.min.js"></script>
+    <script>
+        // ================= 配置区域 =================
+        const LAYOUT_CONFIG = {
+            canvasWidth: 1080,
+            topArea: 300,
+            activityArea: 2100,
+            bottomArea: 240,
+            sidePadding: 40,
+            minBlockHeight: 180,
+            maxWidthRatio: 0.85,
+            targetAspectRatio: 4,
+            minAspectRatio: 2.8,
+            fontRatios: {
+                title: 0.24,
+                time: 0.15,
+                content: 0.12
+            }
+        };
+
+        let DESCRIPTION_TEMPLATES = [
+            { keywords: ['初中级'], desc: '每月一度，面向街霸6初中级者玩家的比赛\n(排位最高积分不高于M1500)' },
+            { keywords: ['初中级复盘'], desc: '现场复盘本月初中级者大会比赛\n聚焦初中级玩家实战问题！' },
+            { keywords: ['月赛'], desc: '每月一度的街霸6个人赛！\n冠军更可获得奖品，以及年度总决赛名额！' },
+            {
+                keywords: ['月卡'], desc: '价格:150，学生党:100\n可在当月无限使用天格会场地！\n26年Q2版本实体卡发放中，更有其他福利！'
+            },
+            {
+                keywords: ['高校杯'], desc: '天格会主办的天津高校杯如火如茶进行中！\n欢迎大家观看直播为自己喜爱的队伍加油助威' },
+        ];
+
+        const BG_OPTIONS = Array.from({ length: 9 }, (_, i) => `actcard${i + 1}`);
+
+        // ================= 初始化 =================
+        window.onload = function () {
+            renderTemplateConfig();
+            updatePosterBackground();
+            addActivityInput();
+        };
+
+        // 顶层固定信息控制逻辑
+        function toggleOverlayLayer() {
+            const overlayLayer = document.getElementById('posterBgOverlay');
+            const isChecked = document.getElementById('toggleOverlayCheckbox').checked;
+            overlayLayer.style.display = isChecked ? 'block' : 'none';
+        }
+
+        // 纯色层与花纹层合并逻辑
+        function updatePosterBackground() {
+            const solidLayer = document.getElementById('posterBgSolid');
+            const patternLayer = document.getElementById('posterBgPattern');
+            const bgColor = document.getElementById('posterBgColor').value;
+            solidLayer.style.backgroundColor = bgColor;
+
+            const patternSelect = document.getElementById('posterPatternSelect').value;
+            const patternColor = document.getElementById('posterPatternColor').value;
+
+            if (patternSelect) {
+                const img = new Image();
+                img.crossOrigin = "anonymous";
+                img.src = `/img/${patternSelect}.png`;
+
+                img.onload = function () {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = img.width || 1080;
+                    canvas.height = img.height || 2640;
+                    const ctx = canvas.getContext('2d');
+
+                    ctx.fillStyle = patternColor;
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                    ctx.globalCompositeOperation = 'destination-in';
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+                    patternLayer.style.backgroundImage = `url(${canvas.toDataURL()})`;
+                    patternLayer.style.opacity = '1';
+                };
+                img.onerror = function () {
+                    patternLayer.style.backgroundImage = 'none';
+                    patternLayer.style.backgroundColor = patternColor;
+                    patternLayer.style.opacity = '0.2';
+                }
+            } else {
+                patternLayer.style.backgroundImage = 'none';
+                patternLayer.style.backgroundColor = 'transparent';
+            }
+        }
+
+        // 中层背景上传自适应
+        function uploadMainBackground() {
+            const fileInput = document.getElementById('bgUploadInput');
+            const mainLayer = document.getElementById('posterBgMain');
+            const file = fileInput.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    mainLayer.style.backgroundImage = `url(${e.target.result})`;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function addActivityInput(activity = {
+            bg: BG_OPTIONS[Math.floor(Math.random() * BG_OPTIONS.length)],
+            title: '',
+            time: '',
+            content: '',
+            titleColor: '#000000',
+            timeColor: '#000000',
+            contentColor: '#000000',
+            mirrored: false,
+            align: 'center'
+        }) {
+            const inputGroup = document.createElement('div');
+            inputGroup.className = 'input-group';
+            inputGroup.innerHTML = `
+                        <div class="input-group-header">
+                            <select class="bg-select" onchange="updatePreview()" style="width: 100px; margin:0; border:none; background:transparent; font-weight:bold;">
+                                ${BG_OPTIONS.map(bg => `<option value="${bg}" ${activity.bg === bg ? 'selected' : ''}>${bg}</option>`).join('')}
+                            </select>
+                            <span style="font-size:12px; color:#999;">卡片设置</span>
+                        </div>
+                        <div class="color-picker-group" style="margin-bottom: 12px;">
+                            <div class="color-picker-item">
+                                <input type="color" class="color-picker" value="${activity.titleColor}" oninput="updatePreview()"><span>标题</span>
+                            </div>
+                            <div class="color-picker-item">
+                                <input type="color" class="color-picker" value="${activity.timeColor}" oninput="updatePreview()"><span>时间</span>
+                            </div>
+                            <div class="color-picker-item">
+                                <input type="color" class="color-picker" value="${activity.contentColor}" oninput="updatePreview()"><span>内容</span>
+                            </div>
+                        </div>
+                        <div class="controls-row" style="margin-bottom: 12px;">
+                            <div class="control-item">
+                                <label>对齐:<select class="align-select-box" onchange="updatePreview()">
+                                    <option value="left" ${activity.align === 'left' ? 'selected' : ''}>居左</option>
+                                    <option value="center" ${activity.align === 'center' ? 'selected' : ''}>居中</option>
+                                    <option value="right" ${activity.align === 'right' ? 'selected' : ''}>居右</option>
+                                </select></label>
+                            </div>
+                            <div class="control-item">
+                                <label><input type="checkbox" class="mirror-checkbox" ${activity.mirrored ? 'checked' : ''} onchange="updatePreview()">镜像翻转</label>
+                            </div>
+                        </div>
+                        <input type="text" placeholder="活动标题" class="act-title" value="${activity.title}" oninput="updatePreview()">
+                        <input type="text" placeholder="活动时间" class="act-time" value="${activity.time}" oninput="updatePreview()">
+                        <textarea placeholder="活动内容" class="act-content" rows="2" oninput="updatePreview()">${activity.content}</textarea>
+                        <button class="btn-delete" onclick="this.parentElement.remove(); updatePreview();">🗑️ 删除此活动</button>
+                    `;
+            document.getElementById('activitiesInput').appendChild(inputGroup);
+            updatePreview();
+        }
+
+        function updatePreview() {
+            const mainTitleInput = document.getElementById('mainTitle');
+            const mainTitlePreview = document.getElementById('previewTitle');
+            mainTitlePreview.textContent = mainTitleInput.value;
+            mainTitlePreview.style.color = document.getElementById('mainTitleColor').value;
+            const previewContainer = document.getElementById('previewActivities');
+            previewContainer.innerHTML = '';
+            const activities = collectActivityData();
+            activities.forEach(activity => {
+                const activityBlock = document.createElement('div');
+                activityBlock.className = `activity-block align-${activity.align} ${activity.mirrored ? 'mirrored' : ''}`;
+                const bgDiv = document.createElement('div');
+                bgDiv.className = 'activity-background';
+                bgDiv.style.backgroundImage = `url(/img/${activity.bg}.png)`;
+                bgDiv.style.transform = activity.mirrored ? 'scaleX(-1)' : 'none';
+                bgDiv.style.backgroundPosition = 'right';
+                activityBlock.appendChild(bgDiv);
+                const contentDiv = document.createElement('div');
+                contentDiv.style.cssText = 'position: relative; z-index: 2; width: 100%;';
+                contentDiv.innerHTML = `
+                            <div class="activity-title" style="color:${activity.titleColor}">${activity.title || '活动标题'}</div>
+                            <div class="activity-time" style="color:${activity.timeColor}">⏰ ${activity.time || '待定时间'}</div>
+                            <div class="activity-content" style="color:${activity.contentColor}">${activity.content.replace(/\n/g, '<br>') || '活动内容...'}</div>
+                        `;
+                activityBlock.appendChild(contentDiv);
+                previewContainer.appendChild(activityBlock);
+            });
+            updateLayout();
+        }
+
+        function collectActivityData() {
+            const activities = [];
+            document.querySelectorAll('#activitiesInput .input-group').forEach(group => {
+                activities.push({
+                    bg: group.querySelector('.bg-select').value,
+                    title: group.querySelector('.act-title').value,
+                    time: group.querySelector('.act-time').value,
+                    content: group.querySelector('.act-content').value,
+                    titleColor: group.querySelectorAll('input[type="color"]')[0].value,
+                    timeColor: group.querySelectorAll('input[type="color"]')[1].value,
+                    contentColor: group.querySelectorAll('input[type="color"]')[2].value,
+                    mirrored: group.querySelector('.mirror-checkbox').checked,
+                    align: group.querySelector('.align-select-box').value
+                });
+            });
+            return activities;
+        }
+
+        function updateLayout() {
+            const container = document.getElementById('previewActivities');
+            const blocks = Array.from(container.children);
+            const count = blocks.length;
+            if (count === 0) return;
+
+            const activityAreaHeight = LAYOUT_CONFIG.activityArea;
+            const maxWidth = LAYOUT_CONFIG.canvasWidth * LAYOUT_CONFIG.maxWidthRatio;
+            const targetAspect = LAYOUT_CONFIG.targetAspectRatio;
+            const minBlockHeight = LAYOUT_CONFIG.minBlockHeight;
+
+            let desiredHeight = 460 - (count - 1) * 30;
+            let blockHeight = Math.max(desiredHeight, minBlockHeight);
+
+            let spacing = (activityAreaHeight - count * blockHeight) / (count + 1);
+
+            if (spacing < 10 && blockHeight > minBlockHeight) {
+                blockHeight = Math.floor((activityAreaHeight - (count + 1) * 10) / count);
+                blockHeight = Math.max(minBlockHeight, blockHeight);
+                spacing = (activityAreaHeight - count * blockHeight) / (count + 1);
+            }
+
+            let blockWidth = blockHeight * targetAspect;
+            if (blockWidth > maxWidth) blockWidth = maxWidth;
+
+            blocks.forEach(block => {
+                block.style.height = `${blockHeight}px`;
+                block.style.width = `${blockWidth}px`;
+                const bgDiv = block.querySelector('.activity-background');
+                if (bgDiv) bgDiv.style.backgroundSize = `auto ${Math.max(blockHeight, 230)}px`;
+                block.style.setProperty('--title-size', `${blockHeight * LAYOUT_CONFIG.fontRatios.title}px`);
+                block.style.setProperty('--time-size', `${blockHeight * LAYOUT_CONFIG.fontRatios.time}px`);
+                block.style.setProperty('--content-size', `${blockHeight * LAYOUT_CONFIG.fontRatios.content}px`);
+            });
+
+            container.style.height = `${activityAreaHeight}px`;
+            container.style.justifyContent = 'space-evenly';
+            container.style.marginTop = '0';
+        }
+
+        // 批量创建活动解析
+        function processBatchInput() {
+            const text = document.getElementById('batchInput').value;
+            if (!text.trim()) { alert('请输入活动内容'); return; }
+            const lines = text.split('\n').filter(l => l.trim());
+            let cnt = 0;
+
+            lines.forEach(line => {
+                const parts = line.split('|');
+                if (parts.length < 2) return;
+
+                const dateText = parts[0].trim();
+                const titleText = parts[1].trim();
+                let contentText = parts.slice(2).join('|').trim();
+
+                if (contentText) {
+                    contentText = contentText.replace(/\\n/g, '\n').replace(/\[BR\]/gi, '\n');
+                } else {
+                    contentText = getAutoDescription(titleText);
+                }
+
+                if (!titleText) return;
+
+                addActivityInput({
+                    bg: BG_OPTIONS[cnt % BG_OPTIONS.length],
+                    title: titleText,
+                    time: dateText,
+                    content: contentText,
+                    titleColor: '#000000',
+                    timeColor: '#000000',
+                    contentColor: '#000000',
+                    mirrored: false,
+                    align: 'center'
+                });
+                cnt++;
+            });
+            cnt ? alert(`成功创建 ${cnt} 个活动！`) : alert('未能正确解析到任何有效活动，请检查格式');
+        }
+
+        // ================= 自动描述模板配置管理 =================
+        function renderTemplateConfig() {
+            let s = '';
+            DESCRIPTION_TEMPLATES.forEach(t => {
+                const escapedDesc = t.desc.replace(/\n/g, '\\n');
+                s += `${t.keywords.join(',')}:${escapedDesc}\n`;
+            });
+            document.getElementById('templateConfig').value = s.trim();
+        }
+
+        function saveTemplates() {
+            const text = document.getElementById('templateConfig').value;
+            const lines = text.split('\n').filter(l => l.trim());
+            let arr = [];
+            try {
+                lines.forEach(l => {
+                    let i = l.indexOf(':');
+                    if (i < 0) return;
+                    let k = l.substring(0, i).trim();
+                    let d = l.substring(i + 1).trim();
+
+                    if (k && d) {
+                        const realDesc = d.replace(/\\n/g, '\n').replace(/\[BR\]/gi, '\n');
+                        arr.push({
+                            keywords: k.split(',').map(x => x.trim()).filter(x => x),
+                            desc: realDesc
+                        });
+                    }
+                });
+                DESCRIPTION_TEMPLATES = arr;
+                alert('模板保存成功！');
+                updatePreview();
+            } catch (e) { alert('保存失败，格式错误'); }
+        }
+
+        function getAutoDescription(title) {
+            for (let t of DESCRIPTION_TEMPLATES) {
+                if (t.keywords.some(k => title.includes(k))) return t.desc;
+            }
+            return '';
+        }
+
+        function clearAllActivities() {
+            if (confirm('确定清空所有活动？')) {
+                document.getElementById('activitiesInput').innerHTML = '';
+                updatePreview();
+            }
+        }
+
+        // ================= 下载事件监听（智能命名调整） =================
+        document.getElementById('downloadBtn').addEventListener('click', function () {
+            const node = document.getElementById('posterPreview');
+
+            // 提取海报标题文本
+            const titleInput = document.getElementById('mainTitle').value.trim();
+            // 规则：若标题存在则作为文件名，否则默认使用 poster
+            const saveName = titleInput ? `${titleInput}.png` : 'poster.png';
+
+            domtoimage.toBlob(node).then(blob => {
+                let url = URL.createObjectURL(blob);
+                let a = document.createElement('a');
+                a.href = url;
+                a.download = saveName; // 注入动态文件名
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }).catch(err => {
+                alert('保存海报发生异常。');
+                console.error(err);
+            });
+        });
+    </script>
+</body>
+</html>
