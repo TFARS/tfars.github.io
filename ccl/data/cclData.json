@@ -281,14 +281,73 @@
             "score": [1, 1]
           }
         ]
+      },
+      {
+        "id": "day_0531",
+        "desc": "5月31日比赛",
+        "date": "2026-05-31",
+        "type": "group",
+        "maxPoints": 50,
+        "maxRounds": 3,
+        "matches": [
+          {
+            "teamA": "VEX",
+            "teamB": "不爱凹升龙",
+            "rounds": [
+              {
+                "vanguard": [1, 2],
+                "zhongjian": [2, 1],
+                "dajiang": [2, 3]
+              },
+              {
+                "vanguard": [1, 2],
+                "zhongjian": [2, 1],
+                "dajiang": [3, 2]
+              },
+              {
+                "vanguard": [1, 2]
+              }
+            ],
+            "winner": "不爱凹升龙",
+            "score": [1, 2]
+          },
+          {
+            "teamA": "Addicted & Afflicted",
+            "teamB": "TeamSauce",
+            "rounds": [
+              {
+                "vanguard": [1, 2],
+                "zhongjian": [1, 2],
+                "dajiang": [1, 3]
+              },
+              {
+                "vanguard": [2, 1],
+                "zhongjian": [0, 2]
+              }
+            ],
+            "winner": "TeamSauce",
+            "score": [0, 2]
+          },
+          {
+            "teamA": "北洋理工舰队",
+            "teamB": "周末狂欢",
+            "rounds": [
+              {
+                "vanguard": [2, 1],
+                "zhongjian": [2, 0],
+                "dajiang": [3, 0]
+              },
+              {
+                "vanguard": [2, 0]
+              }
+            ],
+            "winner": "北洋理工舰队",
+            "score": [2, 0]
+          }
+        ]
       }
     ],
     "upcoming": [
-      {
-        "date": "2026-05-31",
-        "teamA": "VEX",
-        "teamB": "不爱凹升龙"
-      },
       {
         "date": "2026-05-31",
         "teamA": "Air Music Fighters",
@@ -298,16 +357,6 @@
         "date": "2026-05-31",
         "teamA": "HGD",
         "teamB": "DriveSurge"
-      },
-      {
-        "date": "2026-05-31",
-        "teamA": "Addicted & Afflicted",
-        "teamB": "TeamSauce"
-      },
-      {
-        "date": "2026-05-31",
-        "teamA": "北洋理工舰队",
-        "teamB": "周末狂欢"
       }
     ]
   }
