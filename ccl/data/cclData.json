@@ -343,18 +343,29 @@
             ],
             "winner": "北洋理工舰队",
             "score": [2, 0]
+          },
+          {
+            "teamA": "SRK",
+            "teamB": "Air Music Fighters",
+            "rounds": [
+              {
+                "vanguard": [2, 0],
+                "zhongjian": [2, 0],
+                "dajiang": [3, 1]
+              },
+              {
+                "vanguard": [2, 1]
+              }
+            ],
+            "winner": "SRK",
+            "score": [2, 0]
           }
         ]
       }
     ],
     "upcoming": [
       {
-        "date": "2026-05-31",
-        "teamA": "Air Music Fighters",
-        "teamB": "SRK"
-      },
-      {
-        "date": "2026-05-31",
+        "date": "待定",
         "teamA": "HGD",
         "teamB": "DriveSurge"
       }
