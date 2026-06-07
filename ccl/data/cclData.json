@@ -392,6 +392,34 @@
             "score": [1, 2]
           }
         ]
+      },
+      {
+        "id": "day_0607",
+        "desc": "6月7日比赛",
+        "date": "2026-06-07",
+        "type": "group",
+        "maxPoints": 50,
+        "maxRounds": 3,
+        "matches": [
+          {
+            "teamA": "TeamSauce",
+            "teamB": "VEX",
+            "rounds": [
+              {
+                "vanguard": [0, 2],
+                "zhongjian": [2, 0],
+                "dajiang": [2, 3]
+              },
+              {
+                "vanguard": [2, 0],
+                "zhongjian": [0, 2],
+                "dajiang": [2, 3]
+              }
+            ],
+            "winner": "VEX",
+            "score": [0, 2]
+          }
+        ]
       }
     ],
     "upcoming": []
