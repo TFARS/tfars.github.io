@@ -361,14 +361,39 @@
             "score": [2, 0]
           }
         ]
+      },
+      {
+        "id": "day_0606",
+        "desc": "6月6日比赛",
+        "date": "2026-06-06",
+        "type": "group",
+        "maxPoints": 50,
+        "maxRounds": 3,
+        "matches": [
+          {
+            "teamA": "DriveSurge",
+            "teamB": "HGD",
+            "rounds": [
+              {
+                "vanguard": [0, 2],
+                "zhongjian": [2, 1],
+                "dajiang": [0, 3]
+              },
+              {
+                "vanguard": [0, 2],
+                "zhongjian": [2, 0],
+                "dajiang": [3, 0]
+              },
+              {
+                "vanguard": [1, 2]
+              }
+            ],
+            "winner": "HGD",
+            "score": [1, 2]
+          }
+        ]
       }
     ],
-    "upcoming": [
-      {
-        "date": "待定",
-        "teamA": "HGD",
-        "teamB": "DriveSurge"
-      }
-    ]
+    "upcoming": []
   }
 ]
