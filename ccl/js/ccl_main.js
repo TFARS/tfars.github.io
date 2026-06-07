@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // 积分榜
     const leaderboard = Object.values(teamStats).sort(
-        (a, b) => b.totalPoints - a.totalPoints || b.wins - a.wins
+        (a, b) => b.wins - a.wins || b.totalPoints - a.totalPoints
     );
 
     const tbody = document.querySelector('#ccl-rankings tbody');
