@@ -418,6 +418,24 @@
             ],
             "winner": "VEX",
             "score": [0, 2]
+          },
+          {
+            "teamA": "SRK",
+            "teamB": "不爱凹升龙",
+            "rounds": [
+              {
+                "vanguard": [0, 2],
+                "zhongjian": [1, 2],
+                "dajiang": [3, 2]
+              },
+              {
+                "vanguard": [2, 0],
+                "zhongjian": [2, 1],
+                "dajiang": [3, 2]
+              }
+            ],
+            "winner": "SRK",
+            "score": [1, 1]
           }
         ]
       }
