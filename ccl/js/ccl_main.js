@@ -20,17 +20,22 @@ document.addEventListener('DOMContentLoaded', async () => {
             const { teamA, teamB, rounds, winner } = match;
             let ptsA = 0, ptsB = 0;
 
-            // ====== 新增：弃权处理 ======
-            if (rounds.length === 0) {
-                // 胜利方直接获得 maxPoints，失败方 0 分
+            // ---------- 弃权处理 ----------
+            // 如果 rounds 不存在、不是数组或长度为0，视为弃权
+            if (!rounds || rounds.length === 0) {
+                console.log(`弃权比赛：${teamA} vs ${teamB}，胜者 ${winner}`);
+                // 胜利方直接获得满分，失败方0分
                 if (winner === teamA) {
                     ptsA = maxPoints;
-                } else {
+                } else if (winner === teamB) {
                     ptsB = maxPoints;
+                } else {
+                    // 平局（Draw）特殊处理：双方平分？这里按各得一半处理，但弃权一般不会平局
+                    ptsA = Math.floor(maxPoints / 2);
+                    ptsB = Math.floor(maxPoints / 2);
                 }
-                // 大比分统计仍按 winner 处理（放在后面统一处理）
             } else {
-                // 原有轮次积分统计
+                // 正常轮次统计
                 rounds.forEach(round => {
                     if (round.vanguard) {
                         if (round.vanguard[0] > round.vanguard[1]) ptsA += 10;
@@ -46,21 +51,29 @@ document.addEventListener('DOMContentLoaded', async () => {
                     }
                 });
             }
-            // ==========================
+            // ---------------------------------
 
             ptsA = Math.min(ptsA, maxPoints);
             ptsB = Math.min(ptsB, maxPoints);
             teamStats[teamA].totalPoints += ptsA;
             teamStats[teamB].totalPoints += ptsB;
+
+            // 大比分统计
             if (winner === teamA) {
-                teamStats[teamA].wins++; teamStats[teamB].losses++;
+                teamStats[teamA].wins++;
+                teamStats[teamB].losses++;
+            } else if (winner === teamB) {
+                teamStats[teamB].wins++;
+                teamStats[teamA].losses++;
             } else {
-                teamStats[teamB].wins++; teamStats[teamA].losses++;
+                // 平局（Draw）双方各计平局，这里简单处理为各+0.5胜？但您规则中可能没有平局，此处忽略或可自定义
+                // 目前您的数据中只有一场 Draw，暂时按不加胜场处理，只加积分
+                console.log(`平局：${teamA} vs ${teamB}`);
             }
         });
     });
 
-    // 积分榜
+    // 积分榜（按胜场降序，再按总积分降序）
     const leaderboard = Object.values(teamStats).sort(
         (a, b) => b.wins - a.wins || b.totalPoints - a.totalPoints
     );
@@ -77,7 +90,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         row.insertCell(4).textContent = team.totalPoints;
     });
 
-    // 赛事预告（图标与文字同行，队名+学校在右侧）
+    // 赛事预告（略，保持不变）
     const upcomingDiv = document.getElementById('ccl-upcoming');
     if (seasonData.upcoming && seasonData.upcoming.length > 0) {
         let html = `<table class="ccl-upcoming-table"><thead><tr><th>队伍A</th><th>VS</th><th>队伍B</th><th>日期</th></tr></thead><tbody>`;
@@ -113,7 +126,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         upcomingDiv.innerHTML = '<div style="text-align:center;color:#888;padding:20px;">暂无赛事预告</div>';
     }
 
-    // 交战记录
+    // 交战记录（略，保持不变）
     const recordContainer = document.getElementById('ccl-tournaments');
     seasonData.tournaments.reverse().forEach(tour => {
         const maxPoints = tour.maxPoints || maxPointsDefault;
@@ -124,34 +137,41 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             let ptsA = 0, ptsB = 0;
             let roundsDetail = '';
-            match.rounds.forEach((round, idx) => {
-                let line = `第${idx + 1}轮 `;
-                const parts = [];
-                if (round.vanguard) {
-                    const [a, b] = round.vanguard;
-                    const aClass = a > b ? 'score-win' : 'score-lose';
-                    const bClass = b > a ? 'score-win' : 'score-lose';
-                    parts.push(`先锋 <span class="${aClass}">${a}</span> : <span class="${bClass}">${b}</span>`);
-                    if (a > b) ptsA += 10; else if (b > a) ptsB += 10;
-                }
-                if (round.zhongjian) {
-                    const [a, b] = round.zhongjian;
-                    const aClass = a > b ? 'score-win' : 'score-lose';
-                    const bClass = b > a ? 'score-win' : 'score-lose';
-                    parts.push(`中坚 <span class="${aClass}">${a}</span> : <span class="${bClass}">${b}</span>`);
-                    if (a > b) ptsA += 10; else if (b > a) ptsB += 10;
-                }
-                if (round.dajiang) {
-                    const [a, b] = round.dajiang;
-                    const aClass = a > b ? 'score-win' : 'score-lose';
-                    const bClass = b > a ? 'score-win' : 'score-lose';
-                    parts.push(`大将 <span class="${aClass}">${a}</span> : <span class="${bClass}">${b}</span>`);
-                    if (a > b) ptsA += 20; else if (b > a) ptsB += 20;
-                }
-                line += parts.join(' | ');
-                roundsDetail += `<div style="margin-left:20px; line-height:1.8;">${line}</div>`;
-            });
-
+            // 检查是否为弃权（空轮次）
+            if (!match.rounds || match.rounds.length === 0) {
+                roundsDetail = '<div style="margin-left:20px; color: #ffaa00;">⚠️ 对方弃权，直接获胜</div>';
+                // 分数由统计部分决定，展示时直接给满分
+                ptsA = (match.winner === match.teamA) ? maxPoints : 0;
+                ptsB = (match.winner === match.teamB) ? maxPoints : 0;
+            } else {
+                match.rounds.forEach((round, idx) => {
+                    let line = `第${idx + 1}轮 `;
+                    const parts = [];
+                    if (round.vanguard) {
+                        const [a, b] = round.vanguard;
+                        const aClass = a > b ? 'score-win' : 'score-lose';
+                        const bClass = b > a ? 'score-win' : 'score-lose';
+                        parts.push(`先锋 <span class="${aClass}">${a}</span> : <span class="${bClass}">${b}</span>`);
+                        if (a > b) ptsA += 10; else if (b > a) ptsB += 10;
+                    }
+                    if (round.zhongjian) {
+                        const [a, b] = round.zhongjian;
+                        const aClass = a > b ? 'score-win' : 'score-lose';
+                        const bClass = b > a ? 'score-win' : 'score-lose';
+                        parts.push(`中坚 <span class="${aClass}">${a}</span> : <span class="${bClass}">${b}</span>`);
+                        if (a > b) ptsA += 10; else if (b > a) ptsB += 10;
+                    }
+                    if (round.dajiang) {
+                        const [a, b] = round.dajiang;
+                        const aClass = a > b ? 'score-win' : 'score-lose';
+                        const bClass = b > a ? 'score-win' : 'score-lose';
+                        parts.push(`大将 <span class="${aClass}">${a}</span> : <span class="${bClass}">${b}</span>`);
+                        if (a > b) ptsA += 20; else if (b > a) ptsB += 20;
+                    }
+                    line += parts.join(' | ');
+                    roundsDetail += `<div style="margin-left:20px; line-height:1.8;">${line}</div>`;
+                });
+            }
             const dispA = Math.min(ptsA, maxPoints);
             const dispB = Math.min(ptsB, maxPoints);
 
