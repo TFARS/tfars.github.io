@@ -15,14 +15,13 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     console.log('开始统计比赛数据...');
 
-    // 统计所有比赛
+    // 统计所有比赛（包含弃权处理）
     seasonData.tournaments.forEach(tour => {
         const maxPoints = tour.maxPoints || maxPointsDefault;
         tour.matches.forEach(match => {
             const { teamA, teamB, rounds, winner } = match;
             let ptsA = 0, ptsB = 0;
 
-            // ---------- 弃权处理 ----------
             if (!rounds || rounds.length === 0) {
                 console.log(`⚠️ 弃权比赛：${teamA} vs ${teamB}，胜者 ${winner}`);
                 if (winner === teamA) {
@@ -30,12 +29,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                 } else if (winner === teamB) {
                     ptsB = maxPoints;
                 } else {
-                    // 如果 winner 既不是 A 也不是 B，按平局处理（各得一半）
                     ptsA = Math.floor(maxPoints / 2);
                     ptsB = Math.floor(maxPoints / 2);
                 }
             } else {
-                // 正常轮次统计
                 rounds.forEach(round => {
                     if (round.vanguard) {
                         if (round.vanguard[0] > round.vanguard[1]) ptsA += 10;
@@ -51,14 +48,12 @@ document.addEventListener('DOMContentLoaded', async () => {
                     }
                 });
             }
-            // ---------------------------------
 
             ptsA = Math.min(ptsA, maxPoints);
             ptsB = Math.min(ptsB, maxPoints);
             teamStats[teamA].totalPoints += ptsA;
             teamStats[teamB].totalPoints += ptsB;
 
-            // ---------- 大比分统计（严格匹配 ID） ----------
             if (winner === teamA) {
                 teamStats[teamA].wins++;
                 teamStats[teamB].losses++;
@@ -68,15 +63,16 @@ document.addEventListener('DOMContentLoaded', async () => {
                 teamStats[teamA].losses++;
                 console.log(`✅ ${teamB} 胜 ${teamA}，积分 ${ptsA}:${ptsB}`);
             } else {
-                // 平局或未知胜者，双方各计平局（这里暂不增加胜场，只记录）
                 console.warn(`⚠️ 平局或未知胜者：${winner}，比赛 ${teamA} vs ${teamB}，双方不增加胜场`);
-                // 可以视需求增加平局字段，但此处忽略
             }
         });
     });
 
-    // 输出最终统计结果
     console.log('统计完成，队伍数据：', teamStats);
+
+    // ========== 配置高亮队伍数量 ==========
+    const TOP_N = 4;   // 修改此数字可改变高亮队伍数量
+    // =====================================
 
     // 积分榜（按胜场降序，再按总积分降序）
     const leaderboard = Object.values(teamStats).sort(
@@ -87,6 +83,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     tbody.innerHTML = '';
     leaderboard.forEach((team, idx) => {
         const row = tbody.insertRow();
+        // 为前 TOP_N 名添加高亮样式
+        if (idx < TOP_N) {
+            row.style.backgroundColor = '#ffd700';   // 金色背景
+            row.style.fontWeight = 'bold';
+            row.style.color = '#000';
+        }
         row.insertCell(0).textContent = idx + 1;
         const nameCell = row.insertCell(1);
         nameCell.innerHTML = `<img src="${team.logo}" style="width:30px;height:30px;border-radius:50%;vertical-align:middle;margin-right:10px;">${team.name}`;
@@ -95,7 +97,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         row.insertCell(4).textContent = team.totalPoints;
     });
 
-    // 赛事预告（不变）
+    // 赛事预告（若无预告则显示暂无）
     const upcomingDiv = document.getElementById('ccl-upcoming');
     if (seasonData.upcoming && seasonData.upcoming.length > 0) {
         let html = `<table class="ccl-upcoming-table"><thead><tr><th>队伍A</th><th>VS</th><th>队伍B</th><th>日期</th></tr></thead><tbody>`;
@@ -133,7 +135,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // 交战记录（含弃权提示）
     const recordContainer = document.getElementById('ccl-tournaments');
-    recordContainer.innerHTML = ''; // 清空
+    recordContainer.innerHTML = '';
     seasonData.tournaments.slice().reverse().forEach(tour => {
         const maxPoints = tour.maxPoints || maxPointsDefault;
         tour.matches.forEach(match => {
