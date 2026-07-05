@@ -438,6 +438,61 @@
             "score": [1, 1]
           }
         ]
+      },
+      {
+        "id": "day_0608",
+        "desc": "6月8日比赛",
+        "date": "2026-06-08",
+        "type": "group",
+        "maxPoints": 50,
+        "maxRounds": 3,
+        "matches": [
+          {
+            "teamA": "Addicted & Afflicted",
+            "teamB": "周末狂欢",
+            "rounds": [
+              {
+                "vanguard": [0, 10],
+                "zhongjian": [10, 0],
+                "dajiang": [0, 20]
+              },
+              {
+                "vanguard": [0, 10],
+                "zhongjian": [0, 10]
+              }
+            ],
+            "winner": "周末狂欢",
+            "score": [0, 2]
+          },
+          {
+            "teamA": "DriveSurge",
+            "teamB": "北洋理工舰队",
+            "rounds": [
+              {
+                "vanguard": [1, 2],
+                "zhongjian": [2, 0],
+                "dajiang": [1, 3]
+              },
+              {
+                "vanguard": [1, 2],
+                "zhongjian": [2, 0],
+                "dajiang": [3, 0]
+              },
+              {
+                "vanguard": [2, 0]
+              }
+            ],
+            "winner": "DriveSurge",
+            "score": [2, 1]
+          },
+          {
+            "teamA": "HGD",
+            "teamB": "Air Music Fighters",
+            "rounds": [],
+            "winner": "Air Music Fighters",
+            "score": [0, 1]
+          }
+        ]
       }
     ],
     "upcoming": []
