@@ -19,20 +19,35 @@ document.addEventListener('DOMContentLoaded', async () => {
         tour.matches.forEach(match => {
             const { teamA, teamB, rounds, winner } = match;
             let ptsA = 0, ptsB = 0;
-            rounds.forEach(round => {
-                if (round.vanguard) {
-                    if (round.vanguard[0] > round.vanguard[1]) ptsA += 10;
-                    else if (round.vanguard[1] > round.vanguard[0]) ptsB += 10;
+
+            // ====== 新增：弃权处理 ======
+            if (rounds.length === 0) {
+                // 胜利方直接获得 maxPoints，失败方 0 分
+                if (winner === teamA) {
+                    ptsA = maxPoints;
+                } else {
+                    ptsB = maxPoints;
                 }
-                if (round.zhongjian) {
-                    if (round.zhongjian[0] > round.zhongjian[1]) ptsA += 10;
-                    else if (round.zhongjian[1] > round.zhongjian[0]) ptsB += 10;
-                }
-                if (round.dajiang) {
-                    if (round.dajiang[0] > round.dajiang[1]) ptsA += 20;
-                    else if (round.dajiang[1] > round.dajiang[0]) ptsB += 20;
-                }
-            });
+                // 大比分统计仍按 winner 处理（放在后面统一处理）
+            } else {
+                // 原有轮次积分统计
+                rounds.forEach(round => {
+                    if (round.vanguard) {
+                        if (round.vanguard[0] > round.vanguard[1]) ptsA += 10;
+                        else if (round.vanguard[1] > round.vanguard[0]) ptsB += 10;
+                    }
+                    if (round.zhongjian) {
+                        if (round.zhongjian[0] > round.zhongjian[1]) ptsA += 10;
+                        else if (round.zhongjian[1] > round.zhongjian[0]) ptsB += 10;
+                    }
+                    if (round.dajiang) {
+                        if (round.dajiang[0] > round.dajiang[1]) ptsA += 20;
+                        else if (round.dajiang[1] > round.dajiang[0]) ptsB += 20;
+                    }
+                });
+            }
+            // ==========================
+
             ptsA = Math.min(ptsA, maxPoints);
             ptsB = Math.min(ptsB, maxPoints);
             teamStats[teamA].totalPoints += ptsA;
