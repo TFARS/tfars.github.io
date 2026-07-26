@@ -1,4 +1,4 @@
-﻿document.addEventListener('DOMContentLoaded', async function () {
+document.addEventListener('DOMContentLoaded', async function () {
     // 等待数据就绪
     if (!DataService.isReady()) {
         await new Promise(resolve => {
@@ -33,60 +33,66 @@
         return null;
     }
 
-    // 处理单个赛事的自动资格（仅新赛季使用）
+    // 处理单个赛事的自动资格（所有赛季通用）
     function processAutoQualify(tour) {
         const tourSetting = qualifys[tour.id];
         if (!tourSetting || tourSetting.count <= 0) return;
 
-        const resultEntries = Object.entries(tour.result).sort((a, b) => a[1] - b[1]);
-        let remaining = tourSetting.count;
+        // 过滤 -1（DNF）选手，按名次升序
+        const resultEntries = Object.entries(tour.result)
+            .filter(([_, s]) => parseInt(s) > 0)
+            .sort((a, b) => a[1] - b[1]);
+
+        const directCount = tourSetting.count;        // 直通名额数
         const allowExtension = tourSetting.extension || false;
+        let directRemaining = directCount;            // 剩余直通名额
+        let extensionRemaining = 0;                   // 顺延名额（直通被让出时产生）
 
-        for (let i = 0; i < resultEntries.length; i++) {
-            if (remaining <= 0 && !allowExtension) break;
+        for (const [name, standing] of resultEntries) {
+            if (directRemaining <= 0 && extensionRemaining <= 0) break;
 
-            const [name, standing] = resultEntries[i];
             const standingNum = parseInt(standing);
-            const isDirect = i < tourSetting.count;
-            const isShunyan = !isDirect && allowExtension;
-
-            if (!isDirect && !isShunyan) continue;
-
-            let honor = '';
-            switch (standingNum) {
-                case 1: honor = '冠军'; break;
-                case 2: honor = '亚军'; break;
-                case 3: honor = '季军'; break;
-                default: honor = `第${standingNum}名`;
-            }
-            const suffix = isShunyan ? '（顺延）' : '';
+            const honor = { 1: '冠军', 2: '亚军', 3: '季军' }[standingNum] || `第${standingNum}名`;
+            const isDirectSlot = directRemaining > 0;  // 是否处于直通名额内
 
             if (!banlist.includes(name)) {
+                // 未获资格：入榜
+                const isShunyan = !isDirectSlot;       // 不在直通名额内即为顺延
+                const suffix = isShunyan ? '（顺延）' : '';
                 finalists.set(name, [`${tour.desc} ${honor}${suffix}`]);
                 finalIndex.set(finalists.size, name);
                 banlist.push(name);
-                if (isDirect) remaining--;
+                if (isDirectSlot) directRemaining--;
+                else extensionRemaining--;
             } else {
-                // 已获得资格，若为直通名额且未顺延，则追加描述
-                if (isDirect && !isShunyan) {
+                // 已获资格
+                if (isDirectSlot) {
+                    // 占用直通名额：追加描述，消耗直通名额
                     finalists.get(name).push(`${tour.desc} ${honor}`);
+                    directRemaining--;
+                    // 若开启顺延，让出一个顺延名额给后续选手
+                    if (allowExtension) extensionRemaining++;
                 }
+                // 顺延位上的已获资格选手：不消耗名额也不让出，跳过
             }
         }
     }
 
-    // 自动计算：适用于赛季 >= 2026（即 seasonID >= 3）
-    if (seasonData.seasonID >= 3) {
-        seasonData.tournaments.slice().reverse().forEach(tour => processAutoQualify(tour));
+    // 自动计算：所有赛季都执行，倒序遍历（后举办的赛事先处理）
+    seasonData.tournaments.slice().reverse().forEach(tour => processAutoQualify(tour));
 
-        // 补充积分最高且未获资格的选手
-        for (const member of seasonData.members) {
-            if (!banlist.includes(member.tfaName)) {
-                finalists.set(member.tfaName, ['当前积分榜最高积分（顺延）']);
-                finalIndex.set(finalists.size, member.tfaName);
-                break;
-            }
+    // 补充积分最高且未获资格的选手（顺延）
+    // 若积分榜前列选手已有名额，顺延到后面才加"（顺延）"字样；
+    // 若首位选手就未获资格，他本身就是最高分，不加顺延字样
+    let skippedCount = 0;
+    for (const member of seasonData.members) {
+        if (!banlist.includes(member.tfaName)) {
+            const suffix = skippedCount > 0 ? '（顺延）' : '';
+            finalists.set(member.tfaName, [`当前积分榜最高积分${suffix}`]);
+            finalIndex.set(finalists.size, member.tfaName);
+            break;
         }
+        skippedCount++;
     }
 
     // 合并手动资格（所有赛季均执行）
@@ -120,6 +126,14 @@
         }
     }
 
+    // LCQ 检测：若当前赛季没有 LCQ 赛事，则追加"待定"占位行
+    const hasLCQ = seasonData.tournaments.some(t => /LCQ/i.test(t.desc));
+    if (!hasLCQ) {
+        const lcqRow = finalTbody.insertRow();
+        lcqRow.insertCell(0).textContent = '待定';
+        lcqRow.insertCell(1).innerHTML = 'TFAAC LCQ 冠军<br>';
+    }
+
     // ========== 资格规则描述 ==========
     const ruleElement = document.getElementById('rule');
     if (seasonData.seasonID <= 2) {  // 2024、2025 赛季
@@ -127,7 +141,7 @@
     } else {  // 2026 及以后
         ruleElement.innerHTML = `
             <li>本赛季天格会年终总决赛(TFAAC)门票来源：</li>
-            <li>上赛季年终总决赛冠军 </li>
+            <li>上赛季年终总决赛冠军</li>
             <li>本赛季升龙杯的冠亚军（名额顺延）</li>
             <li>每月天格会月赛的冠军（名额顺延）</li>
             <li>赛季结束时积分榜最高分玩家（名额顺延）</li>
