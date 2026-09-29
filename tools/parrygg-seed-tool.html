@@ -1,0 +1,1036 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>parry.gg 种子洗牌工具</title>
+<style>
+  :root{
+    --bg:#12141a; --panel:#1b1e26; --panel2:#222631; --line:#2d323f;
+    --fg:#e8eaf0; --muted:#98a0b3; --acc:#4f8cff; --acc2:#2f6ae0;
+    --ok:#37c07a; --warn:#e2a33c; --err:#e05c5c; --seed:#ffc53d;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--fg);
+    font:15px/1.6 "Microsoft YaHei","PingFang SC",system-ui,-apple-system,Segoe UI,sans-serif;
+    padding:18px 20px 60px;
+  }
+  h1{font-size:20px;margin:0 0 2px}
+  h2{font-size:16px;margin:0 0 10px;color:var(--fg)}
+  a{color:var(--acc)}
+  .muted{color:var(--muted)}
+  .small{font-size:13px}
+  #msg.warn{color:var(--warn)}
+  #msg.err{color:var(--err)}
+  #msg{white-space:pre-wrap;margin-bottom:10px}
+  .ver{font-size:13px;font-weight:400;color:var(--acc);border:1px solid var(--line);border-radius:20px;padding:2px 10px;vertical-align:middle}
+
+  header{margin-bottom:16px}
+  .cfg{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:12px}
+  input[type=text],input[type=password]{
+    background:var(--panel);border:1px solid var(--line);color:var(--fg);
+    border-radius:8px;padding:9px 12px;font-size:15px;font-family:inherit;
+  }
+  #url{width:340px}
+  #key{width:320px}
+  input:focus{outline:none;border-color:var(--acc)}
+
+  button{
+    background:var(--panel2);color:var(--fg);border:1px solid var(--line);
+    border-radius:8px;padding:10px 18px;font-size:15px;font-family:inherit;cursor:pointer;
+  }
+  button:hover:not(:disabled){background:#2b3140;border-color:#3d4457}
+  button:disabled{opacity:.42;cursor:not-allowed}
+  button.primary{background:var(--acc2);border-color:var(--acc2);color:#fff}
+  button.primary:hover:not(:disabled){background:var(--acc)}
+  button.danger{background:#7a2f2f;border-color:#8f3a3a;color:#fff}
+  button.danger:hover:not(:disabled){background:#8f3a3a}
+
+  .tabs{display:flex;gap:8px;flex-wrap:wrap;margin:4px 0 14px}
+  .tab{
+    padding:9px 16px;border-radius:8px;border:1px solid var(--line);
+    background:var(--panel);cursor:pointer;font-size:15px;
+  }
+  .tab.on{background:var(--acc2);border-color:var(--acc2);color:#fff}
+  .tab .st{font-size:12px;opacity:.8;margin-left:8px}
+
+  .bar{
+    display:flex;gap:10px;flex-wrap:wrap;align-items:center;
+    background:var(--panel);border:1px solid var(--line);border-radius:10px;
+    padding:12px 14px;margin-bottom:14px;
+  }
+  .bar .sep{width:1px;height:26px;background:var(--line);margin:0 4px}
+  label.chk{display:flex;align-items:center;gap:7px;cursor:pointer;font-size:14px;color:var(--muted)}
+  label.chk input{width:17px;height:17px;accent-color:var(--acc)}
+
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin-bottom:14px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:14px}
+
+  table{width:100%;border-collapse:collapse;font-size:15px}
+  th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line)}
+  th{color:var(--muted);font-weight:600;font-size:13px;letter-spacing:.4px}
+  tr:last-child td{border-bottom:none}
+  td.num{width:64px;font-variant-numeric:tabular-nums;color:var(--muted)}
+  td.pool{width:70px;color:var(--muted)}
+
+  .star{cursor:pointer;font-size:18px;line-height:1;user-select:none;background:none;border:none;padding:0 4px}
+  .star.on{color:var(--seed)}
+  .star.off{color:#4a5164}
+  .star:hover{color:var(--seed)}
+
+  .pill{display:inline-block;padding:2px 9px;border-radius:20px;font-size:12px;border:1px solid var(--line);color:var(--muted)}
+  .pill.g{color:var(--ok);border-color:#2b5c42}
+  .pill.w{color:var(--warn);border-color:#5c4a26}
+  .pill.r{color:var(--err);border-color:#5c2b2b}
+
+  .move{color:var(--warn)}
+  .same{color:var(--muted)}
+  .rownew{color:var(--ok)}
+
+  #log{
+    background:#0e1015;border:1px solid var(--line);border-radius:8px;
+    padding:10px 12px;height:150px;overflow:auto;font:13px/1.7 Consolas,Menlo,monospace;
+    white-space:pre-wrap;color:#b8c0d0;
+  }
+  #msg{margin-left:auto;font-size:14px}
+  .note{font-size:13px;color:var(--muted);margin-top:8px}
+  .empty{color:var(--muted);padding:18px 0;text-align:center}
+  .seedlist{display:flex;flex-wrap:wrap;gap:8px}
+  .seedtag{background:var(--panel2);border:1px solid var(--line);border-radius:20px;padding:4px 12px;font-size:14px}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>parry.gg 种子洗牌工具 <span class="ver" id="ver">—</span></h1>
+  <div class="muted small">读取赛事种子 / 池子数据，随机重排种子号；可选「种子选手优先分到不同组」。纯前端单文件，双击即用。</div>
+  <div class="cfg">
+    <input type="text" id="url" placeholder="赛事地址 https://parry.gg/<赛事>/<项目> 或 <赛事>/<项目>">
+    <input type="password" id="key" placeholder="API Key (pgk_...)">
+    <button id="btnLoad" class="primary">读取赛事</button>
+    <button id="btnSaveCfg">记住配置</button>
+  </div>
+  <div class="note">Key 只保存在本机浏览器 localStorage，不会写入页面源码，便于直接放到 GitHub Pages。</div>
+</header>
+
+<div id="msg" class="muted small"></div>
+<div id="phases" class="tabs"></div>
+
+<div class="bar" id="toolbar" style="display:none">
+  <button id="btnShuffle" class="primary">随机洗牌（生成预览）</button>
+  <button id="btnApply" disabled>写入生效</button>
+  <button id="btnRollback" class="danger" disabled>回滚上一次写入</button>
+  <button id="btnReload">重新读取</button>
+  <div class="sep"></div>
+  <label class="chk"><input type="checkbox" id="optBracketOnly"> 仅池内打乱（不跨池子）</label>
+  <label class="chk"><input type="checkbox" id="optForce"> 强制（阶段已开赛/结束）</label>
+  <div id="stateBadge"></div>
+</div>
+
+<div id="planWrap"></div>
+<div id="poolsWrap"></div>
+
+<div class="card" id="seedWrap" style="display:none">
+  <h2>种子选手（洗牌时优先分散到不同池子）</h2>
+  <div id="seedList" class="seedlist"></div>
+  <div class="note">点击表格里选手名左侧的 ☆ 即可加入/移出种子选手名单，名单自动保存在本机。</div>
+</div>
+
+<div class="card" id="logWrap" style="display:none">
+  <h2>执行日志</h2>
+  <div id="log"></div>
+</div>
+
+<script>
+'use strict';
+
+/* ============================================================
+ * 常量
+ * ============================================================ */
+const GRPC_BASE = 'https://grpcweb.parry.gg/parrygg.services';
+const LS_CFG   = 'parrygg-seed-tool:cfg';
+const LS_SEEDS = 'parrygg-seed-tool:seeds:';
+const BUILD    = 'v3 · 响应解析兼容 base64/二进制 + 原始体诊断';
+
+/* parry.gg 枚举（JSON 通道返回字符串名，proto 通道返回数字）
+ * 参考：EVENT/PHASE/BRACKET_STATE_UNSPECIFIED=0, READY=1, IN_PROGRESS=2, COMPLETED=3 */
+const BRACKET_TYPE = {
+  0:'BRACKET_TYPE_UNSPECIFIED', 1:'BRACKET_TYPE_SINGLE_ELIMINATION',
+  2:'BRACKET_TYPE_DOUBLE_ELIMINATION', 3:'BRACKET_TYPE_ROUND_ROBIN',
+  4:'BRACKET_TYPE_SWISS', 5:'BRACKET_TYPE_FREE_FOR_ALL'
+};
+
+/* ============================================================
+ * 小工具
+ * ============================================================ */
+const $  = (s, r=document) => r.querySelector(s);
+const $$ = (s, r=document) => Array.from(r.querySelectorAll(s));
+const esc = s => String(s==null?'':s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+function shuffleArr(a){
+  for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]] }
+  return a;
+}
+function shortId(id){ return id ? String(id).slice(-6) : '------' }
+
+const memStore = {};
+function lsGet(k){
+  try{ const v = localStorage.getItem(k); return v==null ? (memStore[k]??null) : v }catch(e){ return memStore[k]??null }
+}
+function lsSet(k,v){ try{ localStorage.setItem(k,v) }catch(e){ memStore[k]=v } }
+
+/* ============================================================
+ * protobuf 手写编解码（SeedService 只走 grpc-web-text 通道）
+ * ============================================================ */
+function pbVarint(n){
+  const b=[]; n=Math.floor(n);
+  while(n>127){ b.push((n&127)|128); n=Math.floor(n/128) }
+  b.push(n); return b;
+}
+function pbStr(field, str){
+  const bytes = Array.from(new TextEncoder().encode(String(str)));
+  return [...pbVarint((field<<3)|2), ...pbVarint(bytes.length), ...bytes];
+}
+function readVarint(buf, pos){
+  let r=0, shift=0, byte;
+  do{ byte=buf[pos++]; r += (byte&127) * Math.pow(2,shift); shift+=7 }while(byte&128);
+  return { value:r, pos };
+}
+function pbDecode(buf){
+  const out={}; let pos=0;
+  while(pos < buf.length){
+    const t = readVarint(buf,pos); pos = t.pos;
+    const fn = t.value >>> 3, wire = t.value & 7;
+    if(wire===0){ const v=readVarint(buf,pos); pos=v.pos; (out[fn] ||= []).push({wire, v:v.value}) }
+    else if(wire===2){ const l=readVarint(buf,pos); pos=l.pos; const end=pos+l.value; (out[fn] ||= []).push({wire, bytes:buf.subarray(pos,end)}); pos=end }
+    else if(wire===5){ (out[fn] ||= []).push({wire, v:0}); pos+=4 }
+    else if(wire===1){ pos+=8 }
+    else throw new Error('未知 protobuf wire type: '+wire);
+  }
+  return out;
+}
+const pbStrOf  = (o,f) => { const a=o[f]; return a&&a[0]&&a[0].bytes ? new TextDecoder().decode(a[0].bytes) : '' };
+const pbIntOf  = (o,f) => { const a=o[f]; return a&&a[0]&&a[0].v!=null ? a[0].v : 0 };
+const pbMsgsOf = (o,f) => (o[f]||[]).filter(x=>x.wire===2).map(x=>pbDecode(x.bytes));
+
+function grpcFrame(payload){
+  const n = payload.length;
+  const f = new Uint8Array(5+n);
+  f[0]=0; f[1]=(n>>>24)&255; f[2]=(n>>>16)&255; f[3]=(n>>>8)&255; f[4]=n&255;
+  f.set(payload,5); return f;
+}
+function u8ToBase64(u8){
+  let s=''; const CH=0x8000;
+  for(let i=0;i<u8.length;i+=CH) s += String.fromCharCode.apply(null, u8.subarray(i,i+CH));
+  return btoa(s);
+}
+function base64ToU8(b64){
+  /* 关键：parry.gg 会把「每个 grpc 帧各自 base64 后再首尾拼接」，
+   * 例如 SwapSeeds 的响应体是
+   *     AAAAAAA=  +  gAAAAA9ncnBjLXN0YXR1czowDQo=
+   *   （帧1 空消息体）  （帧2 trailer，含 grpc-status:0）
+   * 中间那个 '=' 是帧1 自己的 padding。而 atob 按规范只允许 '=' 出现在末尾，
+   * 整串直接 atob 会抛 InvalidCharacterError。
+   * 因此按 4 字符一组逐块解码：每块的 padding 都在自己块尾，天然合法。
+   * 同时兼容 base64url(-_) 与缺省 padding。 */
+  const s = String(b64).replace(/\s+/g,'').replace(/-/g,'+').replace(/_/g,'/');
+  const bytes = [];
+  for(let i=0;i<s.length;i+=4){
+    let chunk = s.slice(i, i+4);
+    if(chunk.length < 4) chunk += '='.repeat(4 - chunk.length);
+    const bin = atob(chunk);
+    for(let j=0;j<bin.length;j++) bytes.push(bin.charCodeAt(j));
+  }
+  return Uint8Array.from(bytes);
+}
+/** 整个响应体是否都在 base64 字母表内（用于判定 grpc-web-text） */
+function looksLikeBase64(u8){
+  if(!u8.length) return false;
+  for(let i=0;i<u8.length;i++){
+    const c = u8[i];
+    const ok = (c>=0x41&&c<=0x5A) || (c>=0x61&&c<=0x7A) || (c>=0x30&&c<=0x39)
+            || c===0x2B || c===0x2F || c===0x3D || c===0x2D || c===0x5F
+            || c===0x20 || c===0x0A || c===0x0D || c===0x09;
+    if(!ok) return false;
+  }
+  return true;
+}
+/** 失败时把原始响应体摘出来，便于直接定位服务器到底返回了什么 */
+function bytesPreview(u8, n){
+  n = n || 200;
+  const head = u8.subarray(0, Math.min(n, u8.length));
+  let hex = '', txt = '';
+  for(const b of head){ hex += b.toString(16).padStart(2,'0'); txt += (b>=0x20 && b<0x7F) ? String.fromCharCode(b) : '.' }
+  return { len:u8.length, hex, txt };
+}
+function parseGrpcFrames(u8){
+  let pos=0; const messages=[]; let trailer='';
+  while(pos+5 <= u8.length){
+    const flag = u8[pos++];
+    const len = ((u8[pos]<<24)|(u8[pos+1]<<16)|(u8[pos+2]<<8)|u8[pos+3]) >>> 0; pos+=4;
+    if(pos+len > u8.length) break;
+    const payload = u8.subarray(pos, pos+len); pos += len;
+    if(flag & 0x80) trailer += new TextDecoder().decode(payload);
+    else messages.push(payload);
+  }
+  return { messages, trailer };
+}
+function grpcStatus(trailer){
+  const m = /grpc-status:\s*(-?\d+)/.exec(trailer||'');
+  const msg = /grpc-message:\s*([^\r\n]*)/.exec(trailer||'');
+  let text = msg ? msg[1].trim() : '';
+  try{ text = decodeURIComponent(text) }catch(e){}
+  return { status: m ? Number(m[1]) : null, message: text };
+}
+
+/** gRPC 状态：优先取 trailer 帧，其次取 HTTP 响应头（预检已放行 *） */
+function statusOf(resp, frames){
+  const st = grpcStatus(frames && frames.trailer);
+  if(st.status !== null) return st;
+  const h = resp.headers.get('grpc-status');
+  if(h !== null && h !== '') return { status:Number(h), message: resp.headers.get('grpc-message') || '' };
+  return { status:null, message:'' };
+}
+
+async function grpcPost(method, payload, apiKey){
+  const tag = 'SeedService/' + method;
+  let resp;
+  try{
+    resp = await fetch(GRPC_BASE + '.SeedService/' + method, {
+      method:'POST',
+      headers:{
+        'Content-Type':'application/grpc-web-text',
+        'Accept':'application/grpc-web-text',
+        'X-API-KEY':asciiHeader(apiKey)
+      },
+      body: u8ToBase64(grpcFrame(payload))
+    });
+  }catch(e){
+    throw new Error(tag + ' 网络请求失败：' + ((e && e.message) || e));
+  }
+
+  const ct  = (resp.headers.get('content-type') || '').toLowerCase();
+  const buf = new Uint8Array(await resp.arrayBuffer());
+  const pv  = bytesPreview(buf);
+
+  // 空响应体：SwapSeeds 成功时确实会返回空体
+  if(buf.length === 0){
+    if(resp.ok) return { messages:[], trailer:'' };
+    throw new Error(tag + ' 空响应 (HTTP ' + resp.status + ')');
+  }
+
+  // 按响应体实际形态解析：grpc-web-text(base64) 或 grpc-web(二进制帧) 都支持
+  let frames = null, mode = '';
+  if(ct.includes('grpc-web-text') || looksLikeBase64(buf)){
+    try{ frames = parseGrpcFrames(base64ToU8(new TextDecoder().decode(buf))); mode = 'grpc-web-text' }
+    catch(e){ frames = null }
+  }
+  if(!frames && (buf[0] === 0x00 || buf[0] === 0x80)){
+    frames = parseGrpcFrames(buf); mode = 'grpc-web(二进制)';
+  }
+  if(!frames){
+    throw new Error(tag + ' 无法识别的响应体（HTTP ' + resp.status + '，content-type: ' + (ct||'无') +
+      '，' + pv.len + ' 字节）\n原始 hex: ' + pv.hex + '\n原始文本: ' + pv.txt);
+  }
+
+  const st = statusOf(resp, frames);
+  if(st.status !== null && st.status !== 0){
+    throw new Error(tag + ' 失败 gRPC-' + st.status + (st.message ? ' ' + st.message : ''));
+  }
+  if(st.status === null && !resp.ok){
+    throw new Error(tag + ' HTTP ' + resp.status + '（' + mode + '，' + pv.len + ' 字节）\n原始文本: ' + pv.txt);
+  }
+  return frames;
+}
+
+/** GetSeeds(phaseId) -> [{seedId, number, bracketIndex, entrantId, name}] */
+async function getSeedsProto(phaseId, apiKey){
+  const frames = await grpcPost('GetSeeds', pbStr(1, phaseId), apiKey);
+  if(!frames.messages.length) throw new Error('GetSeeds 无消息体');
+  const root = pbDecode(frames.messages[0]);          // GetSeedsResponse{ repeated Seed seeds=1 }
+  return pbMsgsOf(root,1).map(s=>{
+    const ee = s[3] ? pbDecode(s[3][0].bytes) : {};    // EventEntrant
+    const entrant = ee[2] ? pbDecode(ee[2][0].bytes) : {}; // Entrant{ id=1, users=2 }
+    const users = entrant[2] ? entrant[2].filter(x=>x.wire===2).map(x=>pbDecode(x.bytes)) : [];
+    const u0 = users[0] || {};
+    const gamerTag = pbStrOf(u0,2);
+    return {
+      seedId: pbStrOf(s,1),
+      number: pbIntOf(s,2),
+      bracketIndex: pbIntOf(s,4),
+      entrantId: pbStrOf(ee,4),
+      name: gamerTag || pbStrOf(ee,3) || ('选手#'+shortId(pbStrOf(s,1)))
+    };
+  });
+}
+
+/** SwapSeeds(sourceSeedId, targetSeedId) —— 真互换语义 */
+async function swapSeedsProto(sourceSeedId, targetSeedId, apiKey){
+  const payload = [...pbStr(1, sourceSeedId), ...pbStr(2, targetSeedId)];
+  await grpcPost('SwapSeeds', payload, apiKey);
+}
+
+/** GetEvent（JSON 通道） */
+async function getEventJson(tournamentSlug, eventSlug, apiKey){
+  let resp;
+  try{
+    resp = await fetch(GRPC_BASE + '.EventService/GetEvent', {
+      method:'POST',
+      headers:{ 'Content-Type':'application/json', 'Accept':'application/json', 'X-API-KEY':asciiHeader(apiKey) },
+      body: JSON.stringify({
+        identifier:{ event_slug_path:{ tournament_slug:tournamentSlug, event_slug:eventSlug } },
+        options:{ event_view:1 }
+      })
+    });
+  }catch(e){
+    const detail = String((e && e.message) || e);
+    if(/ISO-8859-1/i.test(detail)){
+      throw new Error('请求头被非法字符污染，但当前版本已做过滤——说明浏览器加载的是旧版页面。请按 Ctrl+Shift+R 强制刷新后重试。原始错误：'+detail);
+    }
+    throw new Error('网络请求失败（可能是 CORS / 断网 / 地址不可达）：'+detail);
+  }
+  const text = await resp.text();
+  let data;
+  try{ data = JSON.parse(text) }
+  catch(e){ throw new Error('响应不是 JSON（HTTP '+resp.status+'）：'+text.slice(0,200)) }
+  if(!resp.ok){
+    throw new Error('HTTP '+resp.status+'：'+(data.message||data.error||text.slice(0,200)));
+  }
+  return data.event || data;
+}
+
+/* ============================================================
+ * 数据模型
+ * ============================================================ */
+const S = {
+  tournamentSlug:'', eventSlug:'', eventName:'',
+  phases:[], phaseIndex:-1,
+  rows:[],            // 当前阶段的所有种子行
+  seedSet:new Set(),  // 种子选手 entrantId 集合
+  plan:null,          // { swaps, preview, mode }
+  lastApply:null,     // { swaps } 用于回滚
+  busy:false
+};
+
+function normEnum(v){ return v==null ? '' : String(v) }
+function isLocked(state){
+  const s = normEnum(state).toUpperCase();
+  return s.includes('IN_PROGRESS') || s.includes('COMPLETED') || s==='2' || s==='3';
+}
+function bracketTypeName(v){
+  const s = normEnum(v);
+  if(/^[A-Z_]+$/.test(s)) return s.replace('BRACKET_TYPE_','').replace(/_/g,' ').toLowerCase();
+  return (BRACKET_TYPE[Number(s)]||'').replace('BRACKET_TYPE_','').replace(/_/g,' ').toLowerCase();
+}
+function stateName(v){
+  const s = normEnum(v).toUpperCase();
+  if(s.includes('IN_PROGRESS')||s==='2') return {t:'进行中', c:'w'};
+  if(s.includes('COMPLETED')||s==='3')  return {t:'已结束', c:'r'};
+  if(s.includes('PENDING'))              return {t:'待开始', c:''};
+  if(s.includes('READY')||s==='1')       return {t:'未开赛', c:'g'};
+  return {t:s||'未知', c:''};
+}
+
+function normalizeSeedJson(s){
+  const ee  = s.eventEntrant || s.event_entrant || {};
+  const usr = (ee.entrant && ee.entrant.users) || [];
+  const u0  = usr[0] || {};
+  const tag = u0.gamerTag || u0.gamer_tag || '';
+  const uname = u0.username || '';
+  return {
+    seedId: s.id,
+    number: Number(s.seed ?? 0),
+    entrantId: ee.id || '',
+    name: tag || uname || ee.name || ('选手#'+shortId(s.id)),
+    anonymous: !!(u0.isAnonymous ?? u0.is_anonymous)
+  };
+}
+
+function extractPhases(ev){
+  return (ev.phases||[]).map((p,i)=>{
+    const brackets = p.brackets || [];
+    const pools = brackets.map((b,bi)=>({
+      index: Number(b.index ?? b.bracketIndex ?? b.bracket_index ?? bi),
+      seeds: (b.seeds||[]).map(normalizeSeedJson).filter(s=>s.seedId)
+    }));
+    return {
+      id: p.id,
+      name: p.name || p.slug || ('阶段 '+(i+1)),
+      slug: p.slug || '',
+      bracketType: p.bracketType ?? p.bracket_type,
+      state: p.state,
+      numEntrants: p.numEntrants ?? p.num_entrants ?? 0,
+      numBrackets: p.numBrackets ?? p.num_brackets ?? brackets.length,
+      pools
+    };
+  });
+}
+
+/** 把阶段的 pools 拍平成按种子号排序的 rows */
+function buildRows(phase, seedSet){
+  const rows = [];
+  phase.pools.forEach(pool=>{
+    pool.seeds.forEach(s=>{
+      rows.push({
+        seedId:s.seedId, number:s.number, poolIndex:pool.index,
+        entrantId:s.entrantId, name:s.name, anonymous:s.anonymous
+      });
+    });
+  });
+  // 个别种子位可能没有号（proto3 省略 0）：按空缺号补齐，保证 1..N 连续
+  const used = new Set(rows.filter(r=>r.number>0).map(r=>r.number));
+  const miss = rows.filter(r=>!(r.number>0));
+  if(miss.length){
+    const gaps = [];
+    for(let i=1;i<=rows.length;i++) if(!used.has(i)) gaps.push(i);
+    miss.forEach((r,i)=>{ r.number = gaps[i] != null ? gaps[i] : (rows.length + i + 1) });
+  }
+  rows.sort((a,b)=>a.number-b.number);
+  const nums = new Set();
+  for(const r of rows){
+    if(nums.has(r.number)) throw new Error('种子号重复：'+r.number+'（数据异常，已中止）');
+    nums.add(r.number);
+  }
+  rows.forEach(r=>{ r.isSeedPlayer = !!(r.entrantId && seedSet.has(r.entrantId)) });
+  return { rows, numbers:[...nums].sort((a,b)=>a-b) };
+}
+
+/* ============================================================
+ * 洗牌算法
+ * ============================================================ */
+/**
+ * 返回 targetBySeedId: seedId -> 目标种子号
+ * 规则：保持各池子人数（沿用当前分布）；种子选手随机铺到「当前种子选手数最少」的池子；
+ *      普通选手随机铺；最后各组内随机排列具体种子号。
+ */
+function computeTargets(rows, seedSet, bracketOnly){
+  const target = new Map();
+  const fixed   = rows.filter(r=>!r.entrantId);          // progression 预留席位：保持不动
+  const movable = rows.filter(r=>r.entrantId);
+  fixed.forEach(r=>target.set(r.seedId, r.number));
+
+  // 池子 -> 可分配种子号集合
+  const poolNums = new Map();
+  movable.forEach(r=>{
+    if(!poolNums.has(r.poolIndex)) poolNums.set(r.poolIndex, []);
+    poolNums.get(r.poolIndex).push(r.number);
+  });
+  const pools = [...poolNums.keys()];
+
+  if(bracketOnly){
+    pools.forEach(p=>{
+      const nums = shuffleArr([...poolNums.get(p)]);
+      const players = shuffleArr(movable.filter(r=>r.poolIndex===p));
+      players.forEach((r,i)=>target.set(r.seedId, nums[i]));
+    });
+    return target;
+  }
+
+  const cap = new Map(pools.map(p=>[p, poolNums.get(p).length]));
+  const assign = new Map(pools.map(p=>[p, []]));
+  const seedCount = p => assign.get(p).reduce((n,r)=>n+(seedSet.has(r.entrantId)?1:0), 0);
+
+  // 1) 种子选手：随机顺序，逐个放进「种子选手数最少」且未满的池子（并列随机）
+  const seedPlayers = shuffleArr(movable.filter(r=>seedSet.has(r.entrantId)));
+  for(const r of seedPlayers){
+    const avail = pools.filter(p=>assign.get(p).length < cap.get(p));
+    if(!avail.length) break;
+    const min = Math.min.apply(null, avail.map(seedCount));
+    const cand = avail.filter(p=>seedCount(p)===min);
+    assign.get(cand[Math.floor(Math.random()*cand.length)]).push(r);
+  }
+  // 2) 普通选手：随机铺满
+  const normals = shuffleArr(movable.filter(r=>!seedSet.has(r.entrantId)));
+  for(const r of normals){
+    const avail = pools.filter(p=>assign.get(p).length < cap.get(p));
+    if(!avail.length) break;
+    assign.get(avail[Math.floor(Math.random()*avail.length)]).push(r);
+  }
+  // 3) 组内随机确定具体种子号
+  pools.forEach(p=>{
+    const nums = shuffleArr([...poolNums.get(p)]);
+    assign.get(p).forEach((r,i)=>target.set(r.seedId, nums[i]));
+  });
+  return target;
+}
+
+/** 把「行 -> 目标号」映射分解成若干次 SwapSeeds（置换环分解） */
+function decomposeSwaps(rows, targetBySeedId){
+  const rowAtNumber = new Map(rows.map(r=>[r.number, r]));
+  const t = new Map();
+  for(const r of rows){
+    t.set(r.number, targetBySeedId.has(r.seedId) ? targetBySeedId.get(r.seedId) : r.number);
+  }
+  const seen = new Set();
+  for(const [,v] of t){
+    if(seen.has(v)) throw new Error('目标种子号重复：'+v);
+    seen.add(v);
+  }
+  const visited = new Set(); const swaps = [];
+  for(const start of [...t.keys()].sort((a,b)=>a-b)){
+    if(visited.has(start)) continue;
+    const cycle = []; let cur = start;
+    while(t.has(cur) && !visited.has(cur)){ visited.add(cur); cycle.push(cur); cur = t.get(cur) }
+    for(let j=1;j<cycle.length;j++){
+      swaps.push({
+        aId: rowAtNumber.get(cycle[j-1]).seedId,
+        bId: rowAtNumber.get(cycle[j]).seedId,
+        aNum: cycle[j-1], bNum: cycle[j]
+      });
+    }
+  }
+  return swaps;
+}
+
+/* ============================================================
+ * 渲染
+ * ============================================================ */
+function setMsg(text, cls){
+  const el = $('#msg');
+  el.className = 'small ' + (cls||'muted');
+  el.textContent = text || '';
+}
+function log(text){
+  const el = $('#log');
+  $('#logWrap').style.display = 'block';
+  el.textContent += text + '\n';
+  el.scrollTop = el.scrollHeight;
+}
+function clearLog(){ $('#log').textContent = '' }
+
+function renderPhases(){
+  const box = $('#phases');
+  if(!S.phases.length){ box.innerHTML=''; return }
+  box.innerHTML = S.phases.map((p,i)=>{
+    const st = stateName(p.state);
+    return `<div class="tab ${i===S.phaseIndex?'on':''}" data-i="${i}">
+      ${esc(p.name)}<span class="st">${esc(bracketTypeName(p.bracketType))} · ${p.numBrackets}池 · ${esc(st.t)}</span>
+    </div>`;
+  }).join('');
+  $$('.tab', box).forEach(el=>el.onclick = ()=>{
+    if(S.busy) return;
+    S.phaseIndex = Number(el.dataset.i);
+    loadPhase();
+  });
+}
+
+function renderToolbar(){
+  const p = S.phases[S.phaseIndex];
+  $('#toolbar').style.display = p ? 'flex' : 'none';
+  if(!p) return;
+  const st = stateName(p.state);
+  const locked = isLocked(p.state);
+  $('#stateBadge').innerHTML = `<span class="pill ${st.c}">${esc(st.t)}</span>`;
+  const force = $('#optForce').checked;
+  const blocked = locked && !force;
+  const has = S.rows.length > 0 && S.rows.some(r=>r.entrantId);
+  $('#btnShuffle').disabled = S.busy || blocked || !has;
+  $('#btnShuffle').title = blocked ? '阶段已开赛/结束，请勾选「强制」' : '';
+  $('#btnApply').disabled = S.busy || blocked || !S.plan || !S.plan.swaps.length;
+  $('#btnRollback').disabled = S.busy || !S.lastApply;
+}
+
+function poolLabel(i){ return '池 ' + (i+1) }
+
+function renderPools(){
+  const wrap = $('#poolsWrap');
+  const phase = S.phases[S.phaseIndex];
+  if(!phase || !S.rows.length){ wrap.innerHTML=''; return }
+
+  const byPool = new Map();
+  S.rows.forEach(r=>{
+    if(!byPool.has(r.poolIndex)) byPool.set(r.poolIndex, []);
+    byPool.get(r.poolIndex).push(r);
+  });
+
+  const cards = [...byPool.keys()].sort((a,b)=>a-b).map(pi=>{
+    const list = byPool.get(pi).sort((a,b)=>a.number-b.number);
+    const body = list.map(r=>`
+      <tr>
+        <td class="num">#${r.number}</td>
+        <td><button class="star ${r.isSeedPlayer?'on':'off'}" data-eid="${esc(r.entrantId)}" ${r.entrantId?'':'disabled'}>${r.isSeedPlayer?'★':'☆'}</button></td>
+        <td>${esc(r.name)}${r.entrantId?'':' <span class="muted small">（未定/预留）</span>'}</td>
+        <td class="pool muted small">${esc(shortId(r.seedId))}</td>
+      </tr>`).join('');
+    return `<div class="card">
+      <h2>${esc(poolLabel(pi))} <span class="muted small">${list.length} 人</span></h2>
+      <table><thead><tr><th>种子</th><th class="num" style="width:44px"></th><th>选手</th><th>Seed.id</th></tr></thead>
+      <tbody>${body}</tbody></table>
+    </div>`;
+  }).join('');
+  wrap.innerHTML = `<div class="card"><h2>当前状态 · ${esc(phase.name)}</h2>
+    <div class="muted small">赛制 ${esc(bracketTypeName(phase.bracketType))} · 报名 ${phase.numEntrants||S.rows.length} 人 · ${phase.numBrackets} 个池子</div></div>
+    <div class="grid">${cards}</div>`;
+
+  $$('.star', wrap).forEach(el=>el.onclick = ()=>{
+    if(S.busy) return;
+    const eid = el.dataset.eid;
+    if(!eid) return;
+    if(S.seedSet.has(eid)) S.seedSet.delete(eid); else S.seedSet.add(eid);
+    saveSeedSet();
+    S.rows.forEach(r=>{ r.isSeedPlayer = !!(r.entrantId && S.seedSet.has(r.entrantId)) });
+    renderPools(); renderSeedList();
+  });
+}
+
+function renderSeedList(){
+  const box = $('#seedWrap');
+  const ids = S.rows.filter(r=>S.seedSet.has(r.entrantId));
+  const uniq = [];
+  const seen = new Set();
+  ids.forEach(r=>{ if(!seen.has(r.entrantId)){ seen.add(r.entrantId); uniq.push(r) } });
+  box.style.display = S.rows.length ? 'block' : 'none';
+  $('#seedList').innerHTML = uniq.length
+    ? uniq.map(r=>`<span class="seedtag">★ ${esc(r.name)}</span>`).join('')
+    : '<span class="muted small">尚未指定种子选手（洗牌将完全随机）</span>';
+}
+
+function renderPlan(){
+  const wrap = $('#planWrap');
+  if(!S.plan || !S.plan.preview.length){ wrap.innerHTML=''; return }
+  const pv = S.plan.preview;
+  const moves = pv.filter(x=>x.fromNum !== x.number);
+  const cross = pv.filter(x=>x.fromPool !== x.toPool);
+  const body = pv.map(x=>`
+    <tr>
+      <td class="num">#${x.number}</td>
+      <td>${x.fromNum===x.number?'<span class="same">'+esc(x.name)+'</span>':'<span class="rownew">'+esc(x.name)+'</span>'}</td>
+      <td class="muted small">${x.fromNum===x.number?'—':'原 #'+x.fromNum}</td>
+      <td class="pool small ${x.fromPool!==x.toPool?'move':''}">${esc(poolLabel(x.fromPool))}${x.fromPool!==x.toPool?' → '+esc(poolLabel(x.toPool)):''}</td>
+    </tr>`).join('');
+
+  wrap.innerHTML = `<div class="card">
+    <h2>洗牌预览 <span class="muted small">${esc(S.plan.mode)}</span></h2>
+    <div class="muted small">共 ${pv.length} 个种子位，变动 ${moves.length} 位，跨池子移动 ${cross.length} 位，需要 ${S.plan.swaps.length} 次 SwapSeeds 互换。</div>
+    <table style="margin-top:10px">
+      <thead><tr><th>新种子号</th><th>选手</th><th>来源</th><th>池子</th></tr></thead>
+      <tbody>${body}</tbody></table>
+    <div class="note">预览不会写入服务器。确认无误后点击「写入生效」。</div>
+  </div>`;
+}
+
+/* ============================================================
+ * 交互流程
+ * ============================================================ */
+async function doLoadEvent(){
+  const inp = readInputs();
+  const target = parseTarget(inp.url);
+  if(!target){ setMsg('无法解析赛事地址，请填写 https://parry.gg/<赛事slug>/<项目slug>', 'warn'); return }
+  if(!inp.key){ setMsg('请填写 API Key', 'warn'); return }
+  if(!inp.key.startsWith('pgk_')){
+    setMsg('API Key 应以 pgk_ 开头，当前是「'+inp.key.slice(0,14)+'」——请检查是否多粘贴了其他内容', 'warn'); return;
+  }
+  if(!isAscii(target.tournamentSlug) || !isAscii(target.eventSlug)){
+    setMsg('赛事地址含有非法字符，请粘贴形如 https://parry.gg/<赛事>/<项目> 的地址', 'warn'); return;
+  }
+  const key = inp.key;
+  if(inp.changed.length){
+    setMsg('已自动清理输入中的多余字符（'+inp.changed.join('、')+'），请确认内容正确', 'warn');
+  }
+  S.busy = true; renderToolbar();
+  if(!inp.changed.length) setMsg('读取中…');
+  try{
+    const ev = await getEventJson(target.tournamentSlug, target.eventSlug, key);
+    S.tournamentSlug = target.tournamentSlug;
+    S.eventSlug = target.eventSlug;
+    S.eventName = ev.name || '';
+    S.phases = extractPhases(ev);
+    S.plan = null; S.lastApply = null; clearLog();
+    if(!S.phases.length){ setMsg('该赛事下没有可用阶段', 'warn'); S.busy=false; renderPhases(); renderToolbar(); return }
+    S.phaseIndex = 0;
+    setMsg('已读取：'+S.eventName+'（'+S.phases.length+' 个阶段）', 'muted');
+    loadPhase();
+  }catch(e){
+    setMsg('读取失败：'+e.message, 'err');
+    console.error(e);
+  }finally{
+    S.busy = false; renderToolbar();
+  }
+}
+
+async function loadPhase(){
+  const phase = S.phases[S.phaseIndex];
+  if(!phase) return;
+  S.plan = null;
+  S.seedSet = new Set(JSON.parse(lsGet(LS_SEEDS + S.tournamentSlug + '/' + S.eventSlug) || '[]'));
+  try{
+    buildStateFromPhase(phase);
+    setMsg('阶段「'+phase.name+'」共 '+S.rows.length+' 个种子位，'+phase.pools.length+' 个池子', 'muted');
+  }catch(e){
+    setMsg('数据异常：'+e.message, 'err');
+    S.rows = [];
+  }
+  renderPhases(); renderPools(); renderSeedList(); renderPlan(); renderToolbar();
+}
+
+function buildStateFromPhase(phase){
+  const { rows, numbers } = buildRows(phase, S.seedSet);
+  S.rows = rows; S.numbers = numbers;
+}
+
+async function doReload(){
+  const key = readInputs().key;
+  if(!S.tournamentSlug){ setMsg('请先读取赛事', 'warn'); return }
+  S.busy = true; renderToolbar(); setMsg('重新读取中…');
+  try{
+    const ev = await getEventJson(S.tournamentSlug, S.eventSlug, key);
+    S.phases = extractPhases(ev);
+    const phase = S.phases[S.phaseIndex];
+    if(phase){
+      // 若 JSON 未带 seeds（阶段开赛等），退回 SeedService 读取
+      if(!phase.pools.some(p=>p.seeds.length)){
+        setMsg('GetEvent 未返回种子列表，改用 SeedService 读取…', 'warn');
+        const seeds = await getSeedsProto(phase.id, key);
+        phase.pools = groupSeedsByBracket(seeds);
+      }
+      buildStateFromPhase(phase);
+      setMsg('已重新读取，共 '+S.rows.length+' 个种子位', 'muted');
+    }
+    renderPhases(); renderPools(); renderSeedList(); renderPlan(); renderToolbar();
+  }catch(e){
+    setMsg('重新读取失败：'+e.message, 'err');
+  }finally{
+    S.busy = false; renderToolbar();
+  }
+}
+
+function groupSeedsByBracket(seeds){
+  const m = new Map();
+  seeds.forEach(s=>{
+    const b = Number.isFinite(s.bracketIndex) ? s.bracketIndex : 0;
+    if(!m.has(b)) m.set(b, []);
+    m.get(b).push({ seedId:s.seedId, number:s.number, entrantId:s.entrantId, name:s.name, anonymous:false });
+  });
+  return [...m.keys()].sort((a,b)=>a-b).map(k=>({ index:k, seeds:m.get(k) }));
+}
+
+function doShuffle(){
+  if(!S.rows.length){ setMsg('没有可洗牌的数据', 'warn'); return }
+  const bracketOnly = $('#optBracketOnly').checked;
+  const seedPlayers = S.rows.filter(r=>r.entrantId && S.seedSet.has(r.entrantId));
+  if(!S.rows.some(r=>r.entrantId)){ setMsg('该阶段没有已确定选手，无法洗牌', 'warn'); return }
+
+  try{
+    const targetBySeedId = computeTargets(S.rows, S.seedSet, bracketOnly);
+    const swaps = decomposeSwaps(S.rows, targetBySeedId);
+
+    // 生成预览：目标种子号 -> 最终归属的选手
+    const numToPool = new Map(S.rows.map(r=>[r.number, r.poolIndex]));
+    const finalAt = new Map();
+    for(const r of S.rows){
+      const tn = targetBySeedId.get(r.seedId) ?? r.number;
+      finalAt.set(tn, r);
+    }
+    const preview = S.rows.map(r=>{
+      const holder = finalAt.get(r.number) || r;
+      return {
+        number: r.number,
+        name: holder.name,
+        fromNum: holder.number,
+        fromPool: holder.poolIndex,
+        toPool: numToPool.get(r.number) ?? r.poolIndex
+      };
+    }).sort((a,b)=>a.number-b.number);
+
+    S.plan = { swaps, preview, targetBySeedId, mode: bracketOnly ? '仅池内打乱' : '全池随机', seedPlayers:seedPlayers.length };
+    renderPlan();
+    setMsg('已生成预览：'+swaps.length+' 次互换，点击「写入生效」提交', 'muted');
+    renderToolbar();
+  }catch(e){
+    setMsg('生成预览失败：'+e.message, 'err');
+    console.error(e);
+  }
+}
+
+async function doApply(){
+  if(!S.plan || !S.plan.swaps.length){ setMsg('请先生成预览', 'warn'); return }
+  const key = readInputs().key;
+  const n = S.plan.swaps.length;
+  if(!confirm('即将向服务器写入 '+n+' 次 SwapSeeds 互换，执行期间请勿关闭页面。\n\n确定写入吗？')) return;
+
+  S.busy = true; renderToolbar(); clearLog();
+  log('开始写入：'+n+' 次互换');
+  const done = [];
+  try{
+    for(let i=0;i<n;i++){
+      const sw = S.plan.swaps[i];
+      await swapSeedsProto(sw.aId, sw.bId, key);
+      done.push(sw);
+      log(`[${i+1}/${n}] 互换 #${sw.aNum} ↔ #${sw.bNum} ✓`);
+      if(i < n-1) await sleep(300);
+    }
+    S.lastApply = { swaps: done.slice() };
+    log('写入完成，正在回读校验…');
+    await verifyAfterApply();
+  }catch(e){
+    log('写入中断：'+e.message);
+    log('已成功 '+done.length+' 次。可使用「回滚上一次写入」撤销。');
+    if(done.length){ S.lastApply = { swaps: done.slice() } }
+    setMsg('写入失败：'+e.message, 'err');
+  }finally{
+    S.busy = false; renderToolbar();
+  }
+}
+
+async function verifyAfterApply(){
+  const key = readInputs().key;
+  const phase = S.phases[S.phaseIndex];
+  try{
+    const ev = await getEventJson(S.tournamentSlug, S.eventSlug, key);
+    const fresh = extractPhases(ev);
+    let ph = fresh.find(x=>x.id===phase.id) || fresh[S.phaseIndex];
+    if(ph && !ph.pools.some(p=>p.seeds.length)){
+      const seeds = await getSeedsProto(ph.id, key);
+      ph.pools = groupSeedsByBracket(seeds);
+    }
+    const tgt = S.plan.targetBySeedId;
+    const { rows } = buildRows(ph, S.seedSet);
+    let bad = 0;
+    rows.forEach(r=>{
+      const want = tgt.get(r.seedId);
+      if(want!=null && want!==r.number){ bad++; log(`✗ Seed.id ${shortId(r.seedId)} 期望 #${want}，实际 #${r.number}`) }
+    });
+    if(bad===0) log('回读校验通过：所有种子号与预览一致 ✓');
+    else log('回读校验发现 '+bad+' 处不一致，请检查。');
+
+    S.phases = fresh;
+    const idx = fresh.findIndex(x=>x.id===phase.id);
+    S.phaseIndex = idx >= 0 ? idx : Math.min(S.phaseIndex, fresh.length-1);
+    buildStateFromPhase(S.phases[S.phaseIndex]);
+    renderPhases(); renderPools(); renderSeedList();
+    S.plan = null; renderPlan();
+    setMsg(bad===0 ? '写入成功，已按预览生效 ✓' : '写入完成但校验有 '+bad+' 处差异', bad===0?'muted':'warn');
+  }catch(e){
+    log('回读失败：'+e.message);
+    setMsg('写入可能已完成，但回读校验失败：'+e.message, 'warn');
+  }
+}
+
+async function doRollback(){
+  if(!S.lastApply || !S.lastApply.swaps.length){ setMsg('没有可回滚的记录', 'warn'); return }
+  const key = readInputs().key;
+  const list = S.lastApply.swaps.slice().reverse();
+  if(!confirm('将按相反顺序回滚 '+list.length+' 次互换，恢复写入前的排列。\n\n确定回滚吗？')) return;
+  S.busy = true; renderToolbar(); clearLog();
+  log('开始回滚：'+list.length+' 次互换');
+  const done = [];
+  try{
+    for(let i=0;i<list.length;i++){
+      const sw = list[i];
+      await swapSeedsProto(sw.aId, sw.bId, key);
+      done.push(sw);
+      log(`[${i+1}/${list.length}] 反向互换 #${sw.aNum} ↔ #${sw.bNum} ✓`);
+      if(i < list.length-1) await sleep(300);
+    }
+    S.lastApply = null;
+    log('回滚完成。');
+    await doReload();
+    log('已重新读取当前状态。');
+  }catch(e){
+    log('回滚中断：'+e.message);
+    setMsg('回滚失败：'+e.message, 'err');
+  }finally{
+    S.busy = false; renderToolbar();
+  }
+}
+
+function sleep(ms){ return new Promise(r=>setTimeout(r,ms)) }
+
+function parseTarget(text){
+  const t = (text||'').trim();
+  if(!t) return null;
+  try{
+    const u = new URL(t.startsWith('http') ? t : 'https://' + t);
+    const seg = u.pathname.split('/').filter(Boolean);
+    if(seg.length >= 2) return { tournamentSlug:seg[0], eventSlug:seg[1] };
+  }catch(e){}
+  const m = t.match(/^([^\s\/]+)\s*\/\s*([^\s\/]+)$/);
+  if(m) return { tournamentSlug:m[1], eventSlug:m[2] };
+  return null;
+}
+
+/* ---------- 输入清洗 ----------
+ * HTTP 头只允许 ISO-8859-1，粘贴带中文前缀（如 data.txt 的「apikey:」行）
+ * 或夹杂零宽字符（U+200B）、不换行空格（U+00A0）都会直接让 fetch 抛错。
+ * 这里统一：能从整段文本里认出 pgk_ 开头的 Key / parry.gg 链接就提取出来，
+ * 否则去掉所有非可打印 ASCII 字符。 */
+const isAscii = s => /^[\x20-\x7E]*$/.test(String(s==null?'':s));
+const asciiHeader = v => String(v==null?'':v).replace(/[^\x20-\x7E]/g,'');
+
+function extractKey(text){
+  const raw = String(text==null?'':text);
+  // 必须先剥离非 ASCII：零宽字符/不换行空格若夹在 Key 中间，正则会在该处截断，返回半截 Key
+  const ascii = raw.replace(/[^\x20-\x7E]/g,'');
+  const m = ascii.match(/pgk_[A-Za-z0-9+\/=_-]+/);
+  const value = m ? m[0] : ascii.replace(/^apikey\s*:\s*/i,'').trim();
+  return { value, changed: value !== raw.trim() };
+}
+function extractAddr(text){
+  const raw = String(text==null?'':text);
+  const ascii = raw.replace(/[^\x20-\x7E]/g,'');   // 中文前缀（如「测试地址:」）一并去掉
+  const m = ascii.match(/https?:\/\/[^\s"'<>]+/);
+  const value = m ? m[0].replace(/[.,;:)\]]+$/,'') : ascii.replace(/^(url|addr|address)\s*:\s*/i,'').trim();
+  return { value, changed: value !== raw.trim() };
+}
+/** 读取并就地清洗两个输入框；返回清洗后的值 */
+function readInputs(){
+  const kRaw = $('#key').value;
+  const uRaw = $('#url').value;
+  const k = extractKey(kRaw), u = extractAddr(uRaw);
+  const changed = [];
+  if(k.changed){ $('#key').value = k.value; changed.push('API Key') }
+  if(u.changed){ $('#url').value = u.value; changed.push('赛事地址') }
+  return { key:k.value, url:u.value, changed };
+}
+
+function saveSeedSet(){
+  lsSet(LS_SEEDS + S.tournamentSlug + '/' + S.eventSlug, JSON.stringify([...S.seedSet]));
+}
+function saveCfg(){
+  const inp = readInputs();
+  lsSet(LS_CFG, JSON.stringify({ url:inp.url, key:inp.key }));
+  setMsg('配置已保存在本机浏览器', 'muted');
+}
+function loadCfg(){
+  try{
+    const c = JSON.parse(lsGet(LS_CFG) || '{}');
+    if(c.url) $('#url').value = extractAddr(c.url).value;
+    if(c.key) $('#key').value = extractKey(c.key).value;
+  }catch(e){}
+}
+
+/* ============================================================
+ * 绑定 & 启动
+ * ============================================================ */
+$('#btnLoad').onclick     = doLoadEvent;
+$('#btnSaveCfg').onclick  = saveCfg;
+$('#btnShuffle').onclick  = doShuffle;
+$('#btnApply').onclick    = doApply;
+$('#btnRollback').onclick = doRollback;
+$('#btnReload').onclick   = doReload;
+$('#optForce').onchange   = renderToolbar;
+$('#optBracketOnly').onchange = ()=>{ S.plan = null; renderPlan(); };
+
+$('#url').addEventListener('keydown', e=>{ if(e.key==='Enter') doLoadEvent() });
+$('#key').addEventListener('keydown', e=>{ if(e.key==='Enter') doLoadEvent() });
+
+// 粘贴整段文本（如 data.txt 的两行）时，自动把另一项也填上
+$('#url').addEventListener('paste', e=>{
+  const text = ((e.clipboardData || window.clipboardData).getData('text') || '');
+  if(/pgk_/.test(text) && !$('#key').value.trim()) $('#key').value = extractKey(text).value;
+});
+$('#key').addEventListener('paste', e=>{
+  const text = ((e.clipboardData || window.clipboardData).getData('text') || '');
+  const a = extractAddr(text);
+  if(/^https?:\/\//.test(a.value) && !$('#url').value.trim()) $('#url').value = a.value;
+});
+
+$('#ver').textContent = BUILD;
+loadCfg();
+renderToolbar();
+setMsg('已加载：' + BUILD + '。请填写赛事地址与 API Key 后点「读取赛事」。', 'muted');
+</script>
+</body>
+</html>
