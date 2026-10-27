@@ -462,8 +462,8 @@
         "code": "omr2026-street-fighter-6",
         "date": "2026-10-05T03:00:00Z"
       },
-      "count": 1,
-      "extension": false,
+      "count": 2,
+      "extension": true,
       "dqDatas": []
     }
   },
