@@ -8,8 +8,16 @@
 
 body {
     font-family: Arial, sans-serif;
-    background-color: #111; /* Éî»ÒÉ«±³¾° */
+    background-color: #111; /* æ·±ç°è‰²èƒŒæ™¯ */
     padding: 10px;
+}
+
+footer {
+    text-align: center;
+    margin-top: 0px;
+    padding: 20px;
+    color: #a67fd6;
+    font-size: 0.9rem;
 }
 
 .container {
@@ -25,7 +33,7 @@ body {
     margin-bottom: 20px;
     padding: 10px;
     border-radius: 5px;
-    /*background-color: #333; /* »ÒÉ«ÄÚÈİÇøÓò±³¾° */
+    /*background-color: #333; /* ç°è‰²å†…å®¹åŒºåŸŸèƒŒæ™¯ */
     width: 100%;
     /*background: #1c1821;
             background: linear-gradient(325deg,#1c1821,#9500db 50%,#1c1821);*/
@@ -33,7 +41,7 @@ body {
     background: url(/img/sf6_back2.jpg) no-repeat;
     background-attachment: fixed;
     z-index: 10;
-    white-space: nowrap; /* ·ÀÖ¹ÄÚÈİ»»ĞĞ */
+    white-space: nowrap; /* é˜²æ­¢å†…å®¹æ¢è¡Œ */
 }
 
 .tfaac{
@@ -75,8 +83,8 @@ body {
     list-style:none;
     width: 100%;
     padding: 10px;
-    font-size: 18px; /* ¸ù¾İĞèÒªµ÷Õû×ÖÌå´óĞ¡ */
-    color: #fff; /* ×ÖÌåÑÕÉ«£¬¿ÉÒÔ¸ù¾İ±³¾°µ÷Õû */
+    font-size: 18px; /* æ ¹æ®éœ€è¦è°ƒæ•´å­—ä½“å¤§å° */
+    color: #fff; /* å­—ä½“é¢œè‰²ï¼Œå¯ä»¥æ ¹æ®èƒŒæ™¯è°ƒæ•´ */
     text-shadow: 0 0 10px #99208d, 0 0 10px #99208d, 0 0 10px #99208d, 0 0 10px #99208d, 0 0 10px #99208d;
     white-space: normal;
 }
@@ -86,28 +94,28 @@ body {
 .final-table {
     width: 90%;
     border-collapse: collapse;
-    margin: 0 auto; /* ½«±í¸ñË®Æ½¾ÓÖĞ */
+    margin: 0 auto; /* å°†è¡¨æ ¼æ°´å¹³å±…ä¸­ */
     text-shadow: 0 0 10px #99208d, 0 0 10px #99208d, 0 0 10px #99208d, 0 0 10px #99208d, 0 0 10px #99208d;
     white-space: normal;
 }
 
     .final-table th, .final-table td {
-        border: 2px solid #4311a9; /* »ÒÉ«±í¸ñ±ß¿ò */
+        border: 2px solid #4311a9; /* ç°è‰²è¡¨æ ¼è¾¹æ¡† */
         padding: 8px;
         text-align: left;
         font-size: 16px;
-        color: #fff; /* Ç³»ÒÉ«ÎÄ×Ö */
-        text-align: center; /* ÎÄ±¾¾ÓÖĞ */
+        color: #fff; /* æµ…ç°è‰²æ–‡å­— */
+        text-align: center; /* æ–‡æœ¬å±…ä¸­ */
     }
 
 
     .final-table th {
-        background-color: #4c088c; /* ·¬ÇÑºìÉ«±íÍ·±³¾° */
-        color: #fff; /* ºÚÉ«±íÍ·ÎÄ×Ö */
+        background-color: #4c088c; /* ç•ªèŒ„çº¢è‰²è¡¨å¤´èƒŒæ™¯ */
+        color: #fff; /* é»‘è‰²è¡¨å¤´æ–‡å­— */
     }
 
     .final-table tr:nth-child(even) {
-        background-color: #210564; /* »ÒÉ«Å¼ÊıĞĞ±³¾° */
+        background-color: #210564; /* ç°è‰²å¶æ•°è¡ŒèƒŒæ™¯ */
         align-items: center;
         position: relative;
         width: 100%;
@@ -121,7 +129,7 @@ body {
     }
 
     .final-table tr:nth-child(odd) {
-        background-color: #1d025a; /* Éî»ÒÉ«ÆæÊıĞĞ±³¾° */
+        background-color: #1d025a; /* æ·±ç°è‰²å¥‡æ•°è¡ŒèƒŒæ™¯ */
         align-items: center;
         position: relative;
         width: 100%;
@@ -186,11 +194,11 @@ body {
         text-align: left;
     }
 
-/* ...£¨ÓëÖ®Ç°ÏàÍ¬µÄCSSÑùÊ½£©... */
+/* ...ï¼ˆä¸ä¹‹å‰ç›¸åŒçš„CSSæ ·å¼ï¼‰... */
 
-/* Îª¶¯Ì¬´´½¨µÄÊÕÄÉ°åÌí¼ÓÒ»Ğ©¶îÍâµÄÑùÊ½ */
+/* ä¸ºåŠ¨æ€åˆ›å»ºçš„æ”¶çº³æ¿æ·»åŠ ä¸€äº›é¢å¤–çš„æ ·å¼ */
 .accordion-item {
-    margin-bottom: 10px; /* Ìí¼ÓÒ»Ğ©¼ä¾àÒÔ·Ö¸ôÊÕÄÉ°å */
+    margin-bottom: 10px; /* æ·»åŠ ä¸€äº›é—´è·ä»¥åˆ†éš”æ”¶çº³æ¿ */
 }
 
 
@@ -202,22 +210,22 @@ body {
 }
 
     .tour-table th, .tour-table td {
-        border: 2px solid #4311a9; /* »ÒÉ«±í¸ñ±ß¿ò */
+        border: 2px solid #4311a9; /* ç°è‰²è¡¨æ ¼è¾¹æ¡† */
         padding: 8px;
         text-align: left;
         font-size: 16px;
-        color: #fff; /* Ç³»ÒÉ«ÎÄ×Ö */
+        color: #fff; /* æµ…ç°è‰²æ–‡å­— */
     }
 
     .tour-table th {
-        background-color:rgba(234,0,255,.6); /* ·¬ÇÑºìÉ«±íÍ·±³¾° */
-        color: #fff; /* ºÚÉ«±íÍ·ÎÄ×Ö */
+        background-color:rgba(234,0,255,.6); /* ç•ªèŒ„çº¢è‰²è¡¨å¤´èƒŒæ™¯ */
+        color: #fff; /* é»‘è‰²è¡¨å¤´æ–‡å­— */
     }
 
     .tour-table tr:nth-child(even) {
-        background-color: #210564; /* »ÒÉ«Å¼ÊıĞĞ±³¾° */
+        background-color: #210564; /* ç°è‰²å¶æ•°è¡ŒèƒŒæ™¯ */
     }
 
     .tour-table tr:nth-child(odd) {
-        background-color: #1d025a; /* Éî»ÒÉ«ÆæÊıĞĞ±³¾° */
+        background-color: #1d025a; /* æ·±ç°è‰²å¥‡æ•°è¡ŒèƒŒæ™¯ */
     }
