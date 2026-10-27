@@ -142,7 +142,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         ruleElement.innerHTML = `
             <li>本赛季天格会年终总决赛(TFAAC)门票来源：</li>
             <li>上赛季年终总决赛冠军</li>
-            <li>本赛季升龙杯的冠亚军（名额顺延）</li>
+            <li>本赛季OMR的冠亚军（名额顺延）</li>
             <li>每月天格会月赛的冠军（名额顺延）</li>
             <li>赛季结束时积分榜最高分玩家（名额顺延）</li>
             <li>年终总决赛LCQ冠军</li>
