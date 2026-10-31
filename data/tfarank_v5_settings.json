@@ -465,6 +465,17 @@
       "count": 2,
       "extension": true,
       "dqDatas": []
+    },
+    "01a19059-25aa-78d7-84ae-f4d9b335ddbe": {
+      "tour": {
+        "id": "01a19059-25aa-78d7-84ae-f4d9b335ddbe",
+        "desc": "天格会26年10月月赛",
+        "code": "tian-ge-hui26nian10yue-yue-sai",
+        "date": "1970/1/1 8:00:00"
+      },
+      "count": 1,
+      "extension": false,
+      "dqDatas": []
     }
   },
   "count": 1,
@@ -855,6 +866,16 @@
     "Slacker": "TFA1375",
     "wwww": "TFA1376",
     "yem": "TFA1377",
-    "ハメねこ": "TFA1378"
+    "ハメねこ": "TFA1378",
+    "有礼猫": "TFA1379",
+    "小鑫": "TFA1380",
+    "白芷菌": "TFA1381",
+    "JERM": "TFA1382",
+    "水会技师代号莲枫": "TFA1383",
+    "Kenny": "TFA1384",
+    "炸破": "TFA1385",
+    "Kakafayu": "TFA1386",
+    "东海珑音": "TFA1387",
+    "海日罕": "TFA1388"
   }
 }
